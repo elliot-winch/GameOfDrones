@@ -8,8 +8,9 @@ public class DamagableObject : MonoBehaviour {
 	public float startingHealth;
 	float health;
 
+	/*
 	Action onDamaged;
-	Action onDestroyed;
+	Action onDestroyed;*/
 
 	public float CurrentHealth {
 		get {
@@ -17,13 +18,14 @@ public class DamagableObject : MonoBehaviour {
 		}
 	}
 
+	/*
 	public void RegisterOnDamagedCallback(Action callback){
 		onDamaged += callback;
 	}
 
 	public void RegisterOnDestroyCallback(Action callback){
 		onDestroyed += callback;
-	}
+	}*/
 
 	void Start(){
 		health = startingHealth;
@@ -35,16 +37,17 @@ public class DamagableObject : MonoBehaviour {
 
 		if (health > 0f) {
 
-			if (onDamaged != null) {
-				onDamaged ();
-			}
+			Damaged (amount);
 		} else {
-			if (onDestroyed != null) {
-				onDestroyed ();
-			}
-
-			Destroy (gameObject);
+			Destroyed ();
 		}
 	}
 
+	protected virtual void Damaged(float amount){
+		Debug.Log ("I'm hit!");
+	}
+
+	protected virtual void Destroyed(){
+		Destroy (gameObject);
+	}
 }

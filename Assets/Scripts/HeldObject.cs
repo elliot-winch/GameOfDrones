@@ -12,11 +12,26 @@ public abstract class HeldObject : MonoBehaviour {
 
 	private void HandHoverUpdate( Hand hand ){
 
-		if (hand.currentAttachedObject != gameObject) {
+		//temp
+		if ( hand.GetStandardInteractionButtonDown() || ( ( hand.controller != null ) && Input.GetKeyDown( BuildManager.Instance.putDownKey ) ) )
+		{
+			if ( hand.currentAttachedObject != gameObject )
+			{
+				// Call this to continue receiving HandHoverUpdate messages,
+				// and prevent the hand from hovering over anything else
+				hand.HoverLock( GetComponent<Interactable>() );
 
-			hand.HoverLock (GetComponent<Interactable> ());
+				// Attach this object to the hand
+				hand.AttachObject( gameObject, attachmentFlags );
+			}
+			else
+			{
+				// Detach this object from the hand
+				hand.DetachObject( gameObject );
 
-			hand.AttachObject (gameObject, attachmentFlags);
+				// Call this to undo HoverLock
+				hand.HoverUnlock( GetComponent<Interactable>() );
+			}
 		}
 	}
 

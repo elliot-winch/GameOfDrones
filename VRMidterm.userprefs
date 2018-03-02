@@ -1,18 +1,6 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj" RefactoringSettings.EnableRefactorings="True">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\BuildTool.cs">
-    <Files>
-      <File FileName="Assets\Scripts\GameCube.cs" Line="82" Column="26" />
-      <File FileName="Assets\Scripts\BuildManager.cs" Line="43" Column="26" />
-      <File FileName="Assets\Scripts\BuildTool.cs" Line="36" Column="81" />
-      <File FileName="Assets\Scripts\HeldObject.cs" Line="29" Column="35" />
-      <File FileName="Assets\Scripts\IPlaceable.cs" Line="6" Column="1" />
-      <File FileName="Assets\Scripts\Turret.cs" Line="40" Column="32" />
-      <File FileName="Assets\Scripts\Enemy\Enemy.cs" Line="11" Column="28" />
-      <File FileName="Assets\Scripts\Gun\Gun.cs" Line="55" Column="71" />
-      <File FileName="Assets\Scripts\Enemy\Drone.cs" Line="5" Column="27" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

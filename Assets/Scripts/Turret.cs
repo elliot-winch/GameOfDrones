@@ -10,6 +10,7 @@ public class Turret : DamagableObject, IPlaceable {
 
 	private GameCube cube;
 
+	//should this be enemy or damagable object?
 	private Enemy currentTarget;
 	private Action onShoot;
 
