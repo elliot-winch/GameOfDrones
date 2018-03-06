@@ -51,21 +51,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\BuildManager.cs" />
-     <Compile Include="Assets\Scripts\BuildTool.cs" />
+     <Compile Include="Assets\Scripts\AStarPath.cs" />
+     <Compile Include="Assets\Scripts\Build\BuildManager.cs" />
+     <Compile Include="Assets\Scripts\Build\BuildTool.cs" />
+     <Compile Include="Assets\Scripts\Build\IPlaceable.cs" />
+     <Compile Include="Assets\Scripts\Build\Turret.cs" />
      <Compile Include="Assets\Scripts\DamagableObject.cs" />
      <Compile Include="Assets\Scripts\Enemy\Drone.cs" />
      <Compile Include="Assets\Scripts\Enemy\Enemy.cs" />
-     <Compile Include="Assets\Scripts\EnemyManager.cs" />
-     <Compile Include="Assets\Scripts\GameCube.cs" />
+     <Compile Include="Assets\Scripts\Enemy\EnemyManager.cs" />
+     <Compile Include="Assets\Scripts\Enemy\Projectile.cs" />
+     <Compile Include="Assets\Scripts\EnemyTarget.cs" />
      <Compile Include="Assets\Scripts\GamePlayer.cs" />
      <Compile Include="Assets\Scripts\Gun\Gun.cs" />
      <Compile Include="Assets\Scripts\Gun\GunManager.cs" />
      <Compile Include="Assets\Scripts\Gun\Pistol.cs" />
      <Compile Include="Assets\Scripts\HeldObject.cs" />
-     <Compile Include="Assets\Scripts\IPlaceable.cs" />
-     <Compile Include="Assets\Scripts\Turret.cs" />
-     <Compile Include="Assets\Scripts\Wall.cs" />
+     <Compile Include="Assets\Scripts\Map\GameCube.cs" />
+     <Compile Include="Assets\Scripts\Map\MapManager.cs" />
+     <Compile Include="Assets\Scripts\Map\Wall.cs" />
+     <Compile Include="Assets\Scripts\PriorityQueue.cs" />
      <Compile Include="Assets\SteamVR\Extras\SteamVR_GazeTracker.cs" />
      <Compile Include="Assets\SteamVR\Extras\SteamVR_LaserPointer.cs" />
      <Compile Include="Assets\SteamVR\Extras\SteamVR_Teleporter.cs" />

@@ -20,8 +20,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4089235354516448}
   - component: {fileID: 114591050106049176}
-  - component: {fileID: 64137668867158084}
-  m_Layer: 0
+  - component: {fileID: 65097958124519834}
+  m_Layer: 10
   m_Name: Game Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34,15 +34,15 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1318442997742546}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.05, y: 0.64, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -2.5, y: 0.5, z: -1.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!64 &64137668867158084
-MeshCollider:
+--- !u!65 &65097958124519834
+BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -50,11 +50,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114591050106049176
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -68,3 +66,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cornerMarker: {fileID: 1544333196898706, guid: 7bab8dfa02de3204fadfa58f0b4438ba,
     type: 2}
+  extendRight: 1
+  extendUp: 3
+  extendForward: 4

@@ -645,6 +645,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4db27809d7c1d8847964c36c4f51a2c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingHealth: 0
-  range: 10
+  startingHealth: 10
+  attackRange: 3
   damage: 1
+  weaponChargeTime: 0.2
+  rotateSpeed: 1
+  projectile: {fileID: 1514659161871410, guid: 79797a400db32dd41ab04fdf69b087ce, type: 2}

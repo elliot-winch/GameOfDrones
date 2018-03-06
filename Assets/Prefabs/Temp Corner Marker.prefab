@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33190196131967826}
   - component: {fileID: 135933473880960632}
   - component: {fileID: 23643848302605902}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Temp Corner Marker
   m_TagString: Untagged
   m_Icon: {fileID: 0}

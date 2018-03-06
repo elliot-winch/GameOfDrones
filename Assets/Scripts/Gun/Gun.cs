@@ -12,7 +12,10 @@ public class Gun : HeldObject {
 	public float damage;
 	public float rateOfFire;
 
+	public GameObject projectile;
+
 	private float rateOfFireTimer;
+	private bool firing = false;
 
 	//every coroutine that you launch should call firelock when it begins and fireunlock when it ends
 	private int firingLock = 0;
@@ -39,6 +42,7 @@ public class Gun : HeldObject {
 	#endregion
 
 	#region Fire
+	/* Raycast Firing - not cool
 	protected virtual void Fire(){
 		rateOfFireTimer = 0f;
 
@@ -57,6 +61,25 @@ public class Gun : HeldObject {
 
 			}
 		}
+	}*/
+
+
+	protected virtual void Fire(){
+		firing = true;
+
+		GameObject proj = Instantiate (projectile, transform.position, Quaternion.identity);
+
+		Collider projCol = proj.GetComponent<Collider> ();
+
+		foreach (MeshCollider mc in GetComponentsInChildren<MeshCollider>()) {
+			Physics.IgnoreCollision (projCol, mc);
+		}
+
+		proj.GetComponent<Projectile> ().Launch (transform);
+
+		Debug.Log ("Firing");
+
+		firing = false;
 	}
 
 	//This should be called at the beginning of every coroutine associated with Fire
