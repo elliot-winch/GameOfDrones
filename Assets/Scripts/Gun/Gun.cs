@@ -5,7 +5,7 @@ using UnityEngine;
 
 using Valve.VR.InteractionSystem;
 
-public class Gun : HeldObject {
+public class Gun : LaserHeldObject {
 
 	protected Action onShoot;
 
@@ -25,12 +25,15 @@ public class Gun : HeldObject {
 	}
 
 	private void Start(){
+		base.Start ();
+
 		rateOfFireTimer = rateOfFire;
 	}
 
 	#region HeldObject
-	protected override void OnHeld (Hand hand)
-	{
+	protected override void HandAttachedUpdate (Hand hand){
+		base.HandAttachedUpdate (hand);
+
 		if (rateOfFireTimer > rateOfFire && firingLock <= 0) {
 			if (Input.GetKeyDown(GunManager.Instance.fireKey)) {
 				Fire ();

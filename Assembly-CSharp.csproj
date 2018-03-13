@@ -67,6 +67,7 @@
      <Compile Include="Assets\Scripts\Gun\GunManager.cs" />
      <Compile Include="Assets\Scripts\Gun\Pistol.cs" />
      <Compile Include="Assets\Scripts\HeldObject.cs" />
+     <Compile Include="Assets\Scripts\LaserHeldObject.cs" />
      <Compile Include="Assets\Scripts\Map\GameCube.cs" />
      <Compile Include="Assets\Scripts\Map\MapManager.cs" />
      <Compile Include="Assets\Scripts\Map\Wall.cs" />

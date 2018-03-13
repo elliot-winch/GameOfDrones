@@ -63,7 +63,7 @@ public class EnemyManager : MonoBehaviour {
 		while (true) {
 			yield return new WaitForSeconds (secondsPerDrone);
 
-			Instantiate (enemyPrefab, startCube.Position, Quaternion.identity, transform);
+			//Instantiate (enemyPrefab, startCube.Position, Quaternion.identity, transform);
 		}
 	}
 

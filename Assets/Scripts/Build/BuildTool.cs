@@ -4,13 +4,15 @@ using UnityEngine;
 
 using Valve.VR.InteractionSystem;
 
-public class BuildTool : HeldObject {
+public class BuildTool : LaserHeldObject {
 
 	int currentID = 0;
 
 	#region HeldObject
 	GameCube lastPointedAt;
-	protected override void OnHeld (Hand hand){
+	protected override void HandAttachedUpdate (Hand hand){
+		base.HandAttachedUpdate (hand);
+
 		RaycastHit hitInfo;
 
 		if (Physics.Raycast (transform.position, transform.forward, out hitInfo)) {

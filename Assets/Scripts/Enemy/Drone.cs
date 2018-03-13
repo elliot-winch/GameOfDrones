@@ -25,11 +25,10 @@ public class Drone : Enemy {
 
 		if (lookAt != null) {
 			StopCoroutine (lookAt);
-
+			lookAt = null;
 		}
 
 		lookAt = StartCoroutine (SmoothLookAt (target.transform));
-		lookAt = null;
 	}
 
 	protected override void OnFire (DamagableObject target)
@@ -54,6 +53,7 @@ public class Drone : Enemy {
 		Quaternion targetRotation = Quaternion.LookRotation (target.position - transform.position);
 
 		while (Quaternion.Angle (transform.rotation, targetRotation) > 1f) {
+			Debug.Log (name + " looking at " + transform.rotation.eulerAngles);
 
 			transform.rotation = Quaternion.Slerp (transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
 

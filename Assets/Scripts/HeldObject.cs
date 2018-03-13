@@ -9,8 +9,7 @@ public abstract class HeldObject : MonoBehaviour {
 
 	private Hand.AttachmentFlags attachmentFlags = Hand.defaultAttachmentFlags & Hand.AttachmentFlags.SnapOnAttach & Hand.AttachmentFlags.DetachOthers;
 
-
-	private void HandHoverUpdate( Hand hand ){
+	protected void HandHoverUpdate( Hand hand ){
 
 		//temp
 		if ( hand.GetStandardInteractionButtonDown() || ( ( hand.controller != null ) && Input.GetKeyDown( BuildManager.Instance.putDownKey ) ) )
@@ -37,20 +36,12 @@ public abstract class HeldObject : MonoBehaviour {
 
 
 	//Called every Update() while this GameObject is attached to the hand 
-	private void HandAttachedUpdate ( Hand hand) {
+	protected virtual void HandAttachedUpdate ( Hand hand) {
 
-		if (Input.GetKeyDown(BuildManager.Instance.putDownKey) ) {
-			Debug.Log ("Outting down");
+		if (Input.GetKeyDown (BuildManager.Instance.putDownKey)) {
 			hand.DetachObject (gameObject);
 
 			hand.HoverUnlock (GetComponent<Interactable> ());
 		}
-
-		//does this need to be fed hand?
-		OnHeld (hand);
-
-	
 	}
-
-	abstract protected void OnHeld (Hand hand);
 }
