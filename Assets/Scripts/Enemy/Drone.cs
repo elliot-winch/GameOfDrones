@@ -11,7 +11,7 @@ public class Drone : Enemy {
 
 	Coroutine lookAt;
 
-	protected void Update(){
+	protected override void Update(){
 		base.Update ();
 
 		if (currentTarget == null && lookAt == null && moving == true) {

@@ -35,7 +35,7 @@ public class Turret : DamagableObject, IPlaceable {
 		onShoot += callback;
 	}
 
-	void Update(){
+	protected override void Update(){
 
 		//Attacking
 		Collider[] cols = Physics.OverlapSphere (transform.position, attackRange, LayerMask.GetMask("Enemy"));

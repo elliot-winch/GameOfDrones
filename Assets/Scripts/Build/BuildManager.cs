@@ -11,6 +11,8 @@ public class BuildManager : MonoBehaviour {
 
 	public GameObject[] buildables;
 
+	public GameObject previewObjPrefab;
+
 	List<GameCube> cubes;
 	List<IPlaceable> placeables;
 

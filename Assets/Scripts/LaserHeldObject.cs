@@ -10,13 +10,12 @@ public abstract class LaserHeldObject : HeldObject {
 
 	LineRenderer lr;
 
-	protected void Start(){
+	protected override void Start(){
 		lr = GetComponentInChildren<LineRenderer> ();
 
 		lr.useWorldSpace = true;
 		lr.positionCount = 2;
 		lr.enabled = false;
-
 
 	}
 
@@ -39,13 +38,13 @@ public abstract class LaserHeldObject : HeldObject {
 		lr.SetPosition (1, transform.forward * 1000f);
 	}
 
-	private void OnAttachedToHand( Hand hand) {
+	protected override void OnAttachedToHand( Hand hand) {
 
 		lr.enabled = true;
 
 	}
 
-	private void OnDetachedFromHand( Hand hand ){
+	protected override void OnDetachedFromHand( Hand hand ){
 
 		lr.enabled = false;
 	}

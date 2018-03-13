@@ -14,7 +14,7 @@ public class DamagableObject : MonoBehaviour {
 		}
 	}
 
-	protected void Start(){
+	protected virtual void Start(){
 		health = startingHealth;
 	}
 
@@ -40,5 +40,9 @@ public class DamagableObject : MonoBehaviour {
 
 	protected virtual void Destroyed(){
 		Destroy (gameObject);
+	}
+
+	protected virtual void Update(){
+
 	}
 }

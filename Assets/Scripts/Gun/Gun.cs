@@ -16,6 +16,7 @@ public class Gun : LaserHeldObject {
 
 	private float rateOfFireTimer;
 	private bool firing = false;
+	private Transform barrel;
 
 	//every coroutine that you launch should call firelock when it begins and fireunlock when it ends
 	private int firingLock = 0;
@@ -24,10 +25,11 @@ public class Gun : LaserHeldObject {
 		onShoot += callback;
 	}
 
-	private void Start(){
+	protected override void Start(){
 		base.Start ();
 
 		rateOfFireTimer = rateOfFire;
+		barrel = transform.Find ("EndOfBarrel");
 	}
 
 	#region HeldObject
@@ -70,7 +72,7 @@ public class Gun : LaserHeldObject {
 	protected virtual void Fire(){
 		firing = true;
 
-		GameObject proj = Instantiate (projectile, transform.position, Quaternion.identity);
+		GameObject proj = Instantiate (projectile, barrel.transform.position, Quaternion.identity);
 
 		Collider projCol = proj.GetComponent<Collider> ();
 
@@ -78,9 +80,7 @@ public class Gun : LaserHeldObject {
 			Physics.IgnoreCollision (projCol, mc);
 		}
 
-		proj.GetComponent<Projectile> ().Launch (transform);
-
-		Debug.Log ("Firing");
+		proj.GetComponent<Projectile> ().Launch (barrel.transform);
 
 		firing = false;
 	}

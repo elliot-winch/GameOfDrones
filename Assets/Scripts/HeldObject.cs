@@ -44,4 +44,9 @@ public abstract class HeldObject : MonoBehaviour {
 			hand.HoverUnlock (GetComponent<Interactable> ());
 		}
 	}
+
+	protected abstract void Start ();
+	protected abstract void OnAttachedToHand (Hand hand) ;
+	protected abstract void OnDetachedFromHand (Hand hand);
+		
 }

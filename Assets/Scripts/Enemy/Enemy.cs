@@ -23,7 +23,7 @@ public class Enemy : DamagableObject {
 
 	}
 
-	protected void Start(){
+	protected override void Start(){
 		base.Start ();
 
 		transform.position = EnemyManager.Instance.StartCube.RandomPositionInBounds;
@@ -32,7 +32,8 @@ public class Enemy : DamagableObject {
 		StartCoroutine (MoveTowards (EnemyManager.Instance.EnemyDestination));
 	}
 
-	protected void Update(){
+	protected override void Update(){
+		
 		//Attacking
 		Collider[] cols = Physics.OverlapSphere (transform.position, attackRange, LayerMask.GetMask("Friendly"));
 
