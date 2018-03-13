@@ -12,12 +12,26 @@ public class Enemy : DamagableObject {
 	protected DamagableObject currentTarget;
 	protected GameCube currentCube;
 	protected GameCube destination;
+	protected Vector3 destinationPosition;
 
 	private bool firing;
-	protected bool moving;
+	private bool moving;
 
-	public override void Hit (float amount)
-	{
+	protected bool Firing {
+		get {
+			return firing;
+		}
+	}
+
+	protected bool Moving {
+		get {
+			return moving;
+		}
+	}
+
+	private AStarPath pathToTarget;
+
+	public override void Hit (float amount){
 
 		base.Hit (amount);
 
@@ -29,7 +43,10 @@ public class Enemy : DamagableObject {
 		transform.position = EnemyManager.Instance.StartCube.RandomPositionInBounds;
 		currentCube = EnemyManager.Instance.StartCube;
 
-		StartCoroutine (MoveTowards (EnemyManager.Instance.EnemyDestination));
+		pathToTarget = new AStarPath (currentCube, EnemyManager.Instance.EnemyDestination);
+
+		StartCoroutine (Move ());
+
 	}
 
 	protected override void Update(){
@@ -43,11 +60,23 @@ public class Enemy : DamagableObject {
 					//decide which enemy to shoot - currently we just pick the first target found
 					currentTarget = cols [0].GetComponentInParent<DamagableObject> ();
 					StartCoroutine(Fire (currentTarget));
-					
 				}
 			} 
 		}
+	}
 
+	IEnumerator Move(){
+
+		while (pathToTarget.Length() > 0) {
+
+			if (moving == false) {
+				StartCoroutine (MoveTowards (pathToTarget.GetNext ()));
+				PostMove ();
+
+			}
+
+			yield return null;
+		}
 	}
 
 	IEnumerator MoveTowards(GameCube t){
@@ -55,15 +84,16 @@ public class Enemy : DamagableObject {
 
 		this.destination = t;
 
-		Vector3 randomDest = t.RandomPositionInBounds;
+		destinationPosition = t.RandomPositionInBounds;
+		Vector3 startPos = transform.position;
 
-		float dist = Vector3.Distance (currentCube.Position, randomDest);
+		float dist = Vector3.Distance (startPos, destinationPosition);
 		float movePercentage = 0f;
 
 		while (movePercentage < 1f) {
 			movePercentage += (moveSpeed * Time.deltaTime) / dist;
 
-			transform.position = Vector3.Lerp (currentCube.Position, randomDest, movePercentage);
+			transform.position = Vector3.Lerp (startPos, destinationPosition, movePercentage);
 
 			yield return null;
 		}
@@ -92,6 +122,10 @@ public class Enemy : DamagableObject {
 	}
 
 	protected virtual void PreFire(DamagableObject target){
+
+	}
+
+	protected virtual void PostMove(){
 
 	}
 }

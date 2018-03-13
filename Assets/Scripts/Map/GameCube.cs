@@ -22,6 +22,9 @@ public class GameCube : MonoBehaviour {
 	private GameObject occupying;
 	private bool locked = false;
 
+	private float moveCost = 1f;
+
+	#region Getters and Setter
 	public Vector3 Position {
 		get {
 			return position;
@@ -84,6 +87,14 @@ public class GameCube : MonoBehaviour {
 
 		}
 	}
+
+	public float MoveCost {
+		get {
+			return moveCost;
+		}
+	}
+
+	#endregion
 
 	void Start(){
 

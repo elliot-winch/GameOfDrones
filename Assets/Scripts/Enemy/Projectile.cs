@@ -13,12 +13,18 @@ public class Projectile : MonoBehaviour {
 
 		this.transform.LookAt (towards.transform.position);
 
-		GetComponent<Rigidbody> ().velocity = transform.forward * speed;
+		Launch ();
 	}
 
 	public void Launch(Transform inLineWith){
 
 		this.transform.forward = inLineWith.forward;
+
+		Launch ();
+
+	}
+
+	private void Launch(){
 
 		GetComponent<Rigidbody> ().velocity = transform.forward * speed;
 

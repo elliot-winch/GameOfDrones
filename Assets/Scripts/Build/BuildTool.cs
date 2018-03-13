@@ -41,10 +41,8 @@ public class BuildTool : LaserHeldObject {
 	protected override void HandAttachedUpdate (Hand hand){
 		base.HandAttachedUpdate (hand);
 
-
 		//Preview spin
 		if (previewObj != null) {
-			Debug.Log ("Spinning");
 			previewObj.transform.Rotate(new Vector3(0, Time.deltaTime * previewRotateSpeed, 0));
 		}
 

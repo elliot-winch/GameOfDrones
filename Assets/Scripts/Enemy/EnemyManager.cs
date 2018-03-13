@@ -60,10 +60,11 @@ public class EnemyManager : MonoBehaviour {
 		
 	IEnumerator SpawnEnemies(){
 
+		Instantiate (enemyPrefab, startCube.Position, Quaternion.identity, transform);
+
 		while (true) {
 			yield return new WaitForSeconds (secondsPerDrone);
 
-			//Instantiate (enemyPrefab, startCube.Position, Quaternion.identity, transform);
 		}
 	}
 

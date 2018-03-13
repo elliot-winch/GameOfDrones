@@ -11,14 +11,6 @@ public class Drone : Enemy {
 
 	Coroutine lookAt;
 
-	protected override void Update(){
-		base.Update ();
-
-		if (currentTarget == null && lookAt == null && moving == true) {
-			lookAt = StartCoroutine (SmoothLookAt (destination.transform));
-		}
-	}
-
 
 	protected override void PreFire(DamagableObject target){
 		base.PreFire (target);
@@ -28,7 +20,7 @@ public class Drone : Enemy {
 			lookAt = null;
 		}
 
-		lookAt = StartCoroutine (SmoothLookAt (target.transform));
+		lookAt = StartCoroutine (SmoothLookAt (target.transform.position));
 	}
 
 	protected override void OnFire (DamagableObject target)
@@ -48,16 +40,26 @@ public class Drone : Enemy {
 
 	}
 
-	IEnumerator SmoothLookAt(Transform target){
+	IEnumerator SmoothLookAt(Vector3 position){
 
-		Quaternion targetRotation = Quaternion.LookRotation (target.position - transform.position);
+		Quaternion targetRotation = Quaternion.LookRotation (position - transform.position);
+
 
 		while (Quaternion.Angle (transform.rotation, targetRotation) > 1f) {
-			Debug.Log (name + " looking at " + transform.rotation.eulerAngles);
 
 			transform.rotation = Quaternion.Slerp (transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
 
 			yield return null;
+		}
+	}
+
+
+	protected override void PostMove ()
+	{
+		base.PostMove ();
+
+		if (Firing == false) {
+			lookAt = StartCoroutine (SmoothLookAt (destinationPosition));
 		}
 	}
 }
