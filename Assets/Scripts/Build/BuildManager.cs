@@ -6,6 +6,7 @@ public class BuildManager : MonoBehaviour {
 
 	static BuildManager instance;
 
+	public int playerStartResources = 100;
 	public KeyCode buildKey;
 	public KeyCode putDownKey;
 
@@ -13,6 +14,8 @@ public class BuildManager : MonoBehaviour {
 
 	public GameObject previewObjPrefab;
 
+
+	int playerResources;
 	List<GameCube> cubes;
 	List<IPlaceable> placeables;
 
@@ -21,6 +24,17 @@ public class BuildManager : MonoBehaviour {
 	public static BuildManager Instance {
 		get {
 			return instance;
+		}
+	}
+
+	public int PlayerResources {
+		get {
+			return playerResources;
+		}
+		set {
+			playerResources = value;
+
+			//change ui
 		}
 	}
 
@@ -34,10 +48,28 @@ public class BuildManager : MonoBehaviour {
 		placeables = new List<IPlaceable> ();
 		cubes = new List<GameCube> ();
 
+		playerResources = playerStartResources;
+
 	}
 
-	public void AddPlaceable(IPlaceable p){
-		placeables.Add (p);
+	public bool CanPlace(int id, GameCube gc){
+
+		return gc.Locked == false && playerResources - buildables [id].GetComponent<IPlaceable>().Cost >= 0;
+	}
+
+	public void BuildPlaceable(int id, GameCube gc){
+
+		if (CanPlace (id, gc)) {
+			GameObject p = Instantiate (buildables [id]);
+
+			//most of the spawning process is handled by the gamecube
+			gc.Occupying = p;
+
+			playerResources -= p.GetComponent<IPlaceable> ().Cost;
+
+			placeables.Add (p.GetComponent<IPlaceable> ());
+		}
+
 	}
 
 	public void RemovePlaceable(IPlaceable p){

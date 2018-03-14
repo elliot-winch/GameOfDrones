@@ -46,6 +46,12 @@ public class BuildTool : LaserHeldObject {
 			previewObj.transform.Rotate(new Vector3(0, Time.deltaTime * previewRotateSpeed, 0));
 		}
 
+		//temp code - this needs to be VR friendly!!
+
+		if (Input.GetKeyDown (KeyCode.R)) {
+			this.CurrentID = (currentID + 1) % BuildManager.Instance.buildables.Length;
+		} 
+
 		//Raycasting coms last as returning form the function is an option
 
 		RaycastHit hitInfo;
@@ -62,15 +68,15 @@ public class BuildTool : LaserHeldObject {
 							lastPointedAt.OnPointedAway ();
 						}
 
-						cube.OnPointedAt ();
+						cube.OnPointedAt ( BuildManager.Instance.CanPlace(currentID, cube) );
 					}
 
 					lastPointedAt = cube;
 
 					if (Input.GetKeyDown (BuildManager.Instance.buildKey)) {
 
-						//hitInfo.collider.GetComponent<GameCube> ();
-						cube.Occupying = Instantiate(BuildManager.Instance.buildables[currentID]);
+						//can place is chwcked in the manager
+						BuildManager.Instance.BuildPlaceable (currentID, cube);
 					}
 
 					return;
@@ -105,14 +111,6 @@ public class BuildTool : LaserHeldObject {
 	#endregion
 
 	#region Building Functionality
-	void SelectBuildable(){
-
-		//temp code - this needs to be VR friendly!!
-
-		if (Input.GetKeyDown (KeyCode.R)) {
-			this.CurrentID = (currentID + 1) % BuildManager.Instance.buildables.Length;
-		} 
-	}
 
 	GameObject previewObj = null;
 	void StartPreviewBuildable(){
@@ -130,7 +128,9 @@ public class BuildTool : LaserHeldObject {
 		previewObj.transform.localScale = previewObj.transform.lossyScale *  previewScale;
 
 		//preview obj shouldnt shot at enemies!
-		previewObj.GetComponent<Turret> ().enabled = false;
+		if (previewObj.GetComponent<Turret> () != null) {
+			previewObj.GetComponent<Turret> ().enabled = false;
+		}
 
 		foreach (MeshRenderer mr in previewObj.GetComponentsInChildren<MeshRenderer>()) {
 			mr.material = previewMat;
@@ -142,11 +142,6 @@ public class BuildTool : LaserHeldObject {
 		Destroy (previewObj);
 	}
 
-
-	IEnumerator RotatePreview(){
-		while (true) {
-		}
-	}
 
 	#endregion
 }

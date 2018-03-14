@@ -1900,6 +1900,7 @@ GameObject:
   - component: {fileID: 1548584364}
   - component: {fileID: 1548584365}
   - component: {fileID: 1548584366}
+  - component: {fileID: 1548584367}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -1946,10 +1947,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee724a63694081e48bdfedc47aeb0914, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerStartResources: 100
   buildKey: 103
   putDownKey: 104
   buildables:
   - {fileID: 1906547589002882, guid: badbbad711f9f0048aab62eb8844e5d8, type: 2}
+  - {fileID: 1955015407077890, guid: c926c40d62e648f4f80e1050c30d10c4, type: 2}
   previewObjPrefab: {fileID: 0}
 --- !u!114 &1548584364
 MonoBehaviour:
@@ -1962,11 +1965,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fa270967cd6eca4c81de57a03b7fe96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 1911812977861104, guid: 6600cb5ce0a30514abea388fd16287df,
-    type: 2}
+  enemyPrefabs:
+  - {fileID: 114978181904274404, guid: 6600cb5ce0a30514abea388fd16287df, type: 2}
   enemyTargetPrefab: {fileID: 1908926246973740, guid: b461432e6cb01ad4e844dbdcaeb85803,
     type: 2}
-  secondsPerDrone: 5
 --- !u!114 &1548584365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1978,7 +1980,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb01122a23c818b44bbb5c80f8f87fca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameCubePrefab: {fileID: 0}
+  gameCubePrefab: {fileID: 1318442997742546, guid: c934a9098c160ff479e3196511e687dc,
+    type: 2}
 --- !u!114 &1548584366
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1990,6 +1993,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ec15004537e975459b11c6a38b7dedd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1548584367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1548584360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4637aec87f9ad174c9b44500136634bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemiesPerWave: 0a000000
 --- !u!1001 &1614674242
 Prefab:
   m_ObjectHideFlags: 0

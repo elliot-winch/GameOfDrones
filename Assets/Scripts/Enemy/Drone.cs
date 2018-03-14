@@ -31,11 +31,13 @@ public class Drone : Enemy {
 
 		Collider projCol = proj.GetComponent<Collider> ();
 
+		Vector3 aimPos = target.transform.position;
+
 		foreach (MeshCollider mc in GetComponentsInChildren<MeshCollider>()) {
 			Physics.IgnoreCollision (projCol, mc);
 		}
 
-		proj.GetComponent<Projectile> ().Launch (target);
+		proj.GetComponent<Projectile> ().Launch (aimPos);
 		//play sound, animation etc.
 
 	}

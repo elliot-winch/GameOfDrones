@@ -9,11 +9,14 @@ public class Projectile : MonoBehaviour {
 	public float speed = 1f;
 	public float damage = 1f;
 
-	public void Launch(DamagableObject towards){
+	public void Launch(Vector3 position){
+		//there is a case where something was firing at an object that is destroyed before the projectile is launched
 
-		this.transform.LookAt (towards.transform.position);
+		this.transform.LookAt (position);
+
 
 		Launch ();
+
 	}
 
 	public void Launch(Transform inLineWith){

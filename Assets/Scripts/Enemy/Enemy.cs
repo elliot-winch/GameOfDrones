@@ -40,8 +40,10 @@ public class Enemy : DamagableObject {
 	protected override void Start(){
 		base.Start ();
 
-		transform.position = EnemyManager.Instance.StartCube.RandomPositionInBounds;
-		currentCube = EnemyManager.Instance.StartCube;
+		//temp
+		transform.position = GameObject.Find ("StartCube").GetComponent<GameCube> ().Position;
+
+		currentCube = GameObject.Find ("StartCube").GetComponent<GameCube> ();
 
 		pathToTarget = new AStarPath (currentCube, EnemyManager.Instance.EnemyDestination);
 
@@ -110,7 +112,9 @@ public class Enemy : DamagableObject {
 
 		yield return new WaitForSeconds (weaponChargeTime);
 
-		OnFire(target);
+		if(target != null){
+			OnFire(target);
+		}
 
 		currentTarget = null;
 

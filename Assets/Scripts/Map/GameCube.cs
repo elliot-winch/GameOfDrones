@@ -92,6 +92,9 @@ public class GameCube : MonoBehaviour {
 		get {
 			return moveCost;
 		}
+		set {
+			moveCost = value;
+		}
 	}
 
 	#endregion
@@ -133,22 +136,25 @@ public class GameCube : MonoBehaviour {
 	}
 
 	void SetUpOccupying(GameObject pObj){
-		BuildManager.Instance.AddPlaceable (occupying.GetComponent<IPlaceable> ());
-
 		pObj.transform.parent = transform;
 		pObj.transform.position = this.position;
 	}
 
 	void DestroyOccupying(){
-
-		BuildManager.Instance.RemovePlaceable (occupying.GetComponent<IPlaceable> ());
-
 		Destroy (occupying);
 	}
 
-	public void OnPointedAt(){
+	public void OnPointedAt(bool validPlacement){
+		Color c;
+
+		if (validPlacement) {
+			c = Color.green;
+		} else {
+			c = Color.red;
+		}
+
 		foreach (GameObject g in corners) {
-			g.GetComponent<MeshRenderer> ().material.color = Color.red;
+			g.GetComponent<MeshRenderer> ().material.color = c;
 		}
 	}
 

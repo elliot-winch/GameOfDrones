@@ -60,6 +60,7 @@
      <Compile Include="Assets\Scripts\Enemy\Enemy.cs" />
      <Compile Include="Assets\Scripts\Enemy\EnemyManager.cs" />
      <Compile Include="Assets\Scripts\Enemy\Projectile.cs" />
+     <Compile Include="Assets\Scripts\Enemy\WaveManager.cs" />
      <Compile Include="Assets\Scripts\EnemyTarget.cs" />
      <Compile Include="Assets\Scripts\GamePlayer.cs" />
      <Compile Include="Assets\Scripts\Gun\Gun.cs" />

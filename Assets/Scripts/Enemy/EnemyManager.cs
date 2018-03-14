@@ -6,9 +6,8 @@ public class EnemyManager : MonoBehaviour {
 
 	static EnemyManager instance;
 
-	public GameObject enemyPrefab;
+	public Enemy[] enemyPrefabs;
 	public GameObject enemyTargetPrefab;
-	public float secondsPerDrone = 8f;
 
 	private GameCube enemyDestination;
 	private GameCube startCube;
@@ -24,26 +23,13 @@ public class EnemyManager : MonoBehaviour {
 			return enemyDestination;
 		}
 	}
-
-	public GameCube StartCube {
-		get {
-			return startCube;
-		}
-	}
-
+		
 	void Start(){
 		if (instance != null) {
 			Debug.LogWarning ("Only one EnemyManager allowed");
 		}
 
 		instance = this;
-
-		startCube = GameObject.Find ("StartCube").GetComponent<GameCube> ();
-
-		if (startCube == null) {
-			Debug.LogWarning ("No starting cube set!");
-			return;
-		}
 
 		enemyDestination = GameObject.Find ("TargetCube").GetComponent<GameCube>();
 
@@ -54,18 +40,7 @@ public class EnemyManager : MonoBehaviour {
 
 		enemyDestination.Occupying = Instantiate (enemyTargetPrefab);
 		enemyDestination.Locked = true;
-
-		StartCoroutine (SpawnEnemies ());
 	}
-		
-	IEnumerator SpawnEnemies(){
 
-		Instantiate (enemyPrefab, startCube.Position, Quaternion.identity, transform);
-
-		while (true) {
-			yield return new WaitForSeconds (secondsPerDrone);
-
-		}
-	}
 
 }

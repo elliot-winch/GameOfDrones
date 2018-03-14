@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyTarget : DamagableObject, IPlaceable {
-	
+
+
 	#region IPlaceable implementation
 	GameCube cube;
 
@@ -19,6 +20,15 @@ public class EnemyTarget : DamagableObject, IPlaceable {
 		}
 	}
 
+	public int Cost {
+		get {
+			//enemyTarget cannot be placed
+			return -1;
+		}
+	}
+
+	#endregion
+
 	protected override void Destroyed ()
 	{
 		EnemyManager.Instance.enabled = false;
@@ -26,9 +36,6 @@ public class EnemyTarget : DamagableObject, IPlaceable {
 		Debug.Log ("GameOver");
 		//Game OVer!!!!
 	}
-
-	#endregion
-
 
 
 }
