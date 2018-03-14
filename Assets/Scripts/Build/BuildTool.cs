@@ -47,7 +47,6 @@ public class BuildTool : LaserHeldObject {
 		}
 
 		//temp code - this needs to be VR friendly!!
-
 		if (Input.GetKeyDown (KeyCode.R)) {
 			this.CurrentID = (currentID + 1) % BuildManager.Instance.buildables.Length;
 		} 

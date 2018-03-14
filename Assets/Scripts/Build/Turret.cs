@@ -67,7 +67,7 @@ public class Turret : DamagableObject, IPlaceable {
 
 		StartCoroutine(SmoothLookAt (currentTarget.transform));
 
-		yield return new WaitForSeconds (weaponChargeTime);
+		yield return new WaitForSeconds(weaponChargeTime);
 
 		if (currentTarget == null) {
 			//the target has been destroyed before this got a chance to shoot at it

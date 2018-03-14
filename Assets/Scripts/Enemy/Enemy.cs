@@ -110,7 +110,7 @@ public class Enemy : DamagableObject {
 
 		PreFire (target);
 
-		yield return new WaitForSeconds (weaponChargeTime);
+		yield return new WaitForSeconds(weaponChargeTime);
 
 		if(target != null){
 			OnFire(target);

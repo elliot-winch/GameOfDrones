@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BuildManager : MonoBehaviour {
 
@@ -12,11 +13,10 @@ public class BuildManager : MonoBehaviour {
 
 	public GameObject[] buildables;
 
-	public GameObject previewObjPrefab;
-
+	public BuildTool buildTool;
+	private Text resourceDisplay;
 
 	int playerResources;
-	List<GameCube> cubes;
 	List<IPlaceable> placeables;
 
 	Transform cubeParent;
@@ -34,7 +34,7 @@ public class BuildManager : MonoBehaviour {
 		set {
 			playerResources = value;
 
-			//change ui
+			resourceDisplay.text = playerResources.ToString ();
 		}
 	}
 
@@ -46,9 +46,12 @@ public class BuildManager : MonoBehaviour {
 		instance = this;
 
 		placeables = new List<IPlaceable> ();
-		cubes = new List<GameCube> ();
 
-		playerResources = playerStartResources;
+		//this may need to change if we add more ui text elements to the build tool at initialisation
+		resourceDisplay = buildTool.GetComponentInChildren<Text> ();
+
+		PlayerResources = playerStartResources;
+
 
 	}
 
@@ -65,7 +68,7 @@ public class BuildManager : MonoBehaviour {
 			//most of the spawning process is handled by the gamecube
 			gc.Occupying = p;
 
-			playerResources -= p.GetComponent<IPlaceable> ().Cost;
+			PlayerResources -= p.GetComponent<IPlaceable> ().Cost;
 
 			placeables.Add (p.GetComponent<IPlaceable> ());
 		}

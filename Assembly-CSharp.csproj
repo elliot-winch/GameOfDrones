@@ -54,7 +54,9 @@
      <Compile Include="Assets\Scripts\Build\BuildManager.cs" />
      <Compile Include="Assets\Scripts\Build\BuildTool.cs" />
      <Compile Include="Assets\Scripts\Build\IPlaceable.cs" />
+     <Compile Include="Assets\Scripts\Build\TimeManager.cs" />
      <Compile Include="Assets\Scripts\Build\Turret.cs" />
+     <Compile Include="Assets\Scripts\BulletTimeManager.cs" />
      <Compile Include="Assets\Scripts\DamagableObject.cs" />
      <Compile Include="Assets\Scripts\Enemy\Drone.cs" />
      <Compile Include="Assets\Scripts\Enemy\Enemy.cs" />

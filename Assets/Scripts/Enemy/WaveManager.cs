@@ -67,8 +67,6 @@ public class WaveManager : MonoBehaviour {
 
 		List<IncomingEnemy> wave = waveInfo [num];
 
-		float totalTime = 0f;
-
 		while (wave.Count > 0) {
 			for (int i = wave.Count - 1; i >= 0; i--) {
 				IncomingEnemy ie = wave [i];

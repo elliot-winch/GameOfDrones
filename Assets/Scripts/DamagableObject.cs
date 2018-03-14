@@ -19,12 +19,8 @@ public class DamagableObject : MonoBehaviour {
 	}
 
 	public virtual void Hit(float amount){
-		Debug.Log (amount);
-		Debug.Log (name + ": " + health);
 
 		health = Mathf.Max (0f, health - amount);
-
-		Debug.Log (name + ": " + health);
 
 		if (health > 0f) {
 

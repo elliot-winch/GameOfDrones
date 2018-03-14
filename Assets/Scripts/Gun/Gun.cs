@@ -15,7 +15,6 @@ public class Gun : LaserHeldObject {
 	public GameObject projectile;
 
 	private float rateOfFireTimer;
-	private bool firing = false;
 	private Transform barrel;
 
 	//every coroutine that you launch should call firelock when it begins and fireunlock when it ends
@@ -70,7 +69,6 @@ public class Gun : LaserHeldObject {
 
 
 	protected virtual void Fire(){
-		firing = true;
 
 		GameObject proj = Instantiate (projectile, barrel.transform.position, Quaternion.identity);
 
@@ -82,7 +80,6 @@ public class Gun : LaserHeldObject {
 
 		proj.GetComponent<Projectile> ().Launch (barrel.transform);
 
-		firing = false;
 	}
 
 	//This should be called at the beginning of every coroutine associated with Fire
