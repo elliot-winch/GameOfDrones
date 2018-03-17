@@ -54,6 +54,7 @@
      <Compile Include="Assets\Scripts\Build\BuildManager.cs" />
      <Compile Include="Assets\Scripts\Build\BuildTool.cs" />
      <Compile Include="Assets\Scripts\Build\IPlaceable.cs" />
+     <Compile Include="Assets\Scripts\Build\StatsCanvas.cs" />
      <Compile Include="Assets\Scripts\Build\TimeManager.cs" />
      <Compile Include="Assets\Scripts\Build\Turret.cs" />
      <Compile Include="Assets\Scripts\BulletTimeManager.cs" />
@@ -65,6 +66,8 @@
      <Compile Include="Assets\Scripts\Enemy\WaveManager.cs" />
      <Compile Include="Assets\Scripts\EnemyTarget.cs" />
      <Compile Include="Assets\Scripts\GamePlayer.cs" />
+     <Compile Include="Assets\Scripts\GazeInteraction.cs" />
+     <Compile Include="Assets\Scripts\GazeManager.cs" />
      <Compile Include="Assets\Scripts\Gun\Gun.cs" />
      <Compile Include="Assets\Scripts\Gun\GunManager.cs" />
      <Compile Include="Assets\Scripts\Gun\Pistol.cs" />

@@ -14,6 +14,7 @@ public class BuildManager : MonoBehaviour {
 	public GameObject[] buildables;
 
 	public BuildTool buildTool;
+	public Canvas placeableStatsCanvas;
 	private Text resourceDisplay;
 
 	int playerResources;
@@ -63,7 +64,8 @@ public class BuildManager : MonoBehaviour {
 	public void BuildPlaceable(int id, GameCube gc){
 
 		if (CanPlace (id, gc)) {
-			GameObject p = Instantiate (buildables [id]);
+			GameObject prefab = buildables [id];
+			GameObject p = Instantiate (prefab);
 
 			//most of the spawning process is handled by the gamecube
 			gc.Occupying = p;
@@ -71,6 +73,15 @@ public class BuildManager : MonoBehaviour {
 			PlayerResources -= p.GetComponent<IPlaceable> ().Cost;
 
 			placeables.Add (p.GetComponent<IPlaceable> ());
+
+			if (prefab.GetComponent<GazeInteraction> () != null) {
+				GazeInteraction gi = p.GetComponent<GazeInteraction> ();
+				GazeInteraction toCopy = prefab.GetComponent<GazeInteraction> ();
+
+				gi.RegisterOnGaze (toCopy.OnGaze);
+				gi.RegisterOnLookAway (toCopy.OnLookAway);
+				gi.delay = toCopy.delay;
+			}
 		}
 
 	}

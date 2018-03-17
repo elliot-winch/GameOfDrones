@@ -20,13 +20,48 @@ public class EnemyTarget : DamagableObject, IPlaceable {
 		}
 	}
 
+
+	public string Name {
+		get {
+			return "Enemy Target";
+		}
+	}
+
 	public int Cost {
 		get {
-			//enemyTarget cannot be placed
 			return -1;
 		}
 	}
 
+	public string CostStat {
+		get {
+			return "-";
+		}
+	}
+
+	public string HealthStat {
+		get {
+			return CurrentHealth.ToString ();
+		}
+	}
+
+	public string DamageStat {
+		get {
+			return "-";
+		}
+	}
+
+	public string RangeStat {
+		get {
+			return "-";
+		}
+	}
+
+	public string RateOfFireStat {
+		get {
+			return "-";
+		}
+	}
 	#endregion
 
 	protected override void Destroyed ()

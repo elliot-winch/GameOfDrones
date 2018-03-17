@@ -14,6 +14,8 @@ public class BuildTool : LaserHeldObject {
 	Transform barrel;
 	Transform previewArea;
 
+	StatsCanvas btui;
+
 	private int currentID ;
 	public int CurrentID {
 		get {
@@ -34,6 +36,8 @@ public class BuildTool : LaserHeldObject {
 		barrel = transform.Find ("EndOfBarrel");
 		previewArea = transform.Find ("BuildPreview");
 
+		btui = GetComponentInChildren<StatsCanvas> (true);
+		btui.gameObject.SetActive (false);
 	}
 
 	#region HeldObject
@@ -96,7 +100,10 @@ public class BuildTool : LaserHeldObject {
 	{
 		base.OnAttachedToHand (hand);
 
+		btui.gameObject.SetActive (true);
+
 		this.CurrentID = lastIDSelected;
+
 	}
 
 	protected override void OnDetachedFromHand (Hand hand)
@@ -105,7 +112,10 @@ public class BuildTool : LaserHeldObject {
 
 		lastIDSelected = this.CurrentID;
 
+		btui.gameObject.SetActive (false);
+
 		RemovePreviewBuild ();
+
 	} 
 	#endregion
 
@@ -134,6 +144,8 @@ public class BuildTool : LaserHeldObject {
 		foreach (MeshRenderer mr in previewObj.GetComponentsInChildren<MeshRenderer>()) {
 			mr.material = previewMat;
 		}
+
+		btui.FillStats (currentID);
 	}
 
 	void RemovePreviewBuild(){

@@ -33,12 +33,48 @@ public class Turret : DamagableObject, IPlaceable {
 		}
 	}
 
+	public string Name {
+		get {
+			return "Standard Turret";
+		}
+	}
 
 	public int Cost {
 		get {
 			return cost;
 		}
 	}
+
+	public string CostStat {
+		get {
+			return cost.ToString();
+		}
+	}
+
+	public string HealthStat {
+		get {
+			return CurrentHealth.ToString ();
+		}
+	}
+
+	public string DamageStat {
+		get {
+			return damage.ToString();
+		}
+	}
+
+	public string RangeStat {
+		get {
+			return attackRange.ToString();
+		}
+	}
+
+	public string RateOfFireStat {
+		get {
+			return weaponChargeTime.ToString();
+		}
+	}
+
 	#endregion IPlacable
 
 	public void RegisterOnShootCallback(Action callback){

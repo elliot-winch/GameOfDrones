@@ -22,9 +22,45 @@ public class Wall : MonoBehaviour, IPlaceable {
 		}
 	}
 
+	public string Name {
+		get {
+			return "Wall";
+		}
+	}
+
 	public int Cost {
 		get {
-			return cost;
+			return 10;
+		}
+	}
+
+	public string CostStat {
+		get {
+			return cost.ToString();
+		}
+	}
+
+	public string HealthStat {
+		get {
+			return "-"; //walls should be damageable at some point
+		}
+	}
+
+	public string DamageStat {
+		get {
+			return "-";
+		}
+	}
+
+	public string RangeStat {
+		get {
+			return "-";
+		}
+	}
+
+	public string RateOfFireStat {
+		get {
+			return "-";
 		}
 	}
 	#endregion
