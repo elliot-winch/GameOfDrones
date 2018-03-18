@@ -35,8 +35,9 @@ public class Projectile : MonoBehaviour {
 	}
 
 	void OnCollisionEnter(Collision col){
-
+		
 		if (col.collider.GetComponentInParent<DamagableObject> () != null) {
+			Debug.Log (col.collider.name + " hit for " + damage);
 			col.collider.GetComponentInParent<DamagableObject> ().Hit (damage);
 		}
 

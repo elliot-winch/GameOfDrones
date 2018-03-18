@@ -71,6 +71,7 @@
      <Compile Include="Assets\Scripts\Gun\Gun.cs" />
      <Compile Include="Assets\Scripts\Gun\GunManager.cs" />
      <Compile Include="Assets\Scripts\Gun\Pistol.cs" />
+     <Compile Include="Assets\Scripts\Gun\Switcher.cs" />
      <Compile Include="Assets\Scripts\HeldObject.cs" />
      <Compile Include="Assets\Scripts\LaserHeldObject.cs" />
      <Compile Include="Assets\Scripts\Map\GameCube.cs" />

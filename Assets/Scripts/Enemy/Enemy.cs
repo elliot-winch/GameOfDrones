@@ -33,6 +33,9 @@ public class Enemy : DamagableObject {
 
 	public override void Hit (float amount){
 
+		Debug.Log (name + " hit for " + amount);
+		Debug.Log ("has " + CurrentHealth);
+
 		base.Hit (amount);
 
 	}

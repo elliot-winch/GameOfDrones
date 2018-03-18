@@ -34,6 +34,8 @@ public class GazeManager : MonoBehaviour {
 			Debug.LogError ("Error: Cannot have two Gaze Managers");
 		}
 
+		instance = this;
+
 		//for testing, though checking the hand exists is a good idea
 		GameObject playerVRObject = GameObject.Find("Player").transform.Find ("SteamVRObjects").gameObject;
 		Transform hand;
