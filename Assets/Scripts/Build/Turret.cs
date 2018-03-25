@@ -121,7 +121,7 @@ public class Turret : DamagableObject, IPlaceable {
 			Physics.IgnoreCollision (projCol, mc);
 		}
 
-		proj.GetComponent<Projectile> ().Launch (currentTarget.transform.position);
+		proj.GetComponent<Projectile> ().Launch (currentTarget.transform.position, new string[] { "Enemy" });
 
 		currentTarget = null;
 

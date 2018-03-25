@@ -4,7 +4,7 @@ using UnityEngine;
 
 using Valve.VR.InteractionSystem;
 
-public class BuildTool : LaserHeldObject {
+public class BuildTool : HeldObject {
 
 	public float previewScale = 0.15f;
 	public float previewRotateSpeed = 100f;
@@ -33,8 +33,8 @@ public class BuildTool : LaserHeldObject {
 	protected override void Start(){
 		base.Start ();
 
-		barrel = transform.Find ("EndOfBarrel");
-		previewArea = transform.Find ("BuildPreview");
+		barrel = transform.GetChild(0).Find ("EndOfBarrel");
+		previewArea = transform.GetChild(0).Find ("BuildPreview");
 
 		btui = GetComponentInChildren<StatsCanvas> (true);
 		btui.gameObject.SetActive (false);
@@ -45,21 +45,22 @@ public class BuildTool : LaserHeldObject {
 	protected override void HandAttachedUpdate (Hand hand){
 		base.HandAttachedUpdate (hand);
 
+		if (hand.controller.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad))
+		{
+			this.CurrentID = (currentID + 1) % BuildManager.Instance.buildables.Length;
+			hand.controller.TriggerHapticPulse();
+		}
+
 		//Preview spin
 		if (previewObj != null) {
 			previewObj.transform.Rotate(new Vector3(0, Time.deltaTime * previewRotateSpeed, 0));
 		}
 
-		//temp code - this needs to be VR friendly!!
-		if (Input.GetKeyDown (KeyCode.R)) {
-			this.CurrentID = (currentID + 1) % BuildManager.Instance.buildables.Length;
-		} 
-
 		//Raycasting coms last as returning form the function is an option
 
 		RaycastHit hitInfo;
 
-		if (Physics.Raycast (barrel.transform.position, barrel.transform.forward, out hitInfo)) {
+		if (Physics.Raycast (barrel.transform.position, barrel.transform.forward, out hitInfo, Mathf.Infinity)) {
 			if (hitInfo.collider != null) {
 				//we hit a collider
 				GameCube cube = hitInfo.collider.GetComponent<GameCube> ();
@@ -76,7 +77,7 @@ public class BuildTool : LaserHeldObject {
 
 					lastPointedAt = cube;
 
-					if (Input.GetKeyDown (BuildManager.Instance.buildKey)) {
+					if (hand.controller.GetHairTriggerUp()) {
 
 						//can place is chwcked in the manager
 						BuildManager.Instance.BuildPlaceable (currentID, cube);

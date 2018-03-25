@@ -8,8 +8,6 @@ public class BuildManager : MonoBehaviour {
 	static BuildManager instance;
 
 	public int playerStartResources = 100;
-	public KeyCode buildKey;
-	public KeyCode putDownKey;
 
 	public GameObject[] buildables;
 

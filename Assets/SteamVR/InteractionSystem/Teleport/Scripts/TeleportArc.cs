@@ -26,7 +26,7 @@ namespace Valve.VR.InteractionSystem
 		public Material material;
 
 		[HideInInspector]
-		public int traceLayerMask = 0;
+		public int traceLayerMask;
 
 		//Private data
 		private LineRenderer[] lineRenderers;
@@ -44,6 +44,10 @@ namespace Valve.VR.InteractionSystem
 		//-------------------------------------------------
 		void Start()
 		{
+			//Custom!
+			traceLayerMask = ~LayerMask.GetMask("GameCube");
+			//end custom
+
 			arcTimeOffset = Time.time;
 		}
 

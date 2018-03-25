@@ -9,21 +9,27 @@ public class Projectile : MonoBehaviour {
 	public float speed = 1f;
 	public float damage = 1f;
 
-	public void Launch(Vector3 position){
+	string[] layersToHit;
+
+	public void Launch(Vector3 position, string[] layersToHit = null){
 		//there is a case where something was firing at an object that is destroyed before the projectile is launched
 
 		this.transform.LookAt (position);
 
+		this.layersToHit = layersToHit;
 
 		Launch ();
 
 	}
 
-	public void Launch(Transform inLineWith){
+	public void Launch(Transform inLineWith, string[] layersToHit = null)
+	{
 
 		this.transform.forward = inLineWith.forward;
 
-		Launch ();
+		this.layersToHit = layersToHit;
+
+		Launch();
 
 	}
 
@@ -35,10 +41,14 @@ public class Projectile : MonoBehaviour {
 	}
 
 	void OnCollisionEnter(Collision col){
-		
-		if (col.collider.GetComponentInParent<DamagableObject> () != null) {
-			Debug.Log (col.collider.name + " hit for " + damage);
-			col.collider.GetComponentInParent<DamagableObject> ().Hit (damage);
+
+		//we have defined layers and this isn't one of them
+		if (this.layersToHit != null && layersToHit.Contains(col.collider.tag) == false)
+		{ 
+			if (col.collider.GetComponentInParent<DamagableObject>() != null)
+			{
+				col.collider.GetComponentInParent<DamagableObject>().Hit(damage);
+			}
 		}
 
 		Destroy (gameObject);

@@ -12,7 +12,7 @@ public abstract class HeldObject : MonoBehaviour {
 	protected void HandHoverUpdate( Hand hand ){
 
 		//temp
-		if ( hand.GetStandardInteractionButtonDown() || ( ( hand.controller != null ) && Input.GetKeyDown( BuildManager.Instance.putDownKey ) ) )
+		if ( hand.GetStandardInteractionButtonDown() )
 		{
 			if ( hand.currentAttachedObject != gameObject )
 			{
@@ -23,6 +23,7 @@ public abstract class HeldObject : MonoBehaviour {
 				// Attach this object to the hand
 				hand.AttachObject( gameObject, attachmentFlags );
 			}
+			/*
 			else
 			{
 				// Detach this object from the hand
@@ -30,7 +31,7 @@ public abstract class HeldObject : MonoBehaviour {
 
 				// Call this to undo HoverLock
 				hand.HoverUnlock( GetComponent<Interactable>() );
-			}
+			}*/
 		}
 	}
 
@@ -38,15 +39,25 @@ public abstract class HeldObject : MonoBehaviour {
 	//Called every Update() while this GameObject is attached to the hand 
 	protected virtual void HandAttachedUpdate ( Hand hand) {
 
-		if (Input.GetKeyDown (BuildManager.Instance.putDownKey)) {
+		if (hand.controller.GetPressDown(SteamVR_Controller.ButtonMask.Grip)) {
 			hand.DetachObject (gameObject);
 
 			hand.HoverUnlock (GetComponent<Interactable> ());
+
 		}
 	}
 
-	protected abstract void Start ();
-	protected abstract void OnAttachedToHand (Hand hand) ;
-	protected abstract void OnDetachedFromHand (Hand hand);
-		
+	protected virtual void Start() { }
+
+
+	protected virtual void OnAttachedToHand(Hand hand) {
+		hand.GetComponentInChildren<ControllerHoverHighlight>().enabled = false;
+	}
+
+
+	protected virtual void OnDetachedFromHand(Hand hand) {
+		hand.GetComponentInChildren<ControllerHoverHighlight>().enabled = true;
+
+	}
+
 }

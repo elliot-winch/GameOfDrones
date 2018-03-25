@@ -37,7 +37,7 @@ public class Drone : Enemy {
 			Physics.IgnoreCollision (projCol, mc);
 		}
 
-		proj.GetComponent<Projectile> ().Launch (aimPos);
+		proj.GetComponent<Projectile> ().Launch (aimPos, new string[] { "Friendly" });
 		//play sound, animation etc.
 
 	}

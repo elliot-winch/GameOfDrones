@@ -5,7 +5,7 @@ using UnityEngine;
 
 using Valve.VR.InteractionSystem;
 
-public class Gun : LaserHeldObject {
+public class Gun : HeldObject {
 
 	protected Action onShoot;
 
@@ -25,47 +25,58 @@ public class Gun : LaserHeldObject {
 	}
 
 	protected override void Start(){
-		base.Start ();
 
-		rateOfFireTimer = rateOfFire;
-		barrel = transform.Find ("EndOfBarrel");
+		rateOfFireTimer = 0f;
+		barrel = transform.GetChild(0).Find ("EndOfBarrel");
 	}
 
 	#region HeldObject
 	protected override void HandAttachedUpdate (Hand hand){
+
 		base.HandAttachedUpdate (hand);
 
-		if (rateOfFireTimer > rateOfFire && firingLock <= 0) {
-			if (Input.GetKeyDown(GunManager.Instance.fireKey)) {
-				Fire ();
-			} 
-		} else {
+		if (rateOfFireTimer > rateOfFire)
+		{
+			if (hand.controller.GetHairTriggerUp())
+			{
+				Fire();
+				hand.controller.TriggerHapticPulse();
+				rateOfFireTimer = 0f;
+			}
+		}
+		else
+		{
 			rateOfFireTimer += Time.deltaTime;
 		}
 	}
+
+	protected override void OnAttachedToHand(Hand hand)
+	{
+		base.OnAttachedToHand(hand);
+	}
 	#endregion
 
-	#region Fire
-	/* Raycast Firing - not cool
-	protected virtual void Fire(){
-		rateOfFireTimer = 0f;
+		#region Fire
+		/* Raycast Firing - not cool
+		protected virtual void Fire(){
+			rateOfFireTimer = 0f;
 
-		if (onShoot != null) {
-			onShoot ();
-		}
-
-		RaycastHit hitInfo;
-
-		if(Physics.Raycast(transform.position, transform.forward, out hitInfo)){
-			if(hitInfo.collider != null){
-				//we hit a collider
-				if (hitInfo.collider.GetComponentInParent<DamagableObject> () != null) {
-					hitInfo.collider.GetComponentInParent<DamagableObject> ().Hit (10);
-				}
-
+			if (onShoot != null) {
+				onShoot ();
 			}
-		}
-	}*/
+
+			RaycastHit hitInfo;
+
+			if(Physics.Raycast(transform.position, transform.forward, out hitInfo)){
+				if(hitInfo.collider != null){
+					//we hit a collider
+					if (hitInfo.collider.GetComponentInParent<DamagableObject> () != null) {
+						hitInfo.collider.GetComponentInParent<DamagableObject> ().Hit (10);
+					}
+
+				}
+			}
+		}*/
 
 
 	protected virtual void Fire(){
@@ -78,7 +89,7 @@ public class Gun : LaserHeldObject {
 			Physics.IgnoreCollision (projCol, mc);
 		}
 
-		proj.GetComponent<Projectile> ().Launch (barrel.transform);
+		proj.GetComponent<Projectile> ().Launch (barrel.transform, new string[] { "Friendly" });
 
 	}
 

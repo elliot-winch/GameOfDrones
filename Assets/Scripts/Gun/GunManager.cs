@@ -6,8 +6,6 @@ public class GunManager : MonoBehaviour {
 
 	static GunManager instance;
 
-	public KeyCode fireKey;
-
 	public static GunManager Instance {
 		get {
 			return instance;

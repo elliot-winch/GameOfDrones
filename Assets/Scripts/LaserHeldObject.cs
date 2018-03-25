@@ -13,7 +13,7 @@ public abstract class LaserHeldObject : HeldObject {
 	protected override void Start(){
 		lr = GetComponentInChildren<LineRenderer> ();
 
-		lr.useWorldSpace = true;
+		lr.useWorldSpace = false;
 		lr.positionCount = 2;
 		lr.enabled = false;
 
@@ -23,19 +23,19 @@ public abstract class LaserHeldObject : HeldObject {
 
 		base.HandAttachedUpdate (hand);
 
-		lr.SetPosition (0, lr.transform.position);
+		lr.SetPosition (0, Vector3.zero);
 
 		RaycastHit hitInfo;
 
 		if (Physics.Raycast (lr.transform.position, lr.transform.forward, out hitInfo, Mathf.Infinity, LayerMask.GetMask(layerNamesToHit))) {
 
 			if (hitInfo.collider != null) {
-				lr.SetPosition (1, hitInfo.point);
+				lr.SetPosition (1, lr.transform.InverseTransformPoint(hitInfo.point));
 				return;
 			}
 		} 
 
-		lr.SetPosition (1, transform.forward * 1000f);
+		lr.SetPosition (1, lr.transform.forward * 1000f);
 	}
 
 	protected override void OnAttachedToHand( Hand hand) {
