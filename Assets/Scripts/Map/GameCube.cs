@@ -131,8 +131,6 @@ public class GameCube : MonoBehaviour {
 
 		SpawnAdditonals (up, right, forward);
 
-		MapManager.Instance.AddCube (this);
-
 	}
 
 	void SetUpOccupying(GameObject pObj){

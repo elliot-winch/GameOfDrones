@@ -27,7 +27,7 @@ public class GazeManager : MonoBehaviour {
 	//Assiging onGazes to prefabs here
 
 	//This is for looking at an bject and its stats appearing over your hand
-	Canvas statsCanvas;
+	//Canvas statsCanvas;
 	void Start(){
 
 		if (instance != null) {
@@ -48,15 +48,7 @@ public class GazeManager : MonoBehaviour {
 		}
 			
 
-		foreach (GameObject go in BuildManager.Instance.buildables) {
-			GazeInteraction gi = go.GetComponent<GazeInteraction> ();
 
-			if(gi != null){
-
-				assignFunctions (gi, go.GetComponent<IPlaceable> (), hand);
-
-			}
-		}
 	}
 
 	//Helper for start
@@ -68,18 +60,18 @@ public class GazeManager : MonoBehaviour {
 		gi.RegisterOnGaze ( () => {
 
 			Debug.Log("Gazed at");
-
+			/*
 			statsCanvas = Instantiate(BuildManager.Instance.placeableStatsCanvas, Vector3.zero, Quaternion.identity, hand);
 
 			statsCanvas.transform.localPosition = new Vector3(0f, 0.2f, 0.1f);
 
-			statsCanvas.GetComponent<StatsCanvas>().FillStats(place);
-				
+			statsCanvas.GetComponent<BuiltToolStatsCanvas>().FillStats(place);
+				*/
 		});
 
 		gi.RegisterOnLookAway (() => {
 			Debug.Log("Gazed away");
-			Destroy(statsCanvas.gameObject);
+			//Destroy(statsCanvas.gameObject);
 		});
 
 	}
