@@ -29,23 +29,29 @@ public abstract class HeldObject : MonoBehaviour {
 
 
 	//Called every Update() while this GameObject is attached to the hand 
+	bool isDisplaying = false; 
 	protected virtual void HandAttachedUpdate ( Hand hand) {
 		HandControls hc = ControlsManager.Instance.GetControlsFromHand (hand);
 
-		//Display control wheel when touched
-		if (hc.TouchPadTouched.Down ) {
-			controlWheel.DisplayControlWheel ();
-		}
-
 		//Highlight currently hovered over control
 		//Do we want a more intense highlight for when we press over a sector?
-		if (hc.TouchPadTouched.Held) {
+
+		//Why not use Down? Becuase when we switch weapons, down is already called
+		//but the control wheel isn't displayed
+		if (hc.TouchPadTouched.Held || hc.TouchPadPressed.Held) {
 			controlWheel.HighlightSectionAtLocation (hc.TouchPadLocation);
+
+			if (isDisplaying == false)
+			{
+				controlWheel.DisplayControlWheel();
+				isDisplaying = true;
+			}
 		}
 
-		//Hie control wheel when not longer touched
+		//Hide control wheel when not longer touched
 		if (hc.TouchPadTouched.Up) {
 			controlWheel.HideControlWheel ();
+			isDisplaying = false;
 		}
 
 		//On pressed, we active a section

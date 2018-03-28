@@ -133,7 +133,8 @@ namespace Valve.VR.InteractionSystem
 
 			if ( hand.hoveringInteractable && hand.hoveringInteractable.transform.parent != transform.parent )
 			{
-				ShowHighlight();
+				//custom! we are removing the highlight!
+				//ShowHighlight();
 			}
 		}
 

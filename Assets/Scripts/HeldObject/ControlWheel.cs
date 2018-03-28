@@ -154,8 +154,6 @@ public class ControlWheel : MonoBehaviour {
 		seg.AddComponent<MeshFilter> ().sharedMesh = m;
 		seg.AddComponent<MeshRenderer> ().material = displaySegmentMaterial;
 
-		//set seg material
-
 		seg.SetActive (false);
 		seg.transform.SetParent (parent);
 		seg.transform.localScale = new Vector3 (1f, 1f, 1f);
@@ -203,7 +201,7 @@ public class ControlWheel : MonoBehaviour {
 	}
 	#endregion //highlighting
 
-	public void Select(Vector2 location){
+	public void Select(Vector2 location) {
 
 		int sectorNum = sector(location);
 
@@ -215,7 +213,19 @@ public class ControlWheel : MonoBehaviour {
 
 	private int sector(Vector2 point)
 	{
-		for(int i = 0; i < cwActions.Count; i++)
+		if (cwActions.Count <= 0)
+		{
+			return -1;
+		}
+
+		//only one sector is an edge case, since the only point will fail our clockwise / not clockwise test
+		if (cwActions.Count == 1)
+		{
+			return 0;
+		}
+
+
+		for (int i = 0; i < cwActions.Count; i++)
 		{
 			Vector2 startVec = dividingVectors[i];
 			Vector2 endVec = dividingVectors[(i+1)%dividingVectors.Count];
