@@ -56,6 +56,9 @@ public class GrippedTool: MonoBehaviour {
 
 
 		//Set Up Control Wheel Actions
+
+		List<ControlWheelSegment> segs = new List<ControlWheelSegment>();
+
 		foreach(GrippedToolIndex switchTo in Enum.GetValues(typeof(GrippedToolIndex)))
 		{
 			if(switchTo == index)
@@ -63,12 +66,13 @@ public class GrippedTool: MonoBehaviour {
 				continue;
 			}
 
-			ControlWheelSegment cws = new ControlWheelSegment(() =>
+			segs.Add( new ControlWheelSegment(() =>
 		   {
 			   SwitchGrippedObject(switchTo);
-		   }, null);
+		   }, null));
 		}
 
+		playerHeld.GetComponent<ControlWheel>().AddControlWheelActions(segs.ToArray());
 
 		this.prevHeld = playerHeld;
 	}

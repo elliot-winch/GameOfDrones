@@ -16,8 +16,8 @@ public class BuildTool : HeldObject {
 
 	List<IHeldUpdateable> heldUpdateables;
 
-	private int currentID ;
-	public int CurrentID {
+	private uint currentID ;
+	public uint CurrentID {
 		get {
 			return currentID;
 		}
@@ -44,6 +44,22 @@ public class BuildTool : HeldObject {
 
 		heldUpdateables.Add (btPreview);
 		heldUpdateables.Add (btStatsCanvas);
+
+		//Control Wheel Actions
+		ControlWheelSegment left = new ControlWheelSegment(() =>
+	   {
+		   this.CurrentID = (uint)((currentID + 1) % buildables.Length);
+	   }, icon: null);
+
+		ControlWheelSegment right = new ControlWheelSegment(() =>
+		{
+			this.CurrentID = (uint)((currentID - 1) % buildables.Length);
+		}, icon: null);
+
+		controlWheel.AddControlWheelActions(new ControlWheelSegment[] {
+			left,
+			right
+			});
 	}
 
 	#region HeldObject
@@ -109,7 +125,7 @@ public class BuildTool : HeldObject {
 		}
 	}
 
-	int lastIDSelected = 0;
+	uint lastIDSelected = 0;
 	protected override void OnAttachedToHand (Hand hand)
 	{
 		base.OnAttachedToHand (hand);
