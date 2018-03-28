@@ -1876,6 +1876,7 @@ MonoBehaviour:
   outwardExtension: 0.1
   totalSteps: 60
   iconDistance: 0.7
+  highlightedScale: 1.3
   displaySegmentMaterial: {fileID: 2100000, guid: 1a6c1bafd1b59894891ea2a994fd4829,
     type: 2}
   parent: {fileID: 4447091224187446}
@@ -1933,7 +1934,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d36279047b1560544afc74bbc666749b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlWheelActionIcons: []
   buildables:
   - {fileID: 1178372916351378, guid: 4ae3f1573667c664ba665a0b60d22d2c, type: 2}
   - {fileID: 1955015407077890, guid: c926c40d62e648f4f80e1050c30d10c4, type: 2}

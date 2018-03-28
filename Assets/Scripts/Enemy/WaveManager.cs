@@ -49,9 +49,9 @@ public class WaveManager : MonoBehaviour {
 
 	void Update(){
 		//temp - will have proper key to start wave / start on a countdown
-		if (Input.GetKeyDown (KeyCode.Return)) {
-			StartWave ();
-		}
+		//if (Input.GetKeyDown (KeyCode.Return)) {
+		//	StartWave ();
+		//}
 	}
 
 	void StartWave(){
