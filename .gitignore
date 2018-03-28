@@ -1,8 +1,8 @@
 *
 
 !Assets
-!Assets/*
+!Assets/**
 !ProjectSettings
-!ProjectSettings/*
+!ProjectSettings/**
 !.gitignore
 !README
