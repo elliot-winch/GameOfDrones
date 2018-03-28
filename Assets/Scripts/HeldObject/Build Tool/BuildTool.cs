@@ -32,8 +32,8 @@ public class BuildTool : HeldObject {
 		}
 	}
 
-	protected override void Start(){
-		base.Start ();
+	protected override void Awake(){
+		base.Awake();
 
 		barrel = transform.GetChild(0).Find ("EndOfBarrel");
 

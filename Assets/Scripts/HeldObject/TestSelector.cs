@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class TestSelector : HeldObject {
 
-	protected override void Start(){
+	protected override void Awake(){
 
-		base.Start ();
+		base.Awake();
 
 		if (GetComponent<ControlWheel> () != null) {
 

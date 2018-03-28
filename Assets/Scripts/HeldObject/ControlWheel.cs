@@ -25,7 +25,7 @@ public class ControlWheel : MonoBehaviour {
 	List<Vector2> dividingVectors;
 	List<GameObject> displaySegments;
 
-	void Start(){
+	void Awake(){
 
 		displaySegments = new List<GameObject> ();
 

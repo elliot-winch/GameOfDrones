@@ -10,7 +10,7 @@ public class BuiltToolStatsCanvas : MonoBehaviour, IHeldUpdateable {
 
 	Text[] statsUI;
 
-	void Start(){
+	void Awake(){
 		canvas.SetActive (false);
 
 		statsUI = canvas.GetComponentsInChildren<Text> (true);

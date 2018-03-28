@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,18 +15,25 @@ using Valve.VR.InteractionSystem;
 [RequireComponent(typeof(Hand))]
 public class GrippedTool: MonoBehaviour {
 
-	public HeldObject[] playerHeldPrefab;
+	public HeldObject[] playerHeldPrefabs;
 	public GrippedToolIndex startTool;
 
 	private Hand.AttachmentFlags attachmentFlags = Hand.defaultAttachmentFlags & Hand.AttachmentFlags.SnapOnAttach & Hand.AttachmentFlags.DetachOthers;
 	private Hand hand;
 	private GameObject prevHeld;
 
-	void Start () {
+	void Start ()
+	{
+		StartCoroutine(AttachToolsAfterDelay(1f));
+	}
 
-		this.hand = this.GetComponent<Hand> ();
+	IEnumerator AttachToolsAfterDelay(float delay)
+	{
+		yield return new WaitForSeconds(delay);
 
-		this.SwitchGrippedObject (this.startTool);
+		this.hand = this.GetComponent<Hand>();
+
+		this.SwitchGrippedObject(this.startTool);
 	}
 
 	public void SwitchGrippedObject(GrippedToolIndex index){
@@ -39,12 +47,28 @@ public class GrippedTool: MonoBehaviour {
 			Destroy (this.prevHeld);
 		}
 
-		GameObject playerHeld = Instantiate (this.playerHeldPrefab[(int)index].gameObject);
+		GameObject playerHeld = Instantiate (this.playerHeldPrefabs[(int)index].gameObject);
 
 		this.hand.HoverLock( playerHeld.GetComponent<Interactable>() );
 
 		// Attach this object to the hand
 		this.hand.AttachObject( playerHeld, this.attachmentFlags );
+
+
+		//Set Up Control Wheel Actions
+		foreach(GrippedToolIndex switchTo in Enum.GetValues(typeof(GrippedToolIndex)))
+		{
+			if(switchTo == index)
+			{
+				continue;
+			}
+
+			ControlWheelSegment cws = new ControlWheelSegment(() =>
+		   {
+			   SwitchGrippedObject(switchTo);
+		   }, null);
+		}
+
 
 		this.prevHeld = playerHeld;
 	}

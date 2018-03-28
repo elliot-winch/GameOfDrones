@@ -229,6 +229,7 @@ GameObject:
   m_Component:
   - component: {fileID: 476540}
   - component: {fileID: 11450312}
+  - component: {fileID: 114111067238223332}
   m_Layer: 10
   m_Name: Hand1
   m_TagString: Untagged
@@ -245,6 +246,7 @@ GameObject:
   m_Component:
   - component: {fileID: 485514}
   - component: {fileID: 11401046}
+  - component: {fileID: 114861674027391762}
   m_Layer: 10
   m_Name: Hand2
   m_TagString: Untagged
@@ -1437,6 +1439,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingHealth: 10
+--- !u!114 &114111067238223332
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 144230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f73c8ed9174fd504596d0564d47f7072, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerHeldPrefabs:
+  - {fileID: 114796155627870678, guid: a9f3cba3cefa75f4fb956dff27df91a0, type: 2}
+  - {fileID: 114336418587100392, guid: 38e5093edea57134993f613afd85c884, type: 2}
+  startTool: 0
 --- !u!114 &114127039033733658
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1448,9 +1465,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f73c8ed9174fd504596d0564d47f7072, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerHeldPrefab:
-  - {fileID: 114796155627870678, guid: a9f3cba3cefa75f4fb956dff27df91a0, type: 2}
-  - {fileID: 114336418587100392, guid: 38e5093edea57134993f613afd85c884, type: 2}
+  playerHeldPrefabs: []
   startTool: 0
 --- !u!114 &114649182757686916
 MonoBehaviour:
@@ -1463,6 +1478,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85b732b06105a2a498047e05d09546b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114861674027391762
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 160596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f73c8ed9174fd504596d0564d47f7072, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerHeldPrefabs:
+  - {fileID: 114796155627870678, guid: a9f3cba3cefa75f4fb956dff27df91a0, type: 2}
+  - {fileID: 114336418587100392, guid: 38e5093edea57134993f613afd85c884, type: 2}
+  startTool: 1
 --- !u!132 &132000010923692124
 GUIText:
   m_ObjectHideFlags: 1

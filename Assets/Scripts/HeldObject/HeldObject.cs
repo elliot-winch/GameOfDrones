@@ -15,14 +15,15 @@ public abstract class HeldObject : MonoBehaviour {
 
 	ControlWheel controlWheel;
 
-	protected virtual void Start(){
+	protected virtual void Awake(){
 		controlWheel = GetComponent<ControlWheel> ();
+
+		Debug.Log(gameObject.name + " control wheel start " + controlWheel);
 
 		controlWheelActionIcons = new Sprite[2];
 
 		controlWheelActionIcons[0] = Resources.Load<Sprite> ("Icons/teleportIcon");
 		controlWheelActionIcons[1] = Resources.Load<Sprite> ("Icons/dropIcon");
-
 
 	}
 
@@ -56,29 +57,27 @@ public abstract class HeldObject : MonoBehaviour {
 	}
 
 
-	protected virtual void OnAttachedToHand(Hand hand) { 
+	protected virtual void OnAttachedToHand(Hand hand) {
 
-		ControlWheelSegment teleport = new ControlWheelSegment (() => {
-			Debug.Log ("Teleport from Control Wheel");
-		}, controlWheelActionIcons[0]);
+		ControlWheelSegment action1 = new ControlWheelSegment (() =>
+		{
+			
+		}, null);
 
-		ControlWheelSegment drop = new ControlWheelSegment (() => {
-			Debug.Log ("Drop from Control Wheel");
-			// Detach this object from the hand
+		ControlWheelSegment action2 = new ControlWheelSegment(null, null);
 
-
-
-		}, controlWheelActionIcons[1]);
+		Debug.Log(gameObject.name + " control wheel  " + controlWheel);
 
 		controlWheel.AddControlWheelActions (new ControlWheelSegment[] {
-			teleport, drop
+			action1, action2
 		}, overwrite: true);
 
 	}
 
 	protected virtual void OnDetachedFromHand(Hand hand) {
 
+		Debug.Log(gameObject.name + "detaching");
+
 		controlWheel.HideControlWheel ();
 	}
-
 }

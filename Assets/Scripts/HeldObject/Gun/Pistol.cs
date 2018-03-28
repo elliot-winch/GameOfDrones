@@ -8,4 +8,9 @@ public class Pistol : Gun {
 	{
 		base.Fire ();
 	}
+
+	protected override void Awake()
+	{
+		base.Awake();
+	}
 }

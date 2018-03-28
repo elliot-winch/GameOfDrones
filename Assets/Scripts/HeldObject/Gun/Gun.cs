@@ -24,7 +24,8 @@ public class Gun : HeldObject {
 		onShoot += callback;
 	}
 
-	protected override void Start(){
+	protected override void Awake(){
+		base.Awake();
 
 		rateOfFireTimer = 0f;
 		barrel = transform.GetChild(0).Find ("EndOfBarrel");
