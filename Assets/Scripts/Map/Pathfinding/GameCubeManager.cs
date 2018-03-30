@@ -37,11 +37,6 @@ public class GameCubeManager : MonoBehaviour {
 			this.grid.AddCube (gc.transform.position, gc);
 		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }
 
 public class ConceptualGrid {

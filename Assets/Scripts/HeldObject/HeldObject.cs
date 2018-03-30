@@ -9,8 +9,6 @@ using Valve.VR.InteractionSystem;
 
 public abstract class HeldObject : MonoBehaviour {
 
-	private Hand.AttachmentFlags attachmentFlags = Hand.defaultAttachmentFlags & Hand.AttachmentFlags.SnapOnAttach & Hand.AttachmentFlags.DetachOthers;
-
 	private Sprite[] controlWheelActionIcons;
 
 	protected ControlWheel controlWheel;

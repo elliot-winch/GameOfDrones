@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Wall : MonoBehaviour, IPlaceable {
+public class Wall : DamagableObject, IPlaceable {
 
-	public int cost = 10;
-
-	#region IPlaceable implementation
 	GameCube gameCube = null;
 
 	GameCube IPlaceable.Cube {
@@ -16,55 +13,22 @@ public class Wall : MonoBehaviour, IPlaceable {
 		set {
 			this.gameCube = value;
 
+			transform.SetParent (gameCube.transform);
+			transform.position = this.gameCube.Position;
+
 			if (this.gameCube != null) {
 				this.gameCube.MoveCost = Mathf.Infinity;
+
+				EnemyPathManager.Instance.DisplayEnemyPathUI ();
 			}
 		}
 	}
 
-	public string Name {
-		get {
-			return "Wall";
-		}
-	}
+	public int cost = 10;
 
 	public int Cost {
 		get {
 			return 10;
 		}
 	}
-
-	public string CostStat {
-		get {
-			return cost.ToString();
-		}
-	}
-
-	public string HealthStat {
-		get {
-			return "-"; //walls should be damageable at some point
-		}
-	}
-
-	public string DamageStat {
-		get {
-			return "-";
-		}
-	}
-
-	public string RangeStat {
-		get {
-			return "-";
-		}
-	}
-
-	public string RateOfFireStat {
-		get {
-			return "-";
-		}
-	}
-	#endregion
-
-
-
 }

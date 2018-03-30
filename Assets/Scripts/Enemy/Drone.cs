@@ -29,15 +29,9 @@ public class Drone : Enemy {
 
 		GameObject proj = Instantiate (projectile, transform.position, Quaternion.identity);
 
-		Collider projCol = proj.GetComponent<Collider> ();
-
 		Vector3 aimPos = target.transform.position;
 
-		foreach (MeshCollider mc in GetComponentsInChildren<MeshCollider>()) {
-			Physics.IgnoreCollision (projCol, mc);
-		}
-
-		proj.GetComponent<Projectile> ().Launch (aimPos, new string[] { "Friendly" });
+		proj.GetComponent<Projectile> ().Launch (aimPos, gameObject, new string[] { "Friendly" });
 		//play sound, animation etc.
 
 	}

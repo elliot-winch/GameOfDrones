@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/*
 [RequireComponent(typeof(BuildTool))]
 public class BuiltToolStatsCanvas : MonoBehaviour, IHeldUpdateable {
+
 
 	public GameObject canvas;
 
@@ -21,6 +23,7 @@ public class BuiltToolStatsCanvas : MonoBehaviour, IHeldUpdateable {
 	}
 
 	public void FillStats(IPlaceable placing){
+		
 		statsUI [0].text = placing.Name;
 		statsUI [1].text = "Cost: " + placing.CostStat;
 		statsUI [2].text = "Health: " + placing.HealthStat;
@@ -47,3 +50,4 @@ public class BuiltToolStatsCanvas : MonoBehaviour, IHeldUpdateable {
 
 	#endregion
 }
+*/

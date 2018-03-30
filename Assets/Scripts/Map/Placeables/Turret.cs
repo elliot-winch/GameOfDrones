@@ -3,9 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Turret : DamagableObject, IPlaceable {
+public class Turret : Wall {
 
-	public int cost = 10;
 	public float attackRange = 1f;
 	public float damage = 1f;
 	public float weaponChargeTime = 0.2f;
@@ -30,51 +29,11 @@ public class Turret : DamagableObject, IPlaceable {
 
 			transform.SetParent (cube.transform);
 			transform.position = this.cube.Position;
+
+			this.cube.MoveCost = Mathf.Infinity;
 		}
 	}
-
-	public string Name {
-		get {
-			return "Standard Turret";
-		}
-	}
-
-	public int Cost {
-		get {
-			return cost;
-		}
-	}
-
-	public string CostStat {
-		get {
-			return cost.ToString();
-		}
-	}
-
-	public string HealthStat {
-		get {
-			return CurrentHealth.ToString ();
-		}
-	}
-
-	public string DamageStat {
-		get {
-			return damage.ToString();
-		}
-	}
-
-	public string RangeStat {
-		get {
-			return attackRange.ToString();
-		}
-	}
-
-	public string RateOfFireStat {
-		get {
-			return weaponChargeTime.ToString();
-		}
-	}
-
+		
 	#endregion IPlacable
 
 	public void RegisterOnShootCallback(Action callback){
@@ -113,15 +72,7 @@ public class Turret : DamagableObject, IPlaceable {
 
 		GameObject proj = Instantiate (projectile, transform.position, Quaternion.identity);
 
-		Collider projCol = proj.GetComponent<Collider> ();
-
-		//to prevent the case where something was firing at an object that is destroyed before the projectile is launched
-
-		foreach (MeshCollider mc in GetComponentsInChildren<MeshCollider>()) {
-			Physics.IgnoreCollision (projCol, mc);
-		}
-
-		proj.GetComponent<Projectile> ().Launch (currentTarget.transform.position, new string[] { "Enemy" });
+		proj.GetComponent<Projectile> ().Launch (currentTarget.transform.position, gameObject, new string[] { "Enemy" });
 
 		currentTarget = null;
 

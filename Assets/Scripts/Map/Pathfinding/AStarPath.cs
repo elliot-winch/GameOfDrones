@@ -6,6 +6,12 @@ public class AStarPath {
 
 	Stack<GameCube> validPath;
 
+	public bool IsComplete {
+		get {
+			return validPath != null;
+		}
+	}
+		
 	public AStarPath(GameCube start, GameCube end){
 
 		ConceptualGrid grid = GameCubeManager.Instance.Grid;
@@ -50,6 +56,7 @@ public class AStarPath {
 			foreach (GameCube neighbour in neighbours) {
 
 				if (neighbour.MoveCost == Mathf.Infinity) {
+					Debug.Log ("Encounted unpassable");
 					continue;
 				}
 
@@ -73,6 +80,8 @@ public class AStarPath {
 				}
 			}
 		}
+
+		//if we reach this case, it means all nodes have been closed by final destination wasn't found
 	}
 
 	float heuristicCostEstimate(GameCube a, GameCube b){
@@ -81,6 +90,7 @@ public class AStarPath {
 
 	void RecontructPath(Dictionary<GameCube, GameCube> path, GameCube current){
 
+		Debug.Log ("Found a valid path");
 		validPath = new Stack<GameCube> ();
 		Queue<GameCube> pathQueue = new Queue<GameCube> ();
 

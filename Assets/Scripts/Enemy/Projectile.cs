@@ -10,30 +10,46 @@ public class Projectile : MonoBehaviour {
 	public float damage = 1f;
 
 	string[] layersToHit;
+	Transform rootParent;
 
-	public void Launch(Vector3 position, string[] layersToHit = null){
+	void Start(){
+		Transform t = transform;
+		while(t.parent != null){
+			t = t.parent;
+		}
+
+		rootParent = t;
+	}
+
+	public void Launch(Vector3 position, GameObject dontCollideWith, string[] layersToHit = null){
 		//there is a case where something was firing at an object that is destroyed before the projectile is launched
 
 		this.transform.LookAt (position);
 
 		this.layersToHit = layersToHit;
 
-		Launch ();
+		Launch (dontCollideWith);
 
 	}
 
-	public void Launch(Transform inLineWith, string[] layersToHit = null)
+	public void Launch(Transform inLineWith, GameObject dontCollideWith, string[] layersToHit = null)
 	{
 
 		this.transform.forward = inLineWith.forward;
 
 		this.layersToHit = layersToHit;
 
-		Launch();
+		Launch(dontCollideWith);
 
 	}
 
-	private void Launch(){
+	private void Launch(GameObject dontCollideWith){
+
+		foreach (Collider c in dontCollideWith.GetComponentsInChildren<Collider>()) {
+			foreach (Collider mc in GetComponentsInChildren<Collider>()) {
+				Physics.IgnoreCollision (c, mc);
+			}
+		}
 
 		GetComponent<Rigidbody> ().velocity = transform.forward * speed;
 
@@ -51,12 +67,12 @@ public class Projectile : MonoBehaviour {
 			}
 		}
 
-		Destroy (gameObject);
+		Destroy (rootParent.gameObject);
 	}
 
 	IEnumerator DestroyOnDelay(float delay){
 		yield return new WaitForSeconds (delay);
 
-		Destroy (gameObject);
+		Destroy (rootParent.gameObject);
 	}
 }

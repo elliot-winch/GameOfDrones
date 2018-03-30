@@ -42,13 +42,14 @@ public class Enemy : DamagableObject {
 
 	protected override void Start(){
 		base.Start ();
+	}
 
-		//temp
-		transform.position = GameObject.Find ("StartCube").GetComponent<GameCube> ().Position;
+	//Begin - like start but with parameters. Called by WaveManager
+	public void Begin(GameCube startCube, GameCube target){
+		//Pathfinding is managed here
+		currentCube = startCube;
 
-		currentCube = GameObject.Find ("StartCube").GetComponent<GameCube> ();
-
-		pathToTarget = new AStarPath (currentCube, EnemyManager.Instance.EnemyDestination);
+		pathToTarget = new AStarPath (startCube, target);
 
 		StartCoroutine (Move ());
 

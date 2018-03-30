@@ -596,5 +596,5 @@ MonoBehaviour:
   attackDamage: 1
   moveSpeed: 1
   weaponChargeTime: 0.2
-  projectile: {fileID: 1514659161871410, guid: 79797a400db32dd41ab04fdf69b087ce, type: 2}
+  projectile: {fileID: 1495670284022458, guid: 1aa6fe14347697f47837fc84ace07431, type: 2}
   rotateSpeed: 10

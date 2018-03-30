@@ -2,21 +2,45 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * The Wave Manager concerns itself only with waves of enemies: what a wave consists of, and when each enemy in that wave is spawned.
+ * 
+ * WaveManagerEditor collects the public variable info in a nicely organised fashion
+ */ 
+
 public class WaveManager : MonoBehaviour {
 
 	static WaveManager instance;
 
-	public int[] enemiesPerWave; 
+	//Collected in editor
+	public Transform enemyParent;
 
-	int waveNumber = 0;
-	List<List<IncomingEnemy>> waveInfo;
-	private bool waveRunning;
+	[SerializeField]
+	public List<GameCube> startCubes;
+	[SerializeField]
+	public List<Enemy> enemyPrefabs;
+
+	[SerializeField]
+	public int numberOfWaves;
+	[SerializeField]
+	public List<Wave> data;
+
+
+	private int currentWave = 0;
+	private int enemiesLeftToSpawn = 0;
 
 	public static WaveManager Instance {
 		get {
 			return instance;
 		}
 	}
+
+	public bool IsWaveFinished {
+		get {
+			return enemyParent.childCount <= 0 && enemiesLeftToSpawn <= 0;
+		}
+	}
+
 
 	void Start(){
 		if (instance != null) {
@@ -25,90 +49,98 @@ public class WaveManager : MonoBehaviour {
 			
 		instance = this;
 
-		//this needs to be more intelligent
-		GameCube startCube = GameObject.Find ("StartCube").GetComponent<GameCube> ();
-
-		if (startCube == null) {
-			Debug.LogWarning ("No starting cube set!");
+		if (startCubes.Count == 0) {
+			Debug.LogWarning ("No starting cubes set!");
 			return;
 		}
-
-		waveInfo = new List<List<IncomingEnemy>> ();
-
-		//read from file in future - or take arguments in inspector
-
-		for (int i = 0; i < enemiesPerWave.Length; i++) {
-			waveInfo.Add (new List<IncomingEnemy> ());
-
-			for (int j = 0; j < enemiesPerWave [i]; j++) {
-				waveInfo [i].Add (new IncomingEnemy (EnemyManager.Instance.enemyPrefabs [0], Mathf.Sqrt (j * 2f), startCube));
-			}
-		}
-
 	}
 
+	//temp!
 	void Update(){
-		//temp - will have proper key to start wave / start on a countdown
-		//if (Input.GetKeyDown (KeyCode.Return)) {
-		//	StartWave ();
-		//}
-	}
-
-	void StartWave(){
-		if (waveRunning == false) {
-			StartCoroutine (WaveCoroutine (waveNumber));
-
-			waveNumber++;
+		if (Input.GetKeyDown (KeyCode.U)) {
+			RunNextWave ();
 		}
 	}
 
-	IEnumerator WaveCoroutine(int num){
-		waveRunning = true;
 
-		List<IncomingEnemy> wave = waveInfo [num];
+	void RunNextWave(){
 
-		while (wave.Count > 0) {
-			for (int i = wave.Count - 1; i >= 0; i--) {
-				IncomingEnemy ie = wave [i];
+		if (data.Count > currentWave) {
 
-				ie.timeDelay -= Time.deltaTime;
-				wave [i] = ie;
+			enemiesLeftToSpawn = 0;
 
-				if (ie.timeDelay <= 0f) {
-					Instantiate(ie.Enemy, ie.StartCube.RandomPositionInBounds, Quaternion.identity, transform);
-					wave.RemoveAt (i);
-				}
+			foreach (EnemyGroup g in data[currentWave].groups) {
+				enemiesLeftToSpawn += g.number;
+				StartCoroutine (GroupCoroutine(g));
 			}
 
-			yield return null;
 		}
+	}
 
-		waveRunning = false;
+	IEnumerator GroupCoroutine(EnemyGroup group){
+
+		yield return new WaitForSeconds (group.initialDelay);
+
+		for (int i = 0; i < group.number; i++) {
+	
+			yield return new WaitForSeconds (group.timeDelay);
+
+			SpawnEnemy (group);
+		}
+	}
+
+
+	public void SpawnEnemy(EnemyGroup group){
+		//spawn enemy
+		GameObject enemyObj = Instantiate(enemyPrefabs[(int)group.enemy].gameObject, enemyParent);
+
+		enemyObj.transform.position = startCubes [group.startCubeIndex].RandomPositionInBounds;
+
+		//start pathfinding
+		enemyObj.GetComponent<Enemy> ().Begin (startCubes [group.startCubeIndex], EnemyPathManager.Instance.EnemyDestination);
+
+		enemiesLeftToSpawn--;
+	}
+
+	public void EndWave(){
+		currentWave++;
 	}
 }
 
-struct IncomingEnemy {
+[System.Serializable]
+public class Wave {
+	public List<EnemyGroup> groups;
+}
 
-	Enemy enemy;
+[System.Serializable]
+public class EnemyGroup {
+	public EnemyType enemy;
+	public int number;
 	public float timeDelay;
-	GameCube startCube;
+	public float initialDelay;
+	public int startCubeIndex;
 
-	public Enemy Enemy {
-		get {
-			return enemy;
-		}
+	/*
+	public EnemyGroup(){
+
+		this.enemy = EnemyType.Drone;
+		this.number = 1;
+		this.timeDelay = 0f;
+		this.initialDelay = 0f;
+		this.startCubeIndex = 0;
 	}
 
-	public GameCube StartCube {
-		get {
-			return startCube;
-		}
-	}
-
-	public IncomingEnemy(Enemy enemy, float timeDelay, GameCube startCube){
+	public EnemyGroup(EnemyType enemy, int number, float timeDelay, float initialDelay, int startCubeIndex){
 
 		this.enemy = enemy;
+		this.number = number;
 		this.timeDelay = timeDelay;
-		this.startCube = startCube;
-	}
+		this.initialDelay = initialDelay;
+		this.startCubeIndex = startCubeIndex;
+	}*/
+}
+
+public enum EnemyType {
+	Drone,
+	Flash
 }

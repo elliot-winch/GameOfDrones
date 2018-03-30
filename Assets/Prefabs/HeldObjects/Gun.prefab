@@ -131,6 +131,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1180037833592938
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4609127337220390}
+  - component: {fileID: 33306905828437640}
+  - component: {fileID: 23545933499471936}
+  m_Layer: 0
+  m_Name: Gun
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
 --- !u!1 &1188016920403952
 GameObject:
   m_ObjectHideFlags: 1
@@ -791,6 +808,7 @@ Transform:
   m_Children:
   - {fileID: 4280189184466524}
   - {fileID: 4170502547528926}
+  - {fileID: 4609127337220390}
   - {fileID: 4706723126786382}
   m_Father: {fileID: 4963866220460270}
   m_RootOrder: 0
@@ -847,6 +865,19 @@ Transform:
   m_Father: {fileID: 4170502547528926}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4609127337220390
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1180037833592938}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_Children: []
+  m_Father: {fileID: 4415971890524522}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!4 &4616432508161772
 Transform:
   m_ObjectHideFlags: 1
@@ -884,7 +915,7 @@ Transform:
   m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
   m_Children: []
   m_Father: {fileID: 4415971890524522}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: -60, y: 0, z: 0}
 --- !u!4 &4733738491299394
 Transform:
@@ -945,7 +976,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1353524335242844}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.4759087, y: 0.349, z: -1.3}
+  m_LocalPosition: {x: 5.262, y: 1.82, z: -5.804}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4415971890524522}
@@ -1341,6 +1372,42 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_Materials:
   - {fileID: 2100000, guid: 3ece64762c65d4f40bfa43b8bab647e6, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!23 &23545933499471936
+MeshRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1180037833592938}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100004, guid: 954c43f9d53b4ef4a9f5cdbb5fd697ad, type: 3}
+  - {fileID: 2100006, guid: 954c43f9d53b4ef4a9f5cdbb5fd697ad, type: 3}
+  - {fileID: 2100000, guid: 70bb2a5606b9de544b417da5c81b3b2f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1797,6 +1864,13 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1573755444394254}
   m_Mesh: {fileID: 4300010, guid: a0150b21afda585459a29d7dbcbb417d, type: 3}
+--- !u!33 &33306905828437640
+MeshFilter:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1180037833592938}
+  m_Mesh: {fileID: 4300004, guid: 3a65dc4c33423c4458a88fffac183237, type: 3}
 --- !u!33 &33444305258010534
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -2248,7 +2322,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 2
   rateOfFire: 0.02
-  projectile: {fileID: 1514659161871410, guid: 79797a400db32dd41ab04fdf69b087ce, type: 2}
+  projectile: {fileID: 1495670284022458, guid: 1aa6fe14347697f47837fc84ace07431, type: 2}
 --- !u!114 &114922592785557820
 MonoBehaviour:
   m_ObjectHideFlags: 1

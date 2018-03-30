@@ -134,8 +134,8 @@ public class GameCube : MonoBehaviour {
 	}
 
 	void SetUpOccupying(GameObject pObj){
-		pObj.transform.parent = transform;
-		pObj.transform.position = this.position;
+
+		pObj.GetComponent<IPlaceable> ().Cube = this;
 	}
 
 	void DestroyOccupying(){

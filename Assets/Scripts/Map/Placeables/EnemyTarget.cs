@@ -66,7 +66,7 @@ public class EnemyTarget : DamagableObject, IPlaceable {
 
 	protected override void Destroyed ()
 	{
-		EnemyManager.Instance.enabled = false;
+		EnemyPathManager.Instance.enabled = false;
 
 		Debug.Log ("GameOver");
 		//Game OVer!!!!

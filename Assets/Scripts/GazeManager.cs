@@ -37,6 +37,7 @@ public class GazeManager : MonoBehaviour {
 		instance = this;
 
 		//for testing, though checking the hand exists is a good idea
+		/*
 		GameObject playerVRObject = GameObject.Find("Player").transform.Find ("SteamVRObjects").gameObject;
 		Transform hand;
 
@@ -46,7 +47,7 @@ public class GazeManager : MonoBehaviour {
 			hand = GameObject.Find ("Player").transform.Find ("NoSteamVRFallbackObjects").Find("FallbackHand");
 
 		}
-			
+			*/
 
 
 	}

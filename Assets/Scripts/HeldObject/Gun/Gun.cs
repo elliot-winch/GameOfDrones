@@ -5,7 +5,7 @@ using UnityEngine;
 
 using Valve.VR.InteractionSystem;
 
-public class Gun : HeldObject {
+public abstract class Gun : HeldObject {
 
 	protected Action onShoot;
 
@@ -15,7 +15,7 @@ public class Gun : HeldObject {
 	public GameObject projectile;
 
 	private float rateOfFireTimer;
-	private Transform barrel;
+	protected Transform barrel;
 
 	//every coroutine that you launch should call firelock when it begins and fireunlock when it ends
 	private int firingLock = 0;
@@ -88,19 +88,7 @@ public class Gun : HeldObject {
 		}*/
 
 
-	protected virtual void Fire(){
-
-		GameObject proj = Instantiate (projectile, barrel.transform.position, Quaternion.identity);
-
-		Collider projCol = proj.GetComponent<Collider> ();
-
-		foreach (MeshCollider mc in GetComponentsInChildren<MeshCollider>()) {
-			Physics.IgnoreCollision (projCol, mc);
-		}
-
-		proj.GetComponent<Projectile> ().Launch (barrel.transform, new string[] { "Friendly" });
-
-	}
+	protected abstract void Fire ();
 
 	//This should be called at the beginning of every coroutine associated with Fire
 	public void FireLock(){

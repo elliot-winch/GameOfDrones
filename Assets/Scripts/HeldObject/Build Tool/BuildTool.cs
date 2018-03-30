@@ -10,7 +10,7 @@ public class BuildTool : HeldObject {
 
 	Transform barrel;
 
-	BuiltToolStatsCanvas btStatsCanvas;
+	//BuiltToolStatsCanvas btStatsCanvas;
 	BuildToolPreview btPreview;
 	BuildToolResourceDisplay btResourceDisplay;
 
@@ -26,7 +26,7 @@ public class BuildTool : HeldObject {
 				currentID = value;
 
 				btPreview.PreviewBuildable (buildables[currentID]);
-				btStatsCanvas.FillStats (buildables[currentID].GetComponent<IPlaceable>());
+				//btStatsCanvas.FillStats (buildables[currentID].GetComponent<IPlaceable>());
 
 			}
 		}
@@ -37,13 +37,14 @@ public class BuildTool : HeldObject {
 
 		barrel = transform.GetChild(0).Find ("EndOfBarrel");
 
-		btStatsCanvas = GetComponentInChildren<BuiltToolStatsCanvas> (true);
+		//btStatsCanvas = GetComponentInChildren<BuiltToolStatsCanvas> (true);
 		btPreview = GetComponent<BuildToolPreview> ();
+		btResourceDisplay = GetComponentInChildren<BuildToolResourceDisplay> (true);
 
 		heldUpdateables = new List<IHeldUpdateable> ();
 
 		heldUpdateables.Add (btPreview);
-		heldUpdateables.Add (btStatsCanvas);
+		//heldUpdateables.Add (btStatsCanvas);
 
 		//Control Wheel Actions
 		ControlWheelSegment left = new ControlWheelSegment(() =>
@@ -157,7 +158,9 @@ public class BuildTool : HeldObject {
 	#region Build Functionality
 	public bool CanPlace(GameCube gc){
 
-		return gc.Locked == false && ResourceManager.Instance.PlayerResources - buildables [currentID].GetComponent<IPlaceable>().Cost >= 0;
+		return gc.Locked == false 																						//cube isn't locked
+			&& ResourceManager.Instance.PlayerResources - buildables [currentID].GetComponent<IPlaceable>().Cost >= 0	//can you afford it?
+			&& EnemyPathManager.Instance.WouldYieldNoPaths(gc) == false; 														//wouldn't totally block enemy path
 	}
 
 	public void BuildPlaceable(GameCube gc){
