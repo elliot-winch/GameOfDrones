@@ -16,11 +16,13 @@ public class GameCube : MonoBehaviour {
 	public int extendForward;
 
 	private Vector3 position;
-	private Vector3[] limits;
 	private Vector3 size;
 
 	private GameObject occupying;
 	private bool locked = false;
+
+	Material cubeMat;
+	Color originalColor;
 
 	private float moveCost = 1f;
 
@@ -34,12 +36,6 @@ public class GameCube : MonoBehaviour {
 	public Vector3 RandomPositionInBounds {
 		get {
 			return position + new Vector3 (Random.Range (-size.x / 2, size.x / 2), Random.Range (-size.y / 2, size.y / 2), Random.Range (-size.z / 2, size.z / 2));
-		}
-	}
-
-	public Vector3[] Limits {
-		get {
-			return limits;
 		}
 	}
 
@@ -63,8 +59,8 @@ public class GameCube : MonoBehaviour {
 			}
 
 			if (locked) {
+				//this case sohuld have been dealt with before building
 				Debug.Log ("Cannot replace current occupying");
-				//tell user this info
 				Destroy(value);
 				return;
 			}
@@ -105,6 +101,12 @@ public class GameCube : MonoBehaviour {
 
 		size = GetComponent<BoxCollider> ().bounds.size;
 
+		//For higlhighting
+		cubeMat = GetComponent<MeshRenderer>().material;
+
+		originalColor = cubeMat.GetColor ("_RimColor");
+
+		/*
 		//Set Corners
 		limits = new Vector3[8];
 		corners = new List<GameObject> ();
@@ -119,8 +121,9 @@ public class GameCube : MonoBehaviour {
 				}
 			}
 		}
+		*/
 
-		//TO prevent infinite recursion
+		//To prevent infinite recursion
 		int right = extendRight;
 		int up = extendUp;
 		int forward = extendForward;
@@ -133,37 +136,7 @@ public class GameCube : MonoBehaviour {
 
 	}
 
-	void SetUpOccupying(GameObject pObj){
-
-		pObj.GetComponent<IPlaceable> ().Cube = this;
-	}
-
-	void DestroyOccupying(){
-		Destroy (occupying);
-	}
-
-	public void OnPointedAt(bool validPlacement){
-		Color c;
-
-		if (validPlacement) {
-			c = Color.green;
-		} else {
-			c = Color.red;
-		}
-
-		foreach (GameObject g in corners) {
-			g.GetComponent<MeshRenderer> ().material.color = c;
-		}
-	}
-
-	public void OnPointedAway(){
-		foreach (GameObject g in corners) {
-			g.GetComponent<MeshRenderer> ().material.color = Color.white;
-		}
-	}
-
-	//Helper for start
-
+	//Helper for start. Spawns more cubes
 	public void SpawnAdditonals(int up, int right, int forward){
 
 		for (int i = 0; i < right; i++) {
@@ -180,4 +153,119 @@ public class GameCube : MonoBehaviour {
 			}
 		}
 	}
+
+	#region Spawning Placeable
+	void SetUpOccupying(GameObject pObj){
+
+		pObj.GetComponent<IPlaceable> ().Cube = this;
+	}
+
+	void DestroyOccupying(){
+		Destroy (occupying);
+	}
+	#endregion
+
+	#region Building UI
+	public enum PlacementError {
+		None,
+		CubeIsLocked,
+		NotEnoughResources,
+		CannotTotallyBlockEnemies
+	}
+
+	public PlacementError CanPlace(IPlaceable placeable){
+
+		if (Locked == true) {
+			return PlacementError.CubeIsLocked;
+		}
+
+		if (ResourceManager.Instance.PlayerResources - placeable.BuildCost < 0) {
+			return PlacementError.NotEnoughResources;
+		}
+
+		if (EnemyPathManager.Instance.WouldYieldNoPaths (this) == false) {
+			return PlacementError.CannotTotallyBlockEnemies;
+		}
+
+		return PlacementError.None;
+	}
+
+	public void OnPointedAt(IPlaceable placeable){
+		PlacementError pe = CanPlace (placeable);
+
+		if ( pe == PlacementError.None) {
+			
+			PositiveBuildUI (placeable);
+
+		} else {
+			NegativeBuildUI (placeable, pe);
+
+			//display some ui based on error
+		}
+
+
+	}
+
+	public void OnPointedAway(){
+		Reset (cubeMat);
+
+		if(inRangeMats != null){
+			foreach (Material m in inRangeMats) {
+				Reset (m);
+			}
+		}
+	}
+
+	List<Material> inRangeMats;
+	void PositiveBuildUI(IPlaceable placeable){
+
+		cubeMat.SetColor ("_RimColor", Color.green);
+		cubeMat.SetFloat ("_RimPower", 0.1f);
+
+		if (placeable is Turret) {
+
+			Turret placeableTurret = (Turret)placeable;
+
+			inRangeMats = new List<Material> ();
+
+			Collider[] cols = Physics.OverlapSphere (transform.position, placeableTurret.range, LayerMask.GetMask ("GameCube"));
+
+			foreach (Collider c in cols) {
+			
+				if (c.GetComponent<GameCube> () == null) {
+					Debug.LogWarning ("GameCube Warning: Detect non-GameCube in range wth GameCube tag");
+					continue;
+				}
+
+
+				Material m = c.GetComponent<MeshRenderer> ().material;
+
+				//Dont want to modifiy current cube
+				if (m == cubeMat) {
+					continue;
+				}
+
+				m.SetColor ("_RimColor", Color.yellow);
+				m.SetFloat ("_RimPower", 0.1f);
+
+				inRangeMats.Add (m);
+			}
+		}
+	}
+
+	void NegativeBuildUI(IPlaceable placeable, PlacementError pe){
+
+		cubeMat.SetColor ("_RimColor", Color.red);
+		cubeMat.SetFloat ("_RimPower", 0.1f);
+
+		Debug.Log (pe);
+	}
+
+	void Reset(Material m){
+		m.SetColor ("_RimColor", originalColor);
+		m.SetFloat ("_RimPower", 3f);
+	}
+	#endregion Building UI
+
+	
 }

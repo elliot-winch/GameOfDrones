@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,8 +32,8 @@ public class ControlWheel : MonoBehaviour {
 
 	}
 
-	public void AddControlWheelActions(ControlWheelSegment[] segs, bool overwrite = false){
-		if (cwActions == null || overwrite == true) {
+	public void AddControlWheelActions(ControlWheelSegment[] segs){
+		if (cwActions == null) {
 			cwActions = new List<ControlWheelSegment> ();
 		}
 
@@ -47,7 +48,7 @@ public class ControlWheel : MonoBehaviour {
 	 * Used to add new actions to the wheel. Should not add more than 6 but no formal limit
 	 * 
 	 */ 
-	public void AddControlWheelAction(ControlWheelSegment cwa, bool overwrite = false){
+	public void AddControlWheelAction(ControlWheelSegment cwa){
 		if (cwActions == null) {
 			cwActions = new List<ControlWheelSegment> ();
 		}
@@ -58,6 +59,45 @@ public class ControlWheel : MonoBehaviour {
 	}
 
 	private void CreateControlWheel(){
+
+		//Preferred Ordering
+		ControlWheelSegment[] orderedSegs = new ControlWheelSegment[cwActions.Count];
+		List<int> unsetOrdered = new List<int> ();
+		List<int> setUnordered = new List<int> ();
+
+		//Reorder based on preference
+		for (int i = 0; i < cwActions.Count; i++) {
+			for (int j = 0; j < cwActions.Count; j++) {
+
+				if (cwActions[j].PreferredPosition == i) {
+					if (orderedSegs [i] == null) {
+						orderedSegs [i] = cwActions [j];
+						setUnordered.Add (j);
+					} else {
+						Debug.LogWarning ("Control Wheel Warning: Preferred Position " + i + " is already set for " + name);
+					}
+				}
+			}
+
+			if (orderedSegs [i] == null) {
+				unsetOrdered.Add (i);
+			}
+		}
+
+		List<int> unsetUnordered = new List<int> ();
+		for (int i = 0; i < cwActions.Count; i++) {
+			if (setUnordered.Contains (i) == false) {
+				unsetUnordered.Add (i);
+			}
+		}
+
+		for (int i = 0; i < unsetUnordered.Count; i++) {
+			orderedSegs [unsetOrdered [i]] = cwActions [unsetUnordered [i]];
+		}
+
+		cwActions = orderedSegs.ToList ();
+
+		//Reordering complete
 
 		foreach (GameObject seg in displaySegments) {
 			Destroy (seg);
@@ -260,9 +300,17 @@ public class ControlWheelSegment {
 			return icon;
 		}
 	}
+
+	int preferredPosition;
+	public int PreferredPosition {
+		get {
+			return preferredPosition;
+		}
+	}
 						
-	public ControlWheelSegment(Action action, Sprite icon){
+	public ControlWheelSegment(Action action, Sprite icon, int preferredPosition = -1){
 		this.action = action;
 		this.icon = icon;
+		this.preferredPosition = preferredPosition;
 	}
 }

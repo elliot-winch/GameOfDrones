@@ -73,6 +73,11 @@ public class Enemy : DamagableObject {
 
 	IEnumerator Move(){
 
+		if (pathToTarget.IsComplete == false) {
+			Debug.LogError ("Enemy Error: Path could not be found to target!");
+			yield break;
+		}
+
 		while (pathToTarget.Length() > 0) {
 
 			if (moving == false) {

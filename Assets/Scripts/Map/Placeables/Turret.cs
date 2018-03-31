@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Turret : Wall {
 
-	public float attackRange = 1f;
+	public float range = 3f;
 	public float damage = 1f;
 	public float weaponChargeTime = 0.2f;
 
@@ -20,21 +20,6 @@ public class Turret : Wall {
 	private DamagableObject currentTarget;
 	private Action onShoot;
 
-	#region IPlaceable Implementation
-	public GameCube Cube {
-		get {
-			return cube;
-		} set {
-			this.cube = value;
-
-			transform.SetParent (cube.transform);
-			transform.position = this.cube.Position;
-
-			this.cube.MoveCost = Mathf.Infinity;
-		}
-	}
-		
-	#endregion IPlacable
 
 	public void RegisterOnShootCallback(Action callback){
 		onShoot += callback;
@@ -43,7 +28,7 @@ public class Turret : Wall {
 	protected override void Update(){
 
 		//Attacking
-		Collider[] cols = Physics.OverlapSphere (transform.position, attackRange, LayerMask.GetMask("Enemy"));
+		Collider[] cols = Physics.OverlapSphere (transform.position, range, LayerMask.GetMask("Enemy"));
 
 		if (firing == false) {
 			if (currentTarget == null) {

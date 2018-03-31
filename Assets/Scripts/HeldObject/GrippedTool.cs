@@ -69,7 +69,8 @@ public class GrippedTool: MonoBehaviour {
 			segs.Add( new ControlWheelSegment(() =>
 		   {
 			   SwitchGrippedObject(switchTo);
-		   }, null));
+			}, 
+				icon: Resources.Load<Sprite> ("Icons/swapIcon")));
 		}
 
 		playerHeld.GetComponent<ControlWheel>().AddControlWheelActions(segs.ToArray());

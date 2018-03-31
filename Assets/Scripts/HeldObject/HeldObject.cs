@@ -9,18 +9,18 @@ using Valve.VR.InteractionSystem;
 
 public abstract class HeldObject : MonoBehaviour {
 
-	private Sprite[] controlWheelActionIcons;
-
 	protected ControlWheel controlWheel;
 
 	protected virtual void Awake(){
 		controlWheel = GetComponent<ControlWheel> ();
 
-		controlWheelActionIcons = new Sprite[2];
-
-		controlWheelActionIcons[0] = Resources.Load<Sprite> ("Icons/teleportIcon");
-		controlWheelActionIcons[1] = Resources.Load<Sprite> ("Icons/dropIcon");
-
+		controlWheel.AddControlWheelAction( new ControlWheelSegment( 
+			() => {
+				Debug.Log("Teleport");
+			},
+			Resources.Load<Sprite> ("Icons/teleportIcon"),
+			preferredPosition: 0
+		));
 	}
 
 	protected void HandHoverUpdate( Hand hand ){ }

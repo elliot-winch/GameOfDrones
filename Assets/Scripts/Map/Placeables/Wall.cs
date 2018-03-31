@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class Wall : DamagableObject, IPlaceable {
 
-	GameCube gameCube = null;
+	public int buildCost = 10;
+	public float moveCost = Mathf.Infinity;
+
+	GameCube gameCube;
 
 	GameCube IPlaceable.Cube {
 		get {
@@ -17,18 +20,21 @@ public class Wall : DamagableObject, IPlaceable {
 			transform.position = this.gameCube.Position;
 
 			if (this.gameCube != null) {
-				this.gameCube.MoveCost = Mathf.Infinity;
+				this.gameCube.MoveCost = moveCost;
 
-				EnemyPathManager.Instance.DisplayEnemyPathUI ();
 			}
 		}
 	}
 
-	public int cost = 10;
-
-	public int Cost {
+	public virtual int BuildCost {
 		get {
-			return 10;
+			return buildCost;
+		}
+	}
+
+	public virtual float MoveCost {
+		get {
+			return moveCost;
 		}
 	}
 }

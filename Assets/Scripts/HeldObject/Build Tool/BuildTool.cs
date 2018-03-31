@@ -50,12 +50,16 @@ public class BuildTool : HeldObject {
 		ControlWheelSegment left = new ControlWheelSegment(() =>
 	   {
 		   this.CurrentID = (uint)((currentID + 1) % buildables.Length);
-	   }, icon: null);
+	   }, 
+			icon: Resources.Load<Sprite> ("Icons/left-arrow"),
+			preferredPosition: 1);
 
 		ControlWheelSegment right = new ControlWheelSegment(() =>
 		{
 			this.CurrentID = (uint)((currentID - 1) % buildables.Length);
-		}, icon: null);
+		}, 
+			icon: Resources.Load<Sprite> ("Icons/right-arrow"),
+			preferredPosition: 3);
 
 		controlWheel.AddControlWheelActions(new ControlWheelSegment[] {
 			left,
@@ -102,7 +106,7 @@ public class BuildTool : HeldObject {
 							lastPointedAt.OnPointedAway ();
 						}
 
-						cube.OnPointedAt ( CanPlace(cube) );
+						cube.OnPointedAt ( buildables [currentID].GetComponent<IPlaceable> () );
 					}
 
 					lastPointedAt = cube;
@@ -156,26 +160,29 @@ public class BuildTool : HeldObject {
 	#endregion //HeldObject
 
 	#region Build Functionality
-	public bool CanPlace(GameCube gc){
-
-		return gc.Locked == false 																						//cube isn't locked
-			&& ResourceManager.Instance.PlayerResources - buildables [currentID].GetComponent<IPlaceable>().Cost >= 0	//can you afford it?
-			&& EnemyPathManager.Instance.WouldYieldNoPaths(gc) == false; 														//wouldn't totally block enemy path
-	}
-
 	public void BuildPlaceable(GameCube gc){
 
-		if (CanPlace (gc)) {
+		IPlaceable placeable = buildables [currentID].GetComponent<IPlaceable> ();
+
+		GameCube.PlacementError pe = gc.CanPlace (placeable);
+
+		//null, ie there is no error
+		if (pe == GameCube.PlacementError.None) {
 			GameObject p = Instantiate (buildables [currentID]);
 
 			//most of the spawning process is handled by the gamecube
 			gc.Occupying = p;
 
-			ResourceManager.Instance.PlayerResources -= p.GetComponent<IPlaceable> ().Cost;
-
+			//spend resources
+			ResourceManager.Instance.PlayerResources -= p.GetComponent<IPlaceable> ().BuildCost;
 			btResourceDisplay.UpdateDisplay ();
-		}
 
+			//check path
+			EnemyPathManager.Instance.ShouldRecalcPath(gc);
+		//failure cases
+		} else {
+
+		}
 	}
 
 	public void RemovePlaceable(IPlaceable p){

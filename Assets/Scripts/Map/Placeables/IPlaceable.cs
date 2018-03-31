@@ -3,5 +3,6 @@
 public interface IPlaceable {
 
 	GameCube Cube { get; set; }
-	int Cost { get; }
+	int BuildCost { get; }
+	float MoveCost { get; }
 }

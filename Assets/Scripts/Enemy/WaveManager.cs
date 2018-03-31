@@ -35,7 +35,7 @@ public class WaveManager : MonoBehaviour {
 		}
 	}
 
-	public bool IsWaveFinished {
+	public bool InWaveMode {
 		get {
 			return enemyParent.childCount <= 0 && enemiesLeftToSpawn <= 0;
 		}
