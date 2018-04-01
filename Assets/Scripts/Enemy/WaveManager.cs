@@ -35,12 +35,6 @@ public class WaveManager : MonoBehaviour {
 		}
 	}
 
-	public bool InWaveMode {
-		get {
-			return enemyParent.childCount <= 0 && enemiesLeftToSpawn <= 0;
-		}
-	}
-
 
 	void Start(){
 		if (instance != null) {
@@ -73,7 +67,6 @@ public class WaveManager : MonoBehaviour {
 				enemiesLeftToSpawn += g.number;
 				StartCoroutine (GroupCoroutine(g));
 			}
-
 		}
 	}
 
@@ -102,8 +95,21 @@ public class WaveManager : MonoBehaviour {
 		enemiesLeftToSpawn--;
 	}
 
-	public void EndWave(){
-		currentWave++;
+	public void CouldEndWave(){
+		/*
+			 * Why does this check to see if there is one enemy left rather than zero? 
+			 * Good question!
+			 * When we check to see if the wave is over, the enemy which is about to be destoryed is checking.
+			 * This means that enemy is still childed to the enemyParent, so there will be one (but only one)
+			 * enemy to check for
+			 */ 
+		if (enemyParent.childCount <= 1 && enemiesLeftToSpawn <= 0) {
+			Debug.Log("Cleared wave " + currentWave);
+
+			currentWave++;
+
+			//some kinda of visual i guess
+		}
 	}
 }
 

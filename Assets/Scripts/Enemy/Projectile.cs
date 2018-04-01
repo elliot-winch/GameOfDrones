@@ -59,11 +59,13 @@ public class Projectile : MonoBehaviour {
 	void OnCollisionEnter(Collision col){
 
 		//we have defined layers and this isn't one of them
-		if (this.layersToHit != null && layersToHit.Contains(col.collider.tag) == false)
+		if (this.layersToHit != null && layersToHit.Contains(LayerMask.LayerToName(col.gameObject.layer)))
 		{ 
+			Debug.Log (LayerMask.LayerToName(col.gameObject.layer) + " " + layersToHit [0]);
 			if (col.collider.GetComponentInParent<DamagableObject>() != null)
 			{
-				col.collider.GetComponentInParent<DamagableObject>().Hit(damage);
+				Vector3 hitDirection = transform.InverseTransformDirection (GetComponent<Rigidbody> ().velocity);
+				col.collider.GetComponentInParent<DamagableObject>().Hit(hitDirection, damage);
 			}
 		}
 

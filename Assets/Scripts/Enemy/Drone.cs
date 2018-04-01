@@ -9,18 +9,22 @@ public class Drone : Enemy {
 	//rotateSpeed is for cosmetics only. A drone will not delay firing to rotate
 	public float rotateSpeed = 1f;
 
-	Coroutine lookAt;
+	private Coroutine lookAt;
 
+	Rigidbody rb;
 
+	protected override void Start ()
+	{
+		base.Start ();
+
+		rb = GetComponent<Rigidbody> ();
+	}
+
+	//Shooting overrides
 	protected override void PreFire(DamagableObject target){
 		base.PreFire (target);
 
-		if (lookAt != null) {
-			StopCoroutine (lookAt);
-			lookAt = null;
-		}
-
-		lookAt = StartCoroutine (SmoothLookAt (target.transform.position));
+		LookAt (target.transform.position);
 	}
 
 	protected override void OnFire (DamagableObject target)
@@ -36,6 +40,39 @@ public class Drone : Enemy {
 
 	}
 
+	protected override void Disengage ()
+	{
+		base.Disengage ();
+
+		if (Firing == false) {
+			LookAt (destinationPosition);
+		}
+	}
+	//end shooting overrides
+
+	public override void Hit (Vector3 hitDirection, float amount)
+	{
+		base.Hit (hitDirection, amount);
+
+		PauseMovementTowardsTarget (true);
+
+		rb.AddForce (hitDirection * 1f);
+
+		//TODO a nice particle effect
+		//a sound
+	}
+
+	//Private methods
+	private void LookAt(Vector3 position){
+		if (lookAt != null) {
+			StopCoroutine (lookAt);
+			lookAt = null;
+		}
+
+		lookAt = StartCoroutine (SmoothLookAt (position));
+	}
+
+
 	IEnumerator SmoothLookAt(Vector3 position){
 
 		Quaternion targetRotation = Quaternion.LookRotation (position - transform.position);
@@ -46,16 +83,6 @@ public class Drone : Enemy {
 			transform.rotation = Quaternion.Slerp (transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
 
 			yield return null;
-		}
-	}
-
-
-	protected override void PostMove ()
-	{
-		base.PostMove ();
-
-		if (Firing == false) {
-			lookAt = StartCoroutine (SmoothLookAt (destinationPosition));
 		}
 	}
 }

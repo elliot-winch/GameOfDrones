@@ -16,6 +16,8 @@ public class Enemy : DamagableObject {
 
 	private bool firing;
 	private bool moving;
+	private bool movementPaused;
+	private bool disengaging;
 
 	protected bool Firing {
 		get {
@@ -31,12 +33,11 @@ public class Enemy : DamagableObject {
 
 	private AStarPath pathToTarget;
 
-	public override void Hit (float amount){
+	public override void Hit (Vector3 hitDirection, float amount){
 
 		Debug.Log (name + " hit for " + amount);
-		Debug.Log ("has " + CurrentHealth);
 
-		base.Hit (amount);
+		base.Hit (hitDirection, amount);
 
 	}
 
@@ -58,14 +59,21 @@ public class Enemy : DamagableObject {
 	protected override void Update(){
 		
 		//Attacking
-		Collider[] cols = Physics.OverlapSphere (transform.position, attackRange, LayerMask.GetMask("Friendly"));
-
 		if (firing == false) {
 			if (currentTarget == null) {
+				Collider[] cols = Physics.OverlapSphere (transform.position, attackRange, LayerMask.GetMask("Friendly"));
+
 				if (cols.Length > 0) {
 					//decide which enemy to shoot - currently we just pick the first target found
 					currentTarget = cols [0].GetComponentInParent<DamagableObject> ();
-					StartCoroutine(Fire (currentTarget));
+					StartCoroutine (Fire (currentTarget));
+					disengaging = false;
+				} else {
+
+					if (disengaging == false) {
+						Disengage ();
+						disengaging = true;
+					}
 				}
 			} 
 		}
@@ -78,40 +86,58 @@ public class Enemy : DamagableObject {
 			yield break;
 		}
 
-		while (pathToTarget.Length() > 0) {
+		while (pathToTarget.IsNext()) {
 
 			if (moving == false) {
-				StartCoroutine (MoveTowards (pathToTarget.GetNext ()));
-				PostMove ();
-
+				 StartCoroutine (MoveTowards (pathToTarget.GetNext ()));
 			}
 
 			yield return null;
 		}
 	}
 
-	IEnumerator MoveTowards(GameCube t){
+	IEnumerator MoveTowards(GameCube t, Vector3? positionInCube = null){
 		moving = true;
 
 		this.destination = t;
 
-		destinationPosition = t.RandomPositionInBounds;
+		if (positionInCube.HasValue ) {
+			destinationPosition = positionInCube.Value;
+		} else {
+			destinationPosition = t.RandomPositionInBounds;
+		}
+
 		Vector3 startPos = transform.position;
 
 		float dist = Vector3.Distance (startPos, destinationPosition);
 		float movePercentage = 0f;
 
 		while (movePercentage < 1f) {
-			movePercentage += (moveSpeed * Time.deltaTime) / dist;
 
-			transform.position = Vector3.Lerp (startPos, destinationPosition, movePercentage);
+			if (movementPaused != null) {
+
+				movePercentage += (moveSpeed * Time.deltaTime) / dist;
+
+				transform.position = Vector3.Lerp (startPos, destinationPosition, movePercentage);
+			}
 
 			yield return null;
+
 		}
 
 		currentCube = t;
 
 		moving = false;
+	}
+
+	public void PauseMovementTowardsTarget(bool pause){
+
+		this.movementPaused = pause;
+
+		//This will be true when the enemy has reached the target, so we will need to restart the coroutine to get the enemy back to where it was
+		if (pause == false && pathToTarget.IsNext () == false) {
+			StartCoroutine(MoveTowards(currentCube, destinationPosition));
+		}
 	}
 
 	private IEnumerator Fire(DamagableObject target){
@@ -121,15 +147,24 @@ public class Enemy : DamagableObject {
 
 		yield return new WaitForSeconds(weaponChargeTime);
 
-		if(target != null){
-			OnFire(target);
-		}
+		if (target != null) {
+			OnFire (target);
+		} 
 
 		currentTarget = null;
 
 		firing = false;
 	}
 
+
+	protected override void Destroyed ()
+	{
+		WaveManager.Instance.CouldEndWave ();
+
+		base.Destroyed();
+	}
+
+	//To be overriden
 	protected virtual void OnFire(DamagableObject target){
 
 	}
@@ -138,7 +173,10 @@ public class Enemy : DamagableObject {
 
 	}
 
-	protected virtual void PostMove(){
+	//When there is no targt, a target is searched for and not found.
+	protected virtual void Disengage(){
 
 	}
+
+
 }

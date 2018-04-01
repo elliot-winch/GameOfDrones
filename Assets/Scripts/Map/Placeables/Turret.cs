@@ -16,10 +16,9 @@ public class Turret : Wall {
 
 	private bool firing = false;
 
-	//should this be enemy or damagable object?
 	private DamagableObject currentTarget;
 	private Action onShoot;
-
+	private Coroutine rotating;
 
 	public void RegisterOnShootCallback(Action callback){
 		onShoot += callback;
@@ -40,12 +39,18 @@ public class Turret : Wall {
 				}
 			} 
 		}
+
+
 	}
 
 	IEnumerator Fire(){
 		firing = true;
 
-		StartCoroutine(SmoothLookAt (currentTarget.transform));
+		if(rotating != null){
+			StopCoroutine (rotating);
+		}
+
+		rotating = StartCoroutine(SmoothLookAt (currentTarget.transform));
 
 		yield return new WaitForSeconds(weaponChargeTime);
 
