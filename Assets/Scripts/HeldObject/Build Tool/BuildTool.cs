@@ -7,6 +7,8 @@ using Valve.VR.InteractionSystem;
 public class BuildTool : HeldObject {
 
 	public GameObject[] buildables;
+	public int startBuildable = 0;
+	private int currentID ;
 
 	Transform barrel;
 
@@ -16,18 +18,20 @@ public class BuildTool : HeldObject {
 
 	List<IHeldUpdateable> heldUpdateables;
 
-	private uint currentID ;
-	public uint CurrentID {
+	public int CurrentID {
 		get {
 			return currentID;
 		}
 		set {
-			if(value >= 0){
+			if (value >= 0) {
 				currentID = value;
 
-				btPreview.PreviewBuildable (buildables[currentID]);
+				btPreview.PreviewBuildable (buildables [currentID]);
 				//btStatsCanvas.FillStats (buildables[currentID].GetComponent<IPlaceable>());
+			} else {
+				currentID = value;
 
+				//display remove UI
 			}
 		}
 	}
@@ -46,17 +50,19 @@ public class BuildTool : HeldObject {
 		heldUpdateables.Add (btPreview);
 		//heldUpdateables.Add (btStatsCanvas);
 
+		currentID = startBuildable;
+
 		//Control Wheel Actions
 		ControlWheelSegment left = new ControlWheelSegment(() =>
 	   {
-		   this.CurrentID = (uint)((currentID + 1) % buildables.Length);
+		   this.CurrentID = ((currentID + 1) % buildables.Length) - 1;
 	   }, 
 			icon: Resources.Load<Sprite> ("Icons/left-arrow"),
 			preferredPosition: 1);
 
 		ControlWheelSegment right = new ControlWheelSegment(() =>
 		{
-			this.CurrentID = (uint)((currentID - 1) % buildables.Length);
+			this.CurrentID = ((currentID - 1) % buildables.Length) - 1;
 		}, 
 			icon: Resources.Load<Sprite> ("Icons/right-arrow"),
 			preferredPosition: 3);
@@ -106,15 +112,22 @@ public class BuildTool : HeldObject {
 							lastPointedAt.OnPointedAway ();
 						}
 
-						cube.OnPointedAt ( buildables [currentID].GetComponent<IPlaceable> () );
+						if (currentID >= 0) {
+							cube.OnPointedAt (buildables [currentID].GetComponent<IPlaceable> ());
+						} else {
+							cube.OnPointedAt (null);
+						}
 					}
 
 					lastPointedAt = cube;
 
 					if (hc.TriggerPulled.Up) {
 
-						//can place is chwcked in the manager
-						BuildPlaceable (cube);
+						if (currentID >= 0) {
+							ActOnCube (cube);
+						} else {
+							RemovePlaceable (cube);
+						}
 					}
 
 					return;
@@ -130,12 +143,11 @@ public class BuildTool : HeldObject {
 		}
 	}
 
-	uint lastIDSelected = 0;
 	protected override void OnAttachedToHand (Hand hand)
 	{
 		base.OnAttachedToHand (hand);
 
-		this.CurrentID = lastIDSelected;
+		this.CurrentID = this.CurrentID;
 
 		//Update other components when held
 		foreach(IHeldUpdateable hu in heldUpdateables){
@@ -150,8 +162,6 @@ public class BuildTool : HeldObject {
 
 		Debug.Log ("Detaching build tool");
 
-		lastIDSelected = this.CurrentID;
-
 		//Update other components when held
 		foreach(IHeldUpdateable hu in heldUpdateables){
 			hu.HeldEnd ();
@@ -160,33 +170,52 @@ public class BuildTool : HeldObject {
 	#endregion //HeldObject
 
 	#region Build Functionality
-	public void BuildPlaceable(GameCube gc){
+	public void ActOnCube(GameCube gc){
+		//If placing
+		if (currentID >= 0) {
 
-		IPlaceable placeable = buildables [currentID].GetComponent<IPlaceable> ();
+			IPlaceable placeable = buildables [currentID].GetComponent<IPlaceable> ();
 
-		GameCube.PlacementError pe = gc.CanPlace (placeable);
+			GameCube.PlacementError pe = gc.CanPlace (placeable);
 
-		//null, ie there is no error
-		if (pe == GameCube.PlacementError.None) {
-			GameObject p = Instantiate (buildables [currentID]);
+			if (pe == GameCube.PlacementError.None) {
+				GameObject p = Instantiate (buildables [currentID]);
 
-			//most of the spawning process is handled by the gamecube
-			gc.Occupying = p;
+				//most of the spawning process is handled by the gamecube
+				gc.Occupying = p;
 
-			//spend resources
-			ResourceManager.Instance.PlayerResources -= p.GetComponent<IPlaceable> ().BuildCost;
-			btResourceDisplay.UpdateDisplay ();
+				//spend resources
+				ResourceManager.Instance.Spend(p.GetComponent<IPlaceable> ().BuildCost);
 
-			//check path
-			EnemyPathManager.Instance.ShouldRecalcPath(gc);
-		//failure cases
+			} else {
+				//failure cases
+			}
 		} else {
 
+			GameCube.RemoveError re = gc.CanRemove ();
+
+			if (re == GameCube.RemoveError.None) {
+
+				RemovePlaceable (gc);
+
+			} else {
+				//failure case
+			}
 		}
+
+		//check path
+		EnemyPathManager.Instance.ShouldRecalcPath (gc);
 	}
 
-	public void RemovePlaceable(IPlaceable p){
-		//TODO: removing placeable
+	public void RemovePlaceable(GameCube gc){
+
+		if (gc.CanRemove() == GameCube.RemoveError.None) {
+
+			gc.Occupying = null;
+
+		} else {
+			//failure state
+		}
 	}
 
 	#endregion

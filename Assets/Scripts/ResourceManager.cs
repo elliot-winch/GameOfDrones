@@ -8,6 +8,9 @@ public class ResourceManager : MonoBehaviour {
 	static ResourceManager instance;
 
 	public int playerStartResources = 100;
+	[Range(0, 1)]
+	public float reimburseRate = 1.0f;
+	public BuildToolResourceDisplay btrd;
 
 	int playerResources;
 
@@ -17,12 +20,14 @@ public class ResourceManager : MonoBehaviour {
 		}
 	}
 
-	public int PlayerResources {
+	private int PlayerResources {
 		get {
 			return playerResources;
 		}
 		set {
 			playerResources = value;
+
+			btrd.UpdateDisplay (value);
 		}
 	}
 
@@ -37,4 +42,23 @@ public class ResourceManager : MonoBehaviour {
 
 	}
 
+	public bool CanSpend(int amount){
+		return playerResources - amount >= 0;
+	}
+
+	public void Spend(int amount){
+
+		if (CanSpend (amount)) {
+			PlayerResources -= amount;
+		} else {
+			Debug.LogWarning ("Attempted to spend resources you don't have!");
+		}
+
+	}
+
+	public void Reimburse(int amount){
+
+		PlayerResources += amount;
+	}
 }
+

@@ -13,8 +13,10 @@ public class BuildToolResourceDisplay : MonoBehaviour {
 
 	public Text resourceDisplay;
 
-	public void UpdateDisplay(){
 
-		resourceDisplay.text = ResourceManager.Instance.PlayerResources.ToString();
+	public void UpdateDisplay(int amount){
+
+		resourceDisplay.text = amount.ToString ();
 	}
+
 }

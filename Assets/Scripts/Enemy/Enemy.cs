@@ -114,7 +114,7 @@ public class Enemy : DamagableObject {
 
 		while (movePercentage < 1f) {
 
-			if (movementPaused != null) {
+			if (movementPaused == false) {
 
 				movePercentage += (moveSpeed * Time.deltaTime) / dist;
 

@@ -173,13 +173,20 @@ public class GameCube : MonoBehaviour {
 		CannotTotallyBlockEnemies
 	}
 
+	public enum RemoveError
+	{
+		None,
+		CubeIsLocked, 
+		NothingToRemove
+	}
+
 	public PlacementError CanPlace(IPlaceable placeable){
 
 		if (Locked == true) {
 			return PlacementError.CubeIsLocked;
 		}
 
-		if (ResourceManager.Instance.PlayerResources - placeable.BuildCost < 0) {
+		if (ResourceManager.Instance.CanSpend(placeable.BuildCost) == false) {
 			return PlacementError.NotEnoughResources;
 		}
 
@@ -190,20 +197,43 @@ public class GameCube : MonoBehaviour {
 		return PlacementError.None;
 	}
 
-	public void OnPointedAt(IPlaceable placeable){
-		PlacementError pe = CanPlace (placeable);
+	public RemoveError CanRemove(){
 
-		if ( pe == PlacementError.None) {
-			
-			PositiveBuildUI (placeable);
-
-		} else {
-			NegativeBuildUI (placeable, pe);
-
-			//display some ui based on error
+		if (Locked == true) {
+			return RemoveError.CubeIsLocked;
 		}
 
+		if (this.Occupying == null) {
+			return RemoveError.NothingToRemove;
+		}
 
+		return RemoveError.None;
+	}
+
+	public void OnPointedAt(IPlaceable placeable){
+		//Place
+		if (placeable != null) {
+
+			PlacementError pe = CanPlace (placeable);
+
+			if (pe == PlacementError.None) {
+			
+				PositiveBuildUI (placeable);
+
+			} else {
+				NegativeBuildUI (placeable, pe);
+
+				//display some ui based on error
+			}
+		} else {
+			//Remove UI
+
+			RemoveError re = CanRemove ();
+
+			if (re == RemoveError.None) {
+
+			}
+		}
 	}
 
 	public void OnPointedAway(){
@@ -240,7 +270,7 @@ public class GameCube : MonoBehaviour {
 
 				Material m = c.GetComponent<MeshRenderer> ().material;
 
-				//Dont want to modifiy current cube
+				//Dont want to modify current cube
 				if (m == cubeMat) {
 					continue;
 				}
@@ -259,6 +289,22 @@ public class GameCube : MonoBehaviour {
 		cubeMat.SetFloat ("_RimPower", 0.1f);
 
 		Debug.Log (pe);
+	}
+
+
+	void PositiveRemoveUI(){
+
+		cubeMat.SetColor ("_RimColor", Color.red);
+		cubeMat.SetFloat ("_RimPower", 0.1f);
+
+	}
+
+	void NegativeRemoveUI(RemoveError re){
+
+		cubeMat.SetColor ("_RimColor", Color.red);
+		cubeMat.SetFloat ("_RimPower", 0.1f);
+
+		Debug.Log (re);
 	}
 
 	void Reset(Material m){
