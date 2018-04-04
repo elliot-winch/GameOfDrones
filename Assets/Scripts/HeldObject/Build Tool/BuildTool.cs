@@ -7,6 +7,7 @@ using Valve.VR.InteractionSystem;
 public class BuildTool : HeldObject {
 
 	public GameObject[] buildables;
+	public GameObject deleteModel;
 	public int startBuildable = 0;
 	private int currentID ;
 
@@ -14,7 +15,6 @@ public class BuildTool : HeldObject {
 
 	//BuiltToolStatsCanvas btStatsCanvas;
 	BuildToolPreview btPreview;
-	BuildToolResourceDisplay btResourceDisplay;
 
 	List<IHeldUpdateable> heldUpdateables;
 
@@ -26,11 +26,12 @@ public class BuildTool : HeldObject {
 			if (value >= 0) {
 				currentID = value;
 
-				btPreview.PreviewBuildable (buildables [currentID]);
+				btPreview.DisplayModel (buildables [currentID]);
 				//btStatsCanvas.FillStats (buildables[currentID].GetComponent<IPlaceable>());
 			} else {
 				currentID = value;
 
+				btPreview.DisplayModel (deleteModel);
 				//display remove UI
 			}
 		}
@@ -43,7 +44,8 @@ public class BuildTool : HeldObject {
 
 		//btStatsCanvas = GetComponentInChildren<BuiltToolStatsCanvas> (true);
 		btPreview = GetComponent<BuildToolPreview> ();
-		btResourceDisplay = GetComponentInChildren<BuildToolResourceDisplay> (true);
+
+		ResourceManager.Instance.btrd =  GetComponentInChildren<BuildToolResourceDisplay> (true);
 
 		heldUpdateables = new List<IHeldUpdateable> ();
 
@@ -53,17 +55,40 @@ public class BuildTool : HeldObject {
 		currentID = startBuildable;
 
 		//Control Wheel Actions
-		ControlWheelSegment left = new ControlWheelSegment(() =>
-	   {
-		   this.CurrentID = ((currentID + 1) % buildables.Length) - 1;
-	   }, 
+		ControlWheelSegment left = new ControlWheelSegment(
+			name: "Change Buildable Left",
+			action: () =>
+	   			{
+					//Mod doesn't work with negative numbers
+					int newID = currentID - 1;
+					Debug.Log(currentID + " " + newID + " " + buildables.Length);
+					if (newID < -1){
+						this.CurrentID = buildables.Length - 1;
+					} else {
+						this.CurrentID = newID;
+					}
+
+					Debug.Log(this.CurrentID);
+
+	   			}, 
 			icon: Resources.Load<Sprite> ("Icons/left-arrow"),
 			preferredPosition: 1);
 
-		ControlWheelSegment right = new ControlWheelSegment(() =>
-		{
-			this.CurrentID = ((currentID - 1) % buildables.Length) - 1;
-		}, 
+		ControlWheelSegment right = new ControlWheelSegment(
+			name: "Change Buildable Right",
+			action : () =>
+			{
+					//Mod doesn't work with negative numbers
+					int newID = currentID + 1;
+					if (newID >= buildables.Length){
+						this.CurrentID = -1;
+					} else {
+						this.CurrentID = newID;
+					}
+
+					Debug.Log(this.CurrentID);
+
+				}, 
 			icon: Resources.Load<Sprite> ("Icons/right-arrow"),
 			preferredPosition: 3);
 
@@ -84,17 +109,6 @@ public class BuildTool : HeldObject {
 		foreach(IHeldUpdateable hu in heldUpdateables){
 			hu.HeldUpdate ();
 		}
-
-		//TODO change so that left goes left, right goes right
-		/*
-		if (hc.TouchPadPressed.Down)
-		{
-			this.CurrentID = (currentID + 1) % buildables.Length;
-
-			if (hand.controller != null) {
-				hand.controller.TriggerHapticPulse ();
-			}
-		}*/
 
 		//Raycasting comes last as returning form the function is an option
 
@@ -160,7 +174,6 @@ public class BuildTool : HeldObject {
 	{
 		base.OnDetachedFromHand (hand);
 
-		Debug.Log ("Detaching build tool");
 
 		//Update other components when held
 		foreach(IHeldUpdateable hu in heldUpdateables){

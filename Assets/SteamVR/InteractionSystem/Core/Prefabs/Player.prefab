@@ -1468,7 +1468,7 @@ MonoBehaviour:
   playerHeldPrefabs:
   - {fileID: 114796155627870678, guid: a9f3cba3cefa75f4fb956dff27df91a0, type: 2}
   - {fileID: 114336418587100392, guid: 38e5093edea57134993f613afd85c884, type: 2}
-  startTool: 1
+  startTool: 0
 --- !u!114 &114649182757686916
 MonoBehaviour:
   m_ObjectHideFlags: 1

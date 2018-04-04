@@ -47,6 +47,7 @@ public class WaveManager : MonoBehaviour {
 			Debug.LogWarning ("No starting cubes set!");
 			return;
 		}
+
 	}
 
 	//temp!
@@ -57,19 +58,23 @@ public class WaveManager : MonoBehaviour {
 	}
 
 
-	void RunNextWave(){
+	public void RunNextWave(){
 
-		if (data.Count > currentWave) {
+		if (enemyParent.childCount <= 0 && enemiesLeftToSpawn <= 0) {
+			if (data.Count > currentWave) {
 
-			enemiesLeftToSpawn = 0;
+				enemiesLeftToSpawn = 0;
 
-			foreach (EnemyGroup g in data[currentWave].groups) {
-				enemiesLeftToSpawn += g.number;
-				StartCoroutine (GroupCoroutine(g));
+				foreach (EnemyGroup g in data[currentWave].groups) {
+					enemiesLeftToSpawn += g.number;
+					StartCoroutine (GroupCoroutine (g));
+				}
 			}
+		} else {
+			Debug.Log ("Cannot start wave as wave is already running!");
 		}
 	}
-
+		
 	IEnumerator GroupCoroutine(EnemyGroup group){
 
 		yield return new WaitForSeconds (group.initialDelay);

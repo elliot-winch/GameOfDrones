@@ -27,7 +27,10 @@ public class ResourceManager : MonoBehaviour {
 		set {
 			playerResources = value;
 
-			btrd.UpdateDisplay (value);
+			if (btrd != null) {
+				
+				btrd.UpdateDisplay (value);
+			}
 		}
 	}
 

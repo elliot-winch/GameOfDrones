@@ -8,14 +8,18 @@ public class TestSelector : HeldObject {
 
 		base.Awake();
 
+		/*
 		if (GetComponent<ControlWheel> () != null) {
 
-			GetComponent<ControlWheel>().AddControlWheelAction(new ControlWheelSegment (() => {
+			GetComponent<ControlWheel>().AddControlWheelAction(new ControlWheelSegment (
+
+				() => {
 				Debug.Log ("Test");
 			}, null));
 		}
 
 		//temp
 		GetComponent<ControlWheel>().DisplayControlWheel();
+		*/
 	}
 }

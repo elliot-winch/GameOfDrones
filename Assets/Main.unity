@@ -856,6 +856,7 @@ GameObject:
   - component: {fileID: 1548584368}
   - component: {fileID: 1548584361}
   - component: {fileID: 1548584363}
+  - component: {fileID: 1548584364}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -874,7 +875,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7dc8c6857d2d9540bc7854a1b2a8f12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keyboardStandins: 0d0000007400000070000000
+  keyboardStandins: 0d0000007400000067000000
 --- !u!4 &1548584362
 Transform:
   m_ObjectHideFlags: 0
@@ -911,6 +912,20 @@ MonoBehaviour:
   enemyDestination: {fileID: 230530278}
   enemyUIParent: {fileID: 226749402}
   cubesBetweenPathUI: 5
+--- !u!114 &1548584364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1548584360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c0ae9936d332f746813d0793f46b577, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerStartResources: 100
+  reimburseRate: 1
+  btrd: {fileID: 0}
 --- !u!114 &1548584366
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -937,7 +952,7 @@ MonoBehaviour:
   startCubes:
   - {fileID: 1029452244}
   enemyPrefabs:
-  - {fileID: 114934456002686462, guid: 6600cb5ce0a30514abea388fd16287df, type: 2}
+  - {fileID: 114719600905913674, guid: b632f78fdc5c8d24e90677e740045b17, type: 2}
   numberOfWaves: 1
   data:
   - groups:

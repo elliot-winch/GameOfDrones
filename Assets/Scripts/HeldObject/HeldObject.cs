@@ -11,15 +11,32 @@ public abstract class HeldObject : MonoBehaviour {
 
 	protected ControlWheel controlWheel;
 
+	public ControlWheel ControlWheel {
+		get {
+			return controlWheel;
+		}
+	}
+
 	protected virtual void Awake(){
 		controlWheel = GetComponent<ControlWheel> ();
 
 		controlWheel.AddControlWheelAction( new ControlWheelSegment( 
-			() => {
+
+			name : "Teleport",
+			action : () => {
 				Debug.Log("Teleport");
 			},
-			Resources.Load<Sprite> ("Icons/teleportIcon"),
+			icon : Resources.Load<Sprite> ("Icons/teleportIcon"),
 			preferredPosition: 0
+		));
+
+		controlWheel.AddControlWheelAction(new ControlWheelSegment(
+			name : "Wave Start",
+			action: () => 
+			{
+				WaveManager.Instance.RunNextWave();
+			}, 
+			icon: Resources.Load<Sprite> ("Icons/Drone Icon")
 		));
 	}
 

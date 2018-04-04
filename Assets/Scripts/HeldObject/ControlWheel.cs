@@ -58,6 +58,19 @@ public class ControlWheel : MonoBehaviour {
 		CreateControlWheel ();
 	}
 
+	public void RemoveControlWheelAction(string name){
+
+		foreach (ControlWheelSegment seg in cwActions) {
+			if (seg.Name.Equals (name)) {
+				cwActions.Remove (seg);
+				return;
+			}
+		}
+
+		//Recreate the control wheel
+		CreateControlWheel ();
+	}
+
 	private void CreateControlWheel(){
 
 		//Preferred Ordering
@@ -287,6 +300,13 @@ public class ControlWheel : MonoBehaviour {
 
 public class ControlWheelSegment {
 
+	string name;
+	public string Name {
+		get {
+			return name;
+		}
+	}
+
 	Action action;
 	public Action Action {
 		get {
@@ -308,7 +328,8 @@ public class ControlWheelSegment {
 		}
 	}
 						
-	public ControlWheelSegment(Action action, Sprite icon, int preferredPosition = -1){
+	public ControlWheelSegment(string name, Action action, Sprite icon, int preferredPosition = -1){
+		this.name = name;
 		this.action = action;
 		this.icon = icon;
 		this.preferredPosition = preferredPosition;

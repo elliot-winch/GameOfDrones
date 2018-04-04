@@ -17,7 +17,7 @@ public class BuildToolPreview : MonoBehaviour, IHeldUpdateable {
 
 	GameObject previewObj = null;
 
-	public void PreviewBuildable(GameObject placeablePrefab){
+	public void DisplayModel(GameObject placeablePrefab){
 
 		if (previewObj != null) {
 			RemovePreviewBuild();
@@ -38,7 +38,6 @@ public class BuildToolPreview : MonoBehaviour, IHeldUpdateable {
 		foreach (MeshRenderer mr in previewObj.GetComponentsInChildren<MeshRenderer>()) {
 			mr.material = previewMaterial;
 		}
-
 	}
 
 	void RemovePreviewBuild(){

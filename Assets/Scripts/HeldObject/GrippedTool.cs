@@ -34,6 +34,9 @@ public class GrippedTool: MonoBehaviour {
 		this.hand = this.GetComponent<Hand>();
 
 		this.SwitchGrippedObject(this.startTool);
+
+		//After this, wave management will be run by the WaveManager
+
 	}
 
 	public void SwitchGrippedObject(GrippedToolIndex index){
@@ -66,11 +69,14 @@ public class GrippedTool: MonoBehaviour {
 				continue;
 			}
 
-			segs.Add( new ControlWheelSegment(() =>
-		   {
-			   SwitchGrippedObject(switchTo);
-			}, 
-				icon: Resources.Load<Sprite> ("Icons/swapIcon")));
+			segs.Add( new ControlWheelSegment(
+				name : "Switch",
+				action : () =>
+		   		{
+			   		SwitchGrippedObject(switchTo);
+				}, 
+				icon: Resources.Load<Sprite> ("Icons/swapIcon")
+			));
 		}
 
 		playerHeld.GetComponent<ControlWheel>().AddControlWheelActions(segs.ToArray());
