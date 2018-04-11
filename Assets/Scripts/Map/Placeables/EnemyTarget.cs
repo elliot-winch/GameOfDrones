@@ -6,8 +6,10 @@ public class EnemyTarget : Wall {
 	
 	protected override void Destroyed ()
 	{
-		EnemyPathManager.Instance.enabled = false;
+		this.gameCube.Locked = false;
 
-		Debug.Log ("GameOver");
+		GameManager.Instance.EndGame ();
+
+		base.Destroyed ();
 	}
 }

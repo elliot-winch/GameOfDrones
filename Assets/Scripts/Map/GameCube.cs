@@ -168,22 +168,35 @@ public class GameCube : MonoBehaviour {
 	#region Building UI
 	public enum PlacementError {
 		None,
-		CubeIsLocked,
+		GameNotStarted,
+		CubeIsOccupied,
 		NotEnoughResources,
 		CannotTotallyBlockEnemies
+	}
+
+	public enum RepairError {
+		None,
+		NotEnoughResources,
+		OnFullHealth
 	}
 
 	public enum RemoveError
 	{
 		None,
+		GameNotStarted,
 		CubeIsLocked, 
 		NothingToRemove
 	}
 
 	public PlacementError CanPlace(IPlaceable placeable){
 
-		if (Locked == true) {
-			return PlacementError.CubeIsLocked;
+		//Order here is important!
+		if (GameManager.Instance.GameRunning == false) {
+			return PlacementError.GameNotStarted;
+		}
+
+		if (this.Occupying != null) {
+			return PlacementError.CubeIsOccupied;
 		}
 
 		if (ResourceManager.Instance.CanSpend(placeable.BuildCost) == false) {
@@ -194,10 +207,22 @@ public class GameCube : MonoBehaviour {
 			return PlacementError.CannotTotallyBlockEnemies;
 		}
 
+
 		return PlacementError.None;
 	}
 
+	public RepairError CanRepair(){
+
+		//already checked to see if there is something occupying the space
+		return RepairError.None;
+	}
+
 	public RemoveError CanRemove(){
+
+
+		if (GameManager.Instance.GameRunning == false) {
+			return RemoveError.GameNotStarted;
+		}
 
 		if (Locked == true) {
 			return RemoveError.CubeIsLocked;
@@ -211,8 +236,15 @@ public class GameCube : MonoBehaviour {
 	}
 
 	public void OnPointedAt(IPlaceable placeable){
+
+		//Repair
+		if (this.Occupying != null) {
+
+			RepairError re = CanRepair ();
+		}
+
 		//Place
-		if (placeable != null) {
+		else if (placeable != null) {
 
 			PlacementError pe = CanPlace (placeable);
 
@@ -231,7 +263,9 @@ public class GameCube : MonoBehaviour {
 			RemoveError re = CanRemove ();
 
 			if (re == RemoveError.None) {
-
+				PositiveRemoveUI ();
+			} else {
+				NegativeRemoveUI (re);
 			}
 		}
 	}

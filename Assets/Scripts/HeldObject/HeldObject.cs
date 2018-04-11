@@ -27,7 +27,7 @@ public abstract class HeldObject : MonoBehaviour {
 				Debug.Log("Teleport");
 			},
 			icon : Resources.Load<Sprite> ("Icons/teleportIcon"),
-			preferredPosition: 0
+			preferredPosition: ControlWheelSegment.PreferredPosition.Top
 		));
 
 		controlWheel.AddControlWheelAction(new ControlWheelSegment(
@@ -83,5 +83,23 @@ public abstract class HeldObject : MonoBehaviour {
 	protected virtual void OnDetachedFromHand(Hand hand) {
 
 		controlWheel.HideControlWheel ();
+	}
+
+	protected IEnumerator HapticPulseForTime(SteamVR_Controller.Device controller, float time, float strengthPercentage ){
+
+		float timer = 0f;
+
+		while (timer < time) {
+
+			controller.TriggerHapticPulse ((ushort)Mathf.Lerp (0, 3999, strengthPercentage));
+
+			timer += Time.deltaTime;
+			yield return null;
+		}
+
+	}
+
+	public virtual void OnDestroy() {
+
 	}
 }

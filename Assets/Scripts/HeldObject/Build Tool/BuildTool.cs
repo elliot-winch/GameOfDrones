@@ -1,15 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 using Valve.VR.InteractionSystem;
 
 public class BuildTool : HeldObject {
 
+	public float deadHoldToActTime = 0.05f;
+	public float holdToActTime = 1f;
+	public Canvas gameCubeActTimeCanvasPrefab;
 	public GameObject[] buildables;
 	public GameObject deleteModel;
 	public int startBuildable = 0;
-	private int currentID ;
+
+	private int currentID;
+	private float actOnCubeTimer = 0f;
+
+	private Canvas gameCubeActTimeCanvas;
+	private Slider actTimeSlider; 
 
 	Transform barrel;
 
@@ -37,6 +46,31 @@ public class BuildTool : HeldObject {
 		}
 	}
 
+	private float ActOnCubeTimer {
+		get {
+			return actOnCubeTimer;
+		}
+		set {
+			actOnCubeTimer = value;
+
+			if (actOnCubeTimer > deadHoldToActTime && lastPointedAt != null) {
+
+				if (gameCubeActTimeCanvas.enabled == false) {
+
+					gameCubeActTimeCanvas.enabled = true;
+
+					gameCubeActTimeCanvas.transform.LookAt(Vector3.zero);
+					//weird bug: rotation set seemingly randomly?
+					gameCubeActTimeCanvas.transform.position = lastPointedAt.Position + gameCubeActTimeCanvas.transform.forward ;
+				}
+
+				actTimeSlider.value = actOnCubeTimer;
+			} else {
+				gameCubeActTimeCanvas.enabled = false;
+			}
+		}
+	}
+
 	protected override void Awake(){
 		base.Awake();
 
@@ -53,6 +87,14 @@ public class BuildTool : HeldObject {
 		//heldUpdateables.Add (btStatsCanvas);
 
 		currentID = startBuildable;
+
+		//Act on Cube UI
+		gameCubeActTimeCanvas = Instantiate(gameCubeActTimeCanvasPrefab);
+		gameCubeActTimeCanvas.enabled = false;
+
+		actTimeSlider = gameCubeActTimeCanvas.GetComponentInChildren<Slider>(true);
+		actTimeSlider.maxValue = holdToActTime;
+		actTimeSlider.minValue = deadHoldToActTime;
 
 		//Control Wheel Actions
 		ControlWheelSegment left = new ControlWheelSegment(
@@ -72,7 +114,7 @@ public class BuildTool : HeldObject {
 
 	   			}, 
 			icon: Resources.Load<Sprite> ("Icons/left-arrow"),
-			preferredPosition: 1);
+			preferredPosition: ControlWheelSegment.PreferredPosition.Left);
 
 		ControlWheelSegment right = new ControlWheelSegment(
 			name: "Change Buildable Right",
@@ -90,7 +132,7 @@ public class BuildTool : HeldObject {
 
 				}, 
 			icon: Resources.Load<Sprite> ("Icons/right-arrow"),
-			preferredPosition: 3);
+			preferredPosition: ControlWheelSegment.PreferredPosition.Right);
 
 		controlWheel.AddControlWheelActions(new ControlWheelSegment[] {
 			left,
@@ -99,7 +141,9 @@ public class BuildTool : HeldObject {
 	}
 
 	#region HeldObject
+	GameObject lastPointedAtOccupying; //this needs to be cached to avoid the bug where continuouslt holding down keeps building
 	GameCube lastPointedAt;
+	bool built; //to stop continuously holding the trigger to mean continuously acting on a block
 	protected override void HandAttachedUpdate (Hand hand){
 		base.HandAttachedUpdate (hand);
 
@@ -121,7 +165,10 @@ public class BuildTool : HeldObject {
 
 				if (cube != null) {
 
-					if (lastPointedAt != cube) {
+					//When we look at a different cube or the cube we look at changes
+					if (lastPointedAt != cube || lastPointedAtOccupying != cube.Occupying) {
+						ActOnCubeTimer = 0f;
+
 						if (lastPointedAt != null) {
 							lastPointedAt.OnPointedAway ();
 						}
@@ -133,15 +180,25 @@ public class BuildTool : HeldObject {
 						}
 					}
 
+					//Called every frame that we point to the cube
 					lastPointedAt = cube;
+					lastPointedAtOccupying = cube.Occupying;
+
+					if (hc.TriggerPulled.Any && built == false) {
+
+						ActOnCubeTimer += Time.deltaTime;
+
+						if (actOnCubeTimer >= holdToActTime) {
+							ActOnCube (cube);
+							ActOnCubeTimer = 0f;
+							built = true;
+						}
+					} else {
+						ActOnCubeTimer = Mathf.Max(0f, ActOnCubeTimer - (Time.deltaTime * 2f));
+					}
 
 					if (hc.TriggerPulled.Up) {
-
-						if (currentID >= 0) {
-							ActOnCube (cube);
-						} else {
-							RemovePlaceable (cube);
-						}
+						built = false;
 					}
 
 					return;
@@ -154,6 +211,8 @@ public class BuildTool : HeldObject {
 			lastPointedAt.OnPointedAway ();
 
 			lastPointedAt = null;
+
+			ActOnCubeTimer = 0f;
 		}
 	}
 
@@ -200,6 +259,8 @@ public class BuildTool : HeldObject {
 				//spend resources
 				ResourceManager.Instance.Spend(p.GetComponent<IPlaceable> ().BuildCost);
 
+				EnemyPathManager.Instance.ShouldRecalcPathBlocked (gc);
+
 			} else {
 				//failure cases
 			}
@@ -209,7 +270,11 @@ public class BuildTool : HeldObject {
 
 			if (re == GameCube.RemoveError.None) {
 
-				RemovePlaceable (gc);
+				ResourceManager.Instance.AddResources (gc.Occupying.GetComponent<IPlaceable> ().BuildCost);
+
+				gc.Occupying = null;
+
+				EnemyPathManager.Instance.ShouldRecalcPathRemoved ();
 
 			} else {
 				//failure case
@@ -217,19 +282,12 @@ public class BuildTool : HeldObject {
 		}
 
 		//check path
-		EnemyPathManager.Instance.ShouldRecalcPath (gc);
-	}
-
-	public void RemovePlaceable(GameCube gc){
-
-		if (gc.CanRemove() == GameCube.RemoveError.None) {
-
-			gc.Occupying = null;
-
-		} else {
-			//failure state
-		}
 	}
 
 	#endregion
+
+	public override void OnDestroy(){
+
+		Destroy (gameCubeActTimeCanvas.gameObject);
+	}
 }

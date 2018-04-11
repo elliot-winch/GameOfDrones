@@ -42,8 +42,7 @@ public abstract class Gun : HeldObject {
 		{
 			if (hc.TriggerPulled.Down)
 			{
-				Fire();
-				//hand.controller.TriggerHapticPulse();
+				Fire(hand);
 				rateOfFireTimer = 0f;
 			}
 		}
@@ -88,7 +87,7 @@ public abstract class Gun : HeldObject {
 		}*/
 
 
-	protected abstract void Fire ();
+	protected abstract void Fire (Hand hand);
 
 	//This should be called at the beginning of every coroutine associated with Fire
 	public void FireLock(){
@@ -99,4 +98,5 @@ public abstract class Gun : HeldObject {
 		firingLock--;
 	}
 	#endregion
+
 }

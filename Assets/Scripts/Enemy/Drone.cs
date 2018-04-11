@@ -5,19 +5,20 @@ using UnityEngine;
 public class Drone : Enemy {
 
 	public GameObject projectile;
+	public GameObject onHitParticleSystem;
+	public int resourcesGainedOnDestroyed = 5;
 
 	//rotateSpeed is for cosmetics only. A drone will not delay firing to rotate
 	public float rotateSpeed = 1f;
 
 	private Coroutine lookAt;
 
-	Rigidbody rb;
+	//Rigidbody rb;
 
 	protected override void Start ()
 	{
 		base.Start ();
 
-		rb = GetComponent<Rigidbody> ();
 	}
 
 	//Shooting overrides
@@ -35,7 +36,7 @@ public class Drone : Enemy {
 
 		Vector3 aimPos = target.transform.position;
 
-		proj.GetComponent<Projectile> ().Launch (aimPos, gameObject, new string[] { "Friendly" });
+		proj.GetComponent<Projectile> ().Launch (this.attackDamage, aimPos, gameObject, new string[] { "Friendly" });
 		//play sound, animation etc.
 
 	}
@@ -50,16 +51,19 @@ public class Drone : Enemy {
 	}
 	//end shooting overrides
 
-	public override void Hit (Vector3 hitDirection, float amount)
+	public override void Hit (Vector3 hitPosition, Vector3 hitDirection, float amount)
 	{
-		base.Hit (hitDirection, amount);
+		base.Hit (hitPosition, hitDirection, amount);
 
-		PauseMovementTowardsTarget (true);
+		Debug.Log ("Hit drone");
 
-		rb.AddForce (hitDirection * 1f);
+		//Particle Effect
+		GameObject peObj = Instantiate(onHitParticleSystem, transform);
 
-		//TODO a nice particle effect
-		//a sound
+		peObj.transform.position = hitPosition;
+		peObj.transform.LookAt (hitDirection);
+
+		peObj.GetComponent<ParticleSystem> ().Play ();
 	}
 
 	//Private methods
@@ -84,5 +88,12 @@ public class Drone : Enemy {
 
 			yield return null;
 		}
+	}
+
+	protected override void Destroyed ()
+	{
+		ResourceManager.Instance.AddResources (resourcesGainedOnDestroyed);
+
+		base.Destroyed ();
 	}
 }

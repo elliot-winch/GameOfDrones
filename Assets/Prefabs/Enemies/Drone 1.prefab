@@ -123,7 +123,6 @@ GameObject:
   - component: {fileID: 4932265830206070}
   - component: {fileID: 95264373058621838}
   - component: {fileID: 114934456002686462}
-  - component: {fileID: 54363264844994116}
   - component: {fileID: 136405116607290952}
   m_Layer: 8
   m_Name: Drone 1
@@ -475,21 +474,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1751295443019892}
   m_Mesh: {fileID: 4300002, guid: f8bee3709d2a83349b50f973035c87b3, type: 3}
---- !u!54 &54363264844994116
-Rigidbody:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1985559408105466}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!95 &95264373058621838
 Animator:
   serializedVersion: 3
@@ -518,12 +502,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a13864c01a38d4646ad2ae52e64bb69d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingHealth: 12
+  startingHealth: 15
   attackRange: 1
   attackDamage: 1
-  moveSpeed: 1
+  moveSpeed: 1.5
   weaponChargeTime: 0.2
   projectile: {fileID: 1495670284022458, guid: 1aa6fe14347697f47837fc84ace07431, type: 2}
+  onHitParticleSystem: {fileID: 0}
+  resourcesGainedOnDestroyed: 5
   rotateSpeed: 10
 --- !u!136 &136405116607290952
 CapsuleCollider:

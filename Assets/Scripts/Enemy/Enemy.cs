@@ -15,9 +15,13 @@ public class Enemy : DamagableObject {
 	protected Vector3 destinationPosition;
 
 	private bool firing;
-	private bool moving;
-	private bool movementPaused;
 	private bool disengaging;
+
+	private GameCube startCube;
+	//to be set by manager depending on the start cube assigned in begin
+	private List<GameCube> pathToTarget;
+	private int currentPathIndex;
+	private Coroutine moveCoroutine;
 
 	protected bool Firing {
 		get {
@@ -25,19 +29,15 @@ public class Enemy : DamagableObject {
 		}
 	}
 
-	protected bool Moving {
+	public GameCube StartCube {
 		get {
-			return moving;
+			return startCube;
 		}
 	}
 
-	private AStarPath pathToTarget;
+	public override void Hit (Vector3 hitPoint, Vector3 hitDirection, float amount){
 
-	public override void Hit (Vector3 hitDirection, float amount){
-
-		Debug.Log (name + " hit for " + amount);
-
-		base.Hit (hitDirection, amount);
+		base.Hit (hitPoint, hitDirection, amount);
 
 	}
 
@@ -46,13 +46,10 @@ public class Enemy : DamagableObject {
 	}
 
 	//Begin - like start but with parameters. Called by WaveManager
-	public void Begin(GameCube startCube, GameCube target){
+	public void Begin(GameCube startCube){
 		//Pathfinding is managed here
-		currentCube = startCube;
-
-		pathToTarget = new AStarPath (startCube, target);
-
-		StartCoroutine (Move ());
+		this.startCube = startCube;
+		this.currentCube = startCube;
 
 	}
 
@@ -79,25 +76,84 @@ public class Enemy : DamagableObject {
 		}
 	}
 
-	IEnumerator Move(){
+	public void SetPath(List<GameCube> path){
+		Debug.Log ("Setting path");
 
-		if (pathToTarget.IsComplete == false) {
-			Debug.LogError ("Enemy Error: Path could not be found to target!");
-			yield break;
+		this.pathToTarget = path;
+
+		int currentCubeIndex = FindPathIndex (this.currentCube, path);
+
+		if (currentCubeIndex >= 0) {
+			this.currentPathIndex = currentCubeIndex;
+			MoveToNext ();
+			return;
 		}
 
-		while (pathToTarget.IsNext()) {
+		List<GameCube> openSet = new List<GameCube> () {
+			currentCube
+		};
 
-			if (moving == false) {
-				 StartCoroutine (MoveTowards (pathToTarget.GetNext ()));
+		while (openSet.Count > 0) {
+
+			List<GameCube> snapshot = new List<GameCube> ();
+
+			foreach (GameCube gc in openSet) {
+				snapshot.Add (gc);
 			}
 
-			yield return null;
+			foreach (GameCube gc in snapshot) {
+				openSet.Remove (gc);
+
+				foreach (GameCube n in GameCubeManager.Instance.Grid.GetNeighbours (gc)) {
+
+					int posIndex = FindPathIndex (n, path);
+
+					if (posIndex >= 0) {
+						this.currentPathIndex = posIndex;
+						MoveToNext ();
+						return;
+					} else {
+						openSet.Add (n);
+					}
+				}
+			}
 		}
 	}
 
+	//Helper for SetPath
+	int FindPathIndex(GameCube gc, List<GameCube> path){
+		for (int i = 0; i < path.Count; i++) {
+			if (path [i] == gc) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+
+	void MoveToNext(){
+
+		if (pathToTarget == null) {
+			Debug.LogError ("Enemy Error: Path provided was null");
+			return;
+		}
+
+		if (currentPathIndex + 1 >= pathToTarget.Count) {
+			Debug.Log ("Enemy has reached end of path");
+			return;
+		}
+
+
+		if (moveCoroutine != null) {
+			StopCoroutine (moveCoroutine);
+		}
+			
+		currentPathIndex++;
+		moveCoroutine = StartCoroutine (MoveTowards (pathToTarget[currentPathIndex]));
+
+	}
+
 	IEnumerator MoveTowards(GameCube t, Vector3? positionInCube = null){
-		moving = true;
 
 		this.destination = t;
 
@@ -114,12 +170,10 @@ public class Enemy : DamagableObject {
 
 		while (movePercentage < 1f) {
 
-			if (movementPaused == false) {
 
-				movePercentage += (moveSpeed * Time.deltaTime) / dist;
+			movePercentage += (moveSpeed * Time.deltaTime) / dist;
 
-				transform.position = Vector3.Lerp (startPos, destinationPosition, movePercentage);
-			}
+			transform.position = Vector3.Lerp (startPos, destinationPosition, movePercentage);
 
 			yield return null;
 
@@ -127,17 +181,8 @@ public class Enemy : DamagableObject {
 
 		currentCube = t;
 
-		moving = false;
-	}
+		MoveToNext ();
 
-	public void PauseMovementTowardsTarget(bool pause){
-
-		this.movementPaused = pause;
-
-		//This will be true when the enemy has reached the target, so we will need to restart the coroutine to get the enemy back to where it was
-		if (pause == false && pathToTarget.IsNext () == false) {
-			StartCoroutine(MoveTowards(currentCube, destinationPosition));
-		}
 	}
 
 	private IEnumerator Fire(DamagableObject target){
@@ -159,6 +204,8 @@ public class Enemy : DamagableObject {
 
 	protected override void Destroyed ()
 	{
+		EnemyPathManager.Instance.RemoveEnemyFromPathManager (this);
+
 		WaveManager.Instance.CouldEndWave ();
 
 		base.Destroyed();

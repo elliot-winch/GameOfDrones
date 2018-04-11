@@ -7,7 +7,7 @@ public class Wall : DamagableObject, IPlaceable {
 	public int buildCost = 10;
 	public float moveCost = Mathf.Infinity;
 
-	GameCube gameCube;
+	protected GameCube gameCube;
 
 	GameCube IPlaceable.Cube {
 		get {

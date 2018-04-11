@@ -10,8 +10,8 @@ using UnityEngine;
  * 
  */ 
 
-[RequireComponent(typeof(HeldObject))]
 public class ControlWheel : MonoBehaviour {
+
 
 	public float farRadius = 1f;
 	public float nearRadius = 0.5f;
@@ -25,6 +25,7 @@ public class ControlWheel : MonoBehaviour {
 	List<ControlWheelSegment> cwActions;
 	List<Vector2> dividingVectors;
 	List<GameObject> displaySegments;
+
 
 	void Awake(){
 
@@ -82,7 +83,7 @@ public class ControlWheel : MonoBehaviour {
 		for (int i = 0; i < cwActions.Count; i++) {
 			for (int j = 0; j < cwActions.Count; j++) {
 
-				if (cwActions[j].PreferredPosition == i) {
+				if (cwActions[j].PreferredIndex(cwActions.Count) == i) {
 					if (orderedSegs [i] == null) {
 						orderedSegs [i] = cwActions [j];
 						setUnordered.Add (j);
@@ -226,7 +227,7 @@ public class ControlWheel : MonoBehaviour {
 		iconGo.AddComponent<SpriteRenderer> ().sprite = icon;
 
 		iconGo.transform.SetParent (seg.transform);
-		iconGo.transform.Rotate (new Vector3 (90f, 0f, 0f));
+		iconGo.transform.localRotation = Quaternion.Euler (new Vector3 (90f, 0f, 0f));
 		iconGo.transform.localScale = new Vector3 (1f, 1f, 1f);
 		iconGo.transform.localPosition = new Vector3 ( iconDistance * Mathf.Cos(halfAngle), 0.1f, iconDistance * Mathf.Sin(halfAngle));
 	}
@@ -321,14 +322,52 @@ public class ControlWheelSegment {
 		}
 	}
 
-	int preferredPosition;
-	public int PreferredPosition {
-		get {
-			return preferredPosition;
-		}
+
+	public enum PreferredPosition
+	{
+		None,
+		Top,
+		Left,
+		Right,
+		Down
 	}
+
+	public int PreferredIndex(int numSegs){
+
+		switch (this.preferredPosition) {
+
+		case PreferredPosition.None:
+			return -1;
+
+		case PreferredPosition.Top:
+			return 0;
+		case PreferredPosition.Down:
+			if (numSegs > 1) {
+				return numSegs / 2;
+			} else {
+				return -1;
+			}
+
+		case PreferredPosition.Left:
+			if (numSegs > 3) {
+				return 1;
+			} else {
+				return -1;
+			}
+		case PreferredPosition.Right: 
+			if (numSegs > 3) {
+				return numSegs - 1;
+			} else {
+				return -1;
+			}
+		}
+
+		return -1;
+	}
+
+	PreferredPosition preferredPosition;
 						
-	public ControlWheelSegment(string name, Action action, Sprite icon, int preferredPosition = -1){
+	public ControlWheelSegment(string name, Action action, Sprite icon, PreferredPosition preferredPosition = PreferredPosition.None){
 		this.name = name;
 		this.action = action;
 		this.icon = icon;

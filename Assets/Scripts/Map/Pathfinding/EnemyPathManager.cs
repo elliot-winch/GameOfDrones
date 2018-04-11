@@ -10,10 +10,12 @@ public class EnemyPathManager : MonoBehaviour {
 	public GameObject enemyPathUIPrefab;
 	public GameCube enemyDestination;
 	public Transform enemyUIParent;
-	public float cubesBetweenPathUI = 5f; //the number of UI elements per cube
-
 
 	private List<GameCube> startCubes;
+
+	Dictionary<GameCube, List<GameCube>> currentPaths;
+	Dictionary<GameCube, List<Enemy>> currentEnemiesByPath;
+	Dictionary<GameCube, List<GameObject>> currentPathTrails;
 
 	public static EnemyPathManager Instance {
 		get {
@@ -38,26 +40,21 @@ public class EnemyPathManager : MonoBehaviour {
 			Debug.LogWarning ("No enemy destination set!");
 			return;
 		}
+	}
 
+	public void OnGameStart (){
 		enemyDestination.Occupying = Instantiate (enemyTargetPrefab);
 		enemyDestination.Locked = true;
 
-
-		//ensure WaveManager starts before this in SEO
 		startCubes = WaveManager.Instance.startCubes;
 
 		foreach (GameCube gc in startCubes) {
 			gc.Locked = true;
 		}
 
-		StartCoroutine (StartWithDelay (0.1f));
-	}
-
-	IEnumerator StartWithDelay(float delay){
-		yield return new WaitForSeconds (delay);
-
 		currentPaths = new Dictionary<GameCube, List<GameCube>> ();
 		currentPathTrails = new Dictionary<GameCube, List<GameObject>> ();
+		currentEnemiesByPath = new Dictionary<GameCube, List<Enemy>> ();
 
 		foreach (GameCube startCube in startCubes) {
 			CalcEnemyPath (startCube);
@@ -92,11 +89,31 @@ public class EnemyPathManager : MonoBehaviour {
 
 	}
 
-	#region Enemy Path UI
-	Dictionary<GameCube, List<GameObject>> currentPathTrails;
-	Dictionary<GameCube, List<GameCube>> currentPaths;
+	public void AddEnemyToPathManager(Enemy e){
+		if (this.currentEnemiesByPath.ContainsKey (e.StartCube) == false) {
+			this.currentEnemiesByPath [e.StartCube] = new List<Enemy> ();
+		}
 
-	public void ShouldRecalcPath(GameCube placedIn){
+		this.currentEnemiesByPath [e.StartCube].Add (e);
+
+		e.SetPath (currentPaths [e.StartCube]);
+
+	}
+
+	//just so we dont try to access a destroyed enemy
+	public void RemoveEnemyFromPathManager(Enemy e){
+
+		if (this.currentEnemiesByPath.ContainsKey (e.StartCube)) {
+			if (this.currentEnemiesByPath [e.StartCube].Contains (e)) {
+				this.currentEnemiesByPath [e.StartCube].Remove (e);
+			}
+		}
+	}
+
+
+	#region Enemy Path UI
+	//when we add a new block, does it block the current path?
+	public void ShouldRecalcPathBlocked(GameCube placedIn){
 
 		//Since we change currentPaths in the foreach loop, we have to cache the paths as they are
 		//so we can verify state
@@ -110,18 +127,51 @@ public class EnemyPathManager : MonoBehaviour {
 		foreach (KeyValuePair<GameCube, List<GameCube>> path in paths) {
 			if (path.Value.Contains (placedIn)) {
 				CalcEnemyPath (path.Key);
+
+				foreach (KeyValuePair<GameCube, List<Enemy>> enemies in currentEnemiesByPath) {
+					foreach (Enemy e in enemies.Value) {
+						e.SetPath (currentPaths [path.Key]);
+					}
+				}
 			}
 		}
 	}
 
-	public void CalcEnemyPath(GameCube startCube){
+	//When we delete something, does it open a shorter path?
+	public void ShouldRecalcPathRemoved(){
+
+		Dictionary<GameCube, List<GameCube>> paths = new Dictionary<GameCube, List<GameCube>> ();
+
+		foreach (KeyValuePair<GameCube, List<GameCube>> kvp in currentPaths) {
+			paths [kvp.Key] = currentPaths [kvp.Key];
+		}
+
+		foreach (KeyValuePair<GameCube, List<GameCube>> path in paths) {
+			AStarPath newPath = new AStarPath(path.Key, enemyDestination);
+
+			Debug.Log (newPath.Length () + " " + path.Value.Count);
+
+			if (newPath.Length() < path.Value.Count) {
+				Debug.Log ("Recalcing path");
+				CalcEnemyPath (path.Key, newPath);
+			}
+		}
+	}
+
+	public void RemoveAllEnemyPaths(){
+		foreach (KeyValuePair<GameCube, List<GameCube>> path in currentPaths) {
+			RemoveEnemyPathUI (path.Key);
+		}
+	}
+
+	void CalcEnemyPath(GameCube startCube, AStarPath suppliedPath = null){
 
 		RemoveEnemyPathUI (startCube);
 
 		List<GameObject> pathTrails = new List<GameObject> ();
 		List<GameCube> cachedPath = new List<GameCube> ();
 
-		AStarPath path = new AStarPath (startCube, enemyDestination);
+		AStarPath path = (suppliedPath != null) ? suppliedPath : new AStarPath (startCube, enemyDestination);
 
 		if (path.IsComplete == false) {
 			Debug.LogError ("Enemy Path Completely Blocked!");
@@ -133,7 +183,6 @@ public class EnemyPathManager : MonoBehaviour {
 		}
 			
 		for (float i = 0; i < cachedPath.Count; i++) {
-			//FIXME: uneven spacing due to casting
 			pathTrails.Add (SpawnEnemyPathUI (cachedPath, (int) i, pathTrails));
 		}
 
@@ -151,7 +200,7 @@ public class EnemyPathManager : MonoBehaviour {
 		return pathUIObj;
 	}
 		
-	public void RemoveEnemyPathUI(GameCube startCube){
+	void RemoveEnemyPathUI(GameCube startCube){
 
 		if (currentPathTrails.ContainsKey(startCube) && currentPathTrails[startCube] != null) {
 			foreach (GameObject go in currentPathTrails[startCube]) {

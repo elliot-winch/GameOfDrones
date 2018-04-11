@@ -184,7 +184,7 @@ MonoBehaviour:
   m_endPos: {x: 0, y: 0, z: 1}
   m_lineColor: {r: 0.034482718, g: 1, b: 0, a: 1}
   m_lineWidth: 1
-  m_lightSaberFactor: 0.466
+  m_lightSaberFactor: 0.83
 --- !u!114 &114106285112915250
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -196,8 +196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1497900577f21a44b1ef8199f3061d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 16
-  damage: 1
+  speed: 36
 --- !u!136 &136433114621109858
 CapsuleCollider:
   m_ObjectHideFlags: 1

@@ -659,9 +659,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingHealth: 10
-  cost: 10
-  attackRange: 3
-  damage: 1
-  weaponChargeTime: 0.2
-  rotateSpeed: 1
+  buildCost: 30
+  moveCost: Infinity
+  range: 2
+  damage: 2
+  weaponChargeTime: 0.5
+  rotateSpeed: 3
   projectile: {fileID: 1495670284022458, guid: 1aa6fe14347697f47837fc84ace07431, type: 2}

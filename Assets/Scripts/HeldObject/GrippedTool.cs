@@ -47,6 +47,8 @@ public class GrippedTool: MonoBehaviour {
 			// Call this to undo HoverLock
 			this.hand.HoverUnlock( this.prevHeld.GetComponent<Interactable>() );
 
+			this.prevHeld.GetComponent<HeldObject> ().OnDestroy ();
+
 			Destroy (this.prevHeld);
 		}
 

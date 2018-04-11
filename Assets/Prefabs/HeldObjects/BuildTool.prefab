@@ -523,7 +523,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1935672925881658}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.49454996, y: 0.18515465, z: -0.95670056}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4299475166721070}
@@ -1560,6 +1560,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d36279047b1560544afc74bbc666749b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deadHoldToActTime: 0.1
+  holdToActTime: 1
+  gameCubeActTimeCanvasPrefab: {fileID: 223799721638725616, guid: da3a2e00837d014479bbe36b895476ff,
+    type: 2}
   buildables:
   - {fileID: 1178372916351378, guid: 4ae3f1573667c664ba665a0b60d22d2c, type: 2}
   - {fileID: 1955015407077890, guid: c926c40d62e648f4f80e1050c30d10c4, type: 2}

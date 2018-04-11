@@ -62,7 +62,7 @@ public class Turret : Wall {
 
 		GameObject proj = Instantiate (projectile, transform.position, Quaternion.identity);
 
-		proj.GetComponent<Projectile> ().Launch (currentTarget.transform.position, gameObject, new string[] { "Enemy" });
+		proj.GetComponent<Projectile> ().Launch (this.damage, currentTarget.transform.position, gameObject, new string[] { "Enemy" });
 
 		currentTarget = null;
 

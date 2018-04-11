@@ -10,6 +10,7 @@ public class ResourceManager : MonoBehaviour {
 	public int playerStartResources = 100;
 	[Range(0, 1)]
 	public float reimburseRate = 1.0f;
+	[HideInInspector]
 	public BuildToolResourceDisplay btrd;
 
 	int playerResources;
@@ -59,7 +60,7 @@ public class ResourceManager : MonoBehaviour {
 
 	}
 
-	public void Reimburse(int amount){
+	public void AddResources(int amount){
 
 		PlayerResources += amount;
 	}

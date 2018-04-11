@@ -676,7 +676,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1882732095894498}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.423, y: 1.808, z: -5.74}
+  m_LocalPosition: {x: -3.8709705, y: 1.794106, z: -7.3887024}
   m_LocalScale: {x: 0.03, y: 0.03, z: 0.03}
   m_Children:
   - {fileID: 4078968656112440}
@@ -1208,6 +1208,7 @@ MonoBehaviour:
   moveSpeed: 1
   weaponChargeTime: 0.2
   projectile: {fileID: 1495670284022458, guid: 1aa6fe14347697f47837fc84ace07431, type: 2}
+  onHitParticleSystem: {fileID: 0}
   rotateSpeed: 10
 --- !u!136 &136872675461388812
 CapsuleCollider:
@@ -1221,4 +1222,4 @@ CapsuleCollider:
   m_Radius: 6.8239055
   m_Height: 21.032831
   m_Direction: 0
-  m_Center: {x: 0.08487901, y: 5.22041, z: 0}
+  m_Center: {x: 0.08487901, y: 5.22041, z: 16.28}

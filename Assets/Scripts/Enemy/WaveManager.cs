@@ -21,8 +21,6 @@ public class WaveManager : MonoBehaviour {
 	public List<Enemy> enemyPrefabs;
 
 	[SerializeField]
-	public int numberOfWaves;
-	[SerializeField]
 	public List<Wave> data;
 
 
@@ -47,10 +45,14 @@ public class WaveManager : MonoBehaviour {
 			Debug.LogWarning ("No starting cubes set!");
 			return;
 		}
-
 	}
 
-	//temp!
+	public void OnGameStart(){
+
+		currentWave = 0;
+	}
+
+	//for 2d debugging
 	void Update(){
 		if (Input.GetKeyDown (KeyCode.U)) {
 			RunNextWave ();
@@ -59,6 +61,11 @@ public class WaveManager : MonoBehaviour {
 
 
 	public void RunNextWave(){
+
+		if (GameManager.Instance.GameRunning == false) {
+			Debug.Log ("Cannot start wave if not in game");
+			return;
+		}
 
 		if (enemyParent.childCount <= 0 && enemiesLeftToSpawn <= 0) {
 			if (data.Count > currentWave) {
@@ -95,7 +102,9 @@ public class WaveManager : MonoBehaviour {
 		enemyObj.transform.position = startCubes [group.startCubeIndex].RandomPositionInBounds;
 
 		//start pathfinding
-		enemyObj.GetComponent<Enemy> ().Begin (startCubes [group.startCubeIndex], EnemyPathManager.Instance.EnemyDestination);
+		enemyObj.GetComponent<Enemy> ().Begin (startCubes [group.startCubeIndex]);
+
+		EnemyPathManager.Instance.AddEnemyToPathManager (enemyObj.GetComponent<Enemy> ());
 
 		enemiesLeftToSpawn--;
 	}
@@ -112,6 +121,10 @@ public class WaveManager : MonoBehaviour {
 			Debug.Log("Cleared wave " + currentWave);
 
 			currentWave++;
+
+			if (currentWave >= data.Count) {
+				currentWave = 0;
+			}
 
 			//some kinda of visual i guess
 		}
