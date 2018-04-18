@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour {
 
 		WaveManager.Instance.OnGameStart ();
 		EnemyPathManager.Instance.OnGameStart ();
+		ResourceManager.Instance.OnGameStart ();
 
 		//can place turrets
 		gameRunning = true;

@@ -43,7 +43,10 @@ public class ResourceManager : MonoBehaviour {
 		instance = this;
 
 		PlayerResources = playerStartResources;
+	}
 
+	public void OnGameStart(){
+		PlayerResources = playerStartResources;
 	}
 
 	public bool CanSpend(int amount){

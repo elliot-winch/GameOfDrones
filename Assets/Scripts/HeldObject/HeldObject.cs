@@ -20,24 +20,6 @@ public abstract class HeldObject : MonoBehaviour {
 	protected virtual void Awake(){
 		controlWheel = GetComponent<ControlWheel> ();
 
-		controlWheel.AddControlWheelAction( new ControlWheelSegment( 
-
-			name : "Teleport",
-			action : () => {
-				Debug.Log("Teleport");
-			},
-			icon : Resources.Load<Sprite> ("Icons/teleportIcon"),
-			preferredPosition: ControlWheelSegment.PreferredPosition.Top
-		));
-
-		controlWheel.AddControlWheelAction(new ControlWheelSegment(
-			name : "Wave Start",
-			action: () => 
-			{
-				WaveManager.Instance.RunNextWave();
-			}, 
-			icon: Resources.Load<Sprite> ("Icons/Drone Icon")
-		));
 	}
 
 	protected void HandHoverUpdate( Hand hand ){ }

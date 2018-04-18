@@ -1,0 +1,148 @@
+fileFormatVersion: 2
+guid: c4f6ee659c494a5458113912215e96b5
+timeCreated: 1523481272
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: default
+    100002: mesh01
+    100004: //RootNode
+    400000: default
+    400002: mesh01
+    400004: //RootNode
+    2100000: default
+    2100002: default_rv2_windows
+    2100004: default_rv2_full_body_grill
+    2100006: default_rv2_full_body_cover
+    2100008: default_kitchen_sink_stuff
+    2100010: default_metal
+    2100012: default_counter_top
+    2100014: default_top_kitchen_cabinets_stuff
+    2100016: default_handles
+    2100018: default_stove2
+    2100020: default_ct
+    2100022: default_stove
+    2100024: default_bath_extras
+    2100026: default_sink
+    2100028: default_tubes
+    2100030: default_sofa
+    2100032: default_interior_rv_truck
+    2100034: default_refrigerator
+    2100036: default_f2
+    2100038: default_rv_handles
+    2100040: default_rv_wood
+    2100042: default_rv_matress
+    2100044: default_rv_sheet_pillow
+    2100046: default_rv_sheet_2
+    2100048: default_rv2_full_body
+    2100050: default_dinner
+    2100052: default_dinner_cushions
+    2100054: default_bath_door_rv_2
+    2100056: default_door_handle
+    2100058: default_door_loaded
+    2100060: default_inner_lining
+    2100062: default_door
+    2100064: default_dash_display
+    2100066: default_d2
+    2100068: default_d3
+    2100070: default_d4
+    2100072: default_door_loaded_door_loaded
+    2100074: default_tv
+    2100076: default_flat_screen
+    2100078: default_tv_1
+    2100080: default_flat_screen_tv
+    2100082: default_wipers
+    2100084: default_headlights2
+    2100086: default_seat_cushions
+    2100088: default_tires_rv_truck
+    2100090: default_chasis2
+    2100092: default_rv_truck2_inner_lining_skin_seats
+    2100094: default_brake_lens
+    2100096: default_bumpers
+    2300000: default
+    2300002: mesh01
+    3300000: default
+    3300002: mesh01
+    4300000: default
+    4300002: mesh01
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -21,6 +21,12 @@ public class Pistol : Gun {
 		audioSources = GetComponentsInChildren<AudioSource> ();
 
 		muzzleFlash = barrel.GetChild(0).GetComponent<ParticleSystem> ();
+
+	}
+
+	protected override bool FireControlActivated (HandControls hc)
+	{
+		return hc.TriggerPulled.Down;
 	}
 
 	protected override void Fire (Hand hand)

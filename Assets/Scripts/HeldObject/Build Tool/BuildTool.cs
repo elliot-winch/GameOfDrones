@@ -103,15 +103,12 @@ public class BuildTool : HeldObject {
 	   			{
 					//Mod doesn't work with negative numbers
 					int newID = currentID - 1;
-					Debug.Log(currentID + " " + newID + " " + buildables.Length);
 					if (newID < -1){
 						this.CurrentID = buildables.Length - 1;
 					} else {
 						this.CurrentID = newID;
 					}
-
-					Debug.Log(this.CurrentID);
-
+					
 	   			}, 
 			icon: Resources.Load<Sprite> ("Icons/left-arrow"),
 			preferredPosition: ControlWheelSegment.PreferredPosition.Left);
@@ -127,9 +124,7 @@ public class BuildTool : HeldObject {
 					} else {
 						this.CurrentID = newID;
 					}
-
-					Debug.Log(this.CurrentID);
-
+					
 				}, 
 			icon: Resources.Load<Sprite> ("Icons/right-arrow"),
 			preferredPosition: ControlWheelSegment.PreferredPosition.Right);
@@ -174,9 +169,9 @@ public class BuildTool : HeldObject {
 						}
 
 						if (currentID >= 0) {
-							cube.OnPointedAt (buildables [currentID].GetComponent<IPlaceable> ());
+							cube.OnPointedAt (buildables [currentID].GetComponent<IPlaceable> (), this);
 						} else {
-							cube.OnPointedAt (null);
+							cube.OnPointedAt (null, this);
 						}
 					}
 
@@ -243,45 +238,51 @@ public class BuildTool : HeldObject {
 
 	#region Build Functionality
 	public void ActOnCube(GameCube gc){
-		//If placing
-		if (currentID >= 0) {
 
-			IPlaceable placeable = buildables [currentID].GetComponent<IPlaceable> ();
+		if (gc.CurrentlyPointingAt == this) {
+			//If placing
+			if (currentID >= 0) {
 
-			GameCube.PlacementError pe = gc.CanPlace (placeable);
+				IPlaceable placeable = buildables [currentID].GetComponent<IPlaceable> ();
 
-			if (pe == GameCube.PlacementError.None) {
-				GameObject p = Instantiate (buildables [currentID]);
+				GameCube.PlacementError pe = gc.CanPlace (placeable);
 
-				//most of the spawning process is handled by the gamecube
-				gc.Occupying = p;
+				if (pe == GameCube.PlacementError.None) {
+					GameObject p = Instantiate (buildables [currentID]);
 
-				//spend resources
-				ResourceManager.Instance.Spend(p.GetComponent<IPlaceable> ().BuildCost);
+					//most of the spawning process is handled by the gamecube
+					gc.Occupying = p;
 
-				EnemyPathManager.Instance.ShouldRecalcPathBlocked (gc);
+					//spend resources
+					ResourceManager.Instance.Spend (p.GetComponent<IPlaceable> ().BuildCost);
 
+					EnemyPathManager.Instance.ShouldRecalcPathBlocked (gc);
+
+				} else {
+					//failure cases
+					Debug.Log (pe.ToString ());
+				}
 			} else {
-				//failure cases
+			
+				GameCube.RemoveError re = gc.CanRemove ();
+
+				if (re == GameCube.RemoveError.None) {
+
+					ResourceManager.Instance.AddResources (gc.Occupying.GetComponent<IPlaceable> ().BuildCost);
+
+					gc.Occupying = null;
+
+					EnemyPathManager.Instance.ShouldRecalcPathRemoved ();
+
+				} else {
+					//failure case
+					Debug.Log (re.ToString ());
+				}
 			}
 		} else {
-
-			GameCube.RemoveError re = gc.CanRemove ();
-
-			if (re == GameCube.RemoveError.None) {
-
-				ResourceManager.Instance.AddResources (gc.Occupying.GetComponent<IPlaceable> ().BuildCost);
-
-				gc.Occupying = null;
-
-				EnemyPathManager.Instance.ShouldRecalcPathRemoved ();
-
-			} else {
-				//failure case
-			}
+			Debug.Log ("Another build tool is pointed at this cube first!");
 		}
 
-		//check path
 	}
 
 	#endregion

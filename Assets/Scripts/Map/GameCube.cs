@@ -20,6 +20,7 @@ public class GameCube : MonoBehaviour {
 
 	private GameObject occupying;
 	private bool locked = false;
+	private BuildTool currentlyPointingAt = null;
 
 	Material cubeMat;
 	Color originalColor;
@@ -45,6 +46,12 @@ public class GameCube : MonoBehaviour {
 		}
 		set {
 			locked = value;
+		}
+	}
+
+	public BuildTool CurrentlyPointingAt {
+		get {
+			return currentlyPointingAt;
 		}
 	}
 
@@ -162,6 +169,8 @@ public class GameCube : MonoBehaviour {
 
 	void DestroyOccupying(){
 		Destroy (occupying);
+
+		MoveCost = 1f;
 	}
 	#endregion
 
@@ -235,37 +244,40 @@ public class GameCube : MonoBehaviour {
 		return RemoveError.None;
 	}
 
-	public void OnPointedAt(IPlaceable placeable){
+	public void OnPointedAt(IPlaceable placeable, BuildTool bt){
 
-		//Repair
-		if (this.Occupying != null) {
+		if (currentlyPointingAt == null) {
+			currentlyPointingAt = bt;
+			//Repair
+			if (this.Occupying != null) {
 
-			RepairError re = CanRepair ();
-		}
+				RepairError re = CanRepair ();
+			}
 
 		//Place
 		else if (placeable != null) {
 
-			PlacementError pe = CanPlace (placeable);
+				PlacementError pe = CanPlace (placeable);
 
-			if (pe == PlacementError.None) {
+				if (pe == PlacementError.None) {
 			
-				PositiveBuildUI (placeable);
+					PositiveBuildUI (placeable);
 
+				} else {
+					NegativeBuildUI (placeable, pe);
+
+					//display some ui based on error
+				}
 			} else {
-				NegativeBuildUI (placeable, pe);
+				//Remove UI
 
-				//display some ui based on error
-			}
-		} else {
-			//Remove UI
+				RemoveError re = CanRemove ();
 
-			RemoveError re = CanRemove ();
-
-			if (re == RemoveError.None) {
-				PositiveRemoveUI ();
-			} else {
-				NegativeRemoveUI (re);
+				if (re == RemoveError.None) {
+					PositiveRemoveUI ();
+				} else {
+					NegativeRemoveUI (re);
+				}
 			}
 		}
 	}
@@ -278,6 +290,8 @@ public class GameCube : MonoBehaviour {
 				Reset (m);
 			}
 		}
+
+		currentlyPointingAt = null;
 	}
 
 	List<Material> inRangeMats;

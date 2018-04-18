@@ -55,15 +55,14 @@ public class Drone : Enemy {
 	{
 		base.Hit (hitPosition, hitDirection, amount);
 
-		Debug.Log ("Hit drone");
-
 		//Particle Effect
-		GameObject peObj = Instantiate(onHitParticleSystem, transform);
+		if (onHitParticleSystem != null) {
+			GameObject peObj = Instantiate (onHitParticleSystem, transform);
+			peObj.transform.position = hitPosition;
+			peObj.transform.LookAt (hitDirection);
 
-		peObj.transform.position = hitPosition;
-		peObj.transform.LookAt (hitDirection);
-
-		peObj.GetComponent<ParticleSystem> ().Play ();
+			peObj.GetComponent<ParticleSystem> ().Play ();
+		}
 	}
 
 	//Private methods

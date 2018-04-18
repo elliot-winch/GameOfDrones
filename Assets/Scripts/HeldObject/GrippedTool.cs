@@ -21,9 +21,14 @@ public class GrippedTool: MonoBehaviour {
 	private Hand.AttachmentFlags attachmentFlags = Hand.defaultAttachmentFlags & Hand.AttachmentFlags.SnapOnAttach & Hand.AttachmentFlags.DetachOthers;
 	private Hand hand;
 	private GameObject prevHeld;
+	private GrippedToolIndex prevGunHeld = GrippedToolIndex.Pistol;
+
+	private int numGuns;
 
 	void Start ()
 	{
+		numGuns = Enum.GetNames (typeof(GrippedToolIndex)).Length - 1;
+
 		StartCoroutine(AttachToolsAfterDelay(1f));
 	}
 
@@ -50,6 +55,10 @@ public class GrippedTool: MonoBehaviour {
 			this.prevHeld.GetComponent<HeldObject> ().OnDestroy ();
 
 			Destroy (this.prevHeld);
+
+			if ((int)index >= (int)GrippedToolIndex.Pistol) {
+				this.prevGunHeld = index;
+			}
 		}
 
 		GameObject playerHeld = Instantiate (this.playerHeldPrefabs[(int)index].gameObject);
@@ -62,26 +71,57 @@ public class GrippedTool: MonoBehaviour {
 
 		//Set Up Control Wheel Actions
 
-		List<ControlWheelSegment> segs = new List<ControlWheelSegment>();
+		if (index == GrippedToolIndex.BuildTool) {
+			playerHeld.GetComponent<ControlWheel> ().AddControlWheelAction (
+				new ControlWheelSegment (
+					name: "Switch",
+					action: () => {
+						SwitchGrippedObject (prevGunHeld);
+					},
+					icon: Resources.Load<Sprite>("Icons/swapIcon")
+				));
+		} else {
+			ControlWheelSegment buildTool = new ControlWheelSegment (
+					name: "Switch",
+					action: () => {
+						SwitchGrippedObject (GrippedToolIndex.BuildTool);
+					},
+					icon: Resources.Load<Sprite>("Icons/swapIcon")
+			);
+				
+			ControlWheelSegment left = new ControlWheelSegment(
+				name: "Change Gun Left",
+				action: () =>
+				{
+					int newIndex = ((int)index + this.numGuns - 2) % this.numGuns + 1;
 
-		foreach(GrippedToolIndex switchTo in Enum.GetValues(typeof(GrippedToolIndex)))
-		{
-			if(switchTo == index)
-			{
-				continue;
-			}
+					SwitchGrippedObject((GrippedToolIndex)newIndex);
 
-			segs.Add( new ControlWheelSegment(
-				name : "Switch",
-				action : () =>
-		   		{
-			   		SwitchGrippedObject(switchTo);
 				}, 
-				icon: Resources.Load<Sprite> ("Icons/swapIcon")
-			));
+				icon: Resources.Load<Sprite> ("Icons/left-arrow"),
+				preferredPosition: ControlWheelSegment.PreferredPosition.Left
+			);
+
+			ControlWheelSegment right = new ControlWheelSegment(
+				name: "Change Gun Right",
+				action : () =>
+				{
+					int newIndex = ((int)index) % this.numGuns + 1;
+
+					SwitchGrippedObject((GrippedToolIndex)newIndex);
+
+				}, 
+				icon: Resources.Load<Sprite> ("Icons/right-arrow"),
+				preferredPosition: ControlWheelSegment.PreferredPosition.Right
+			);
+
+			playerHeld.GetComponent<ControlWheel> ().AddControlWheelActions(new ControlWheelSegment[] {
+				left,
+				buildTool,
+				right,
+			});
 		}
 
-		playerHeld.GetComponent<ControlWheel>().AddControlWheelActions(segs.ToArray());
 
 		this.prevHeld = playerHeld;
 	}
@@ -89,6 +129,7 @@ public class GrippedTool: MonoBehaviour {
 
 public enum GrippedToolIndex {
 	BuildTool,
-	Pistol
+	Pistol,
+	RapidFire
 	//etc
 }

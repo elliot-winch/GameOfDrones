@@ -26,10 +26,25 @@ public class ControlWheel : MonoBehaviour {
 	List<Vector2> dividingVectors;
 	List<GameObject> displaySegments;
 
+	private static Action<ControlWheel> onCreate;
+
+	public static void RegisterOnCreate(Action<ControlWheel> a){
+		onCreate += a;
+	}
+
+	public static void ResetOnCreate(){
+		onCreate = null;
+	}
+
+	/* ------------- */
 
 	void Awake(){
 
 		displaySegments = new List<GameObject> ();
+
+		if (onCreate != null) {
+			onCreate (this);
+		}
 
 	}
 
@@ -349,13 +364,13 @@ public class ControlWheelSegment {
 			}
 
 		case PreferredPosition.Left:
-			if (numSegs > 3) {
+			if (numSegs >= 3) {
 				return 1;
 			} else {
 				return -1;
 			}
 		case PreferredPosition.Right: 
-			if (numSegs > 3) {
+			if (numSegs >= 3) {
 				return numSegs - 1;
 			} else {
 				return -1;

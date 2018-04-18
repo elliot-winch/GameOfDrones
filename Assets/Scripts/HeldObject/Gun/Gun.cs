@@ -7,8 +7,6 @@ using Valve.VR.InteractionSystem;
 
 public abstract class Gun : HeldObject {
 
-	protected Action onShoot;
-
 	public float damage;
 	public float rateOfFire;
 
@@ -19,10 +17,6 @@ public abstract class Gun : HeldObject {
 
 	//every coroutine that you launch should call firelock when it begins and fireunlock when it ends
 	private int firingLock = 0;
-
-	public void RegisterOnShootCallback(Action callback){
-		onShoot += callback;
-	}
 
 	protected override void Awake(){
 		base.Awake();
@@ -36,11 +30,9 @@ public abstract class Gun : HeldObject {
 
 		base.HandAttachedUpdate (hand);
 
-		HandControls hc = ControlsManager.Instance.GetControlsFromHand (hand);
-
 		if (rateOfFireTimer > rateOfFire)
 		{
-			if (hc.TriggerPulled.Down)
+			if (FireControlActivated(ControlsManager.Instance.GetControlsFromHand (hand)))
 			{
 				Fire(hand);
 				rateOfFireTimer = 0f;
@@ -85,7 +77,7 @@ public abstract class Gun : HeldObject {
 				}
 			}
 		}*/
-
+	protected abstract bool FireControlActivated (HandControls hc);
 
 	protected abstract void Fire (Hand hand);
 

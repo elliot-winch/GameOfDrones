@@ -50,6 +50,8 @@ public class WaveManager : MonoBehaviour {
 	public void OnGameStart(){
 
 		currentWave = 0;
+
+		AddNewWaveButton ();
 	}
 
 	//for 2d debugging
@@ -68,6 +70,9 @@ public class WaveManager : MonoBehaviour {
 		}
 
 		if (enemyParent.childCount <= 0 && enemiesLeftToSpawn <= 0) {
+
+			RemoveNewWaveButton ();
+
 			if (data.Count > currentWave) {
 
 				enemiesLeftToSpawn = 0;
@@ -122,11 +127,43 @@ public class WaveManager : MonoBehaviour {
 
 			currentWave++;
 
+			AddNewWaveButton ();
+
 			if (currentWave >= data.Count) {
 				currentWave = 0;
 			}
 
 			//some kinda of visual i guess
+		}
+	}
+
+	private void AddNewWaveButton(){
+
+		ControlWheelSegment startWave = new ControlWheelSegment (
+            name : "Start Wave",
+            action: () => {
+				WaveManager.Instance.RunNextWave ();
+			}, 
+	        icon: Resources.Load<Sprite> ("Icons/Drone Icon")
+	    );
+
+		//Wheels in the future
+		ControlWheel.RegisterOnCreate ((self) => {
+			self.AddControlWheelAction( startWave );
+		});
+
+		//Currently equipped
+		foreach (ControlWheel cw in Resources.FindObjectsOfTypeAll<ControlWheel> ()) {
+			cw.AddControlWheelAction ( startWave );
+		}
+	}
+
+	private void RemoveNewWaveButton(){
+
+		ControlWheel.ResetOnCreate ();
+
+		foreach (ControlWheel cw in Resources.FindObjectsOfTypeAll<ControlWheel> ()) {
+			cw.RemoveControlWheelAction ("Start Wave");
 		}
 	}
 }
