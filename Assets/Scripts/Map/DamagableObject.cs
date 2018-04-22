@@ -18,7 +18,7 @@ public class DamagableObject : MonoBehaviour {
 		health = startingHealth;
 	}
 
-	public virtual void Hit(Vector3 hitPoint, Vector3 hitDirection, float amount){
+	public virtual void Hit(Vector3 hitPoint, Transform hitFrom, float amount){
 
 		health = Mathf.Max (0f, health - amount);
 

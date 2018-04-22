@@ -37,10 +37,6 @@ public class GazeInteraction : MonoBehaviour {
 	}
 
 	IEnumerator Gaze(){
-
-		Debug.Log ("Starting gaze");
-		Debug.Log (onGaze);
-
 		yield return new WaitForSeconds (delay);
 
 		Debug.Log (onGaze);

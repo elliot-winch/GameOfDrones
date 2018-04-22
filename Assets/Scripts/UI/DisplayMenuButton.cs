@@ -6,9 +6,9 @@ public class DisplayMenuButton : DamagableObject {
 
 	public GameObject menu;
 
-	public override void Hit (Vector3 hitPoint, Vector3 hitDirection, float amount)
+	public override void Hit (Vector3 hitPoint, Transform hitFrom, float amount)
 	{
-		base.Hit (hitPoint, hitDirection, amount);
+		base.Hit (hitPoint, hitFrom, amount);
 	}
 
 	protected override void Destroyed ()

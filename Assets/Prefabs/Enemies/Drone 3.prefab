@@ -20,7 +20,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4516522393075566}
   - component: {fileID: 95483240889793926}
-  m_Layer: 0
+  - component: {fileID: 114424897736715918}
+  m_Layer: 8
   m_Name: Drone 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -37,7 +38,7 @@ GameObject:
   - component: {fileID: 4834007282957352}
   - component: {fileID: 33745857497226972}
   - component: {fileID: 23407939309126430}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: pTorus3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54,7 +55,7 @@ GameObject:
   - component: {fileID: 4646160804939372}
   - component: {fileID: 33594491029609868}
   - component: {fileID: 23974293377784500}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: pSphere4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,7 +72,7 @@ GameObject:
   - component: {fileID: 4132976513585840}
   - component: {fileID: 33120975519258764}
   - component: {fileID: 23881018202769138}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: pSphere9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,7 +89,7 @@ GameObject:
   - component: {fileID: 4449812038266694}
   - component: {fileID: 33423839528199254}
   - component: {fileID: 23591465646505190}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: pCylinder1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,7 +106,7 @@ GameObject:
   - component: {fileID: 4014293028143270}
   - component: {fileID: 33416597707971744}
   - component: {fileID: 23269767409979090}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: pTorus4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -122,7 +123,7 @@ GameObject:
   - component: {fileID: 4867124471384372}
   - component: {fileID: 33783425507775956}
   - component: {fileID: 23950471681628638}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: pSphere7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -175,7 +176,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1065546920532404}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.45, y: 5.39, z: 0}
+  m_LocalPosition: {x: 4.685526, y: 1.9500433, z: 0.7027502}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children:
   - {fileID: 4449812038266694}
@@ -489,3 +490,23 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114424897736715918
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1065546920532404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31272e1324d2e194c8659ba6fd4dab79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startingHealth: 10
+  resourcesGainedOnDestroyed: 5
+  attackRange: 2
+  attackDamage: 100
+  weaponChargeTime: 0.2
+  moveSpeed: 1
+  rotateSpeed: 10
+  onHitParticleSystem: {fileID: 0}
+  explodeTime: 0.4

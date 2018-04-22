@@ -20,7 +20,7 @@ public class Pistol : Gun {
 
 		audioSources = GetComponentsInChildren<AudioSource> ();
 
-		muzzleFlash = barrel.GetChild(0).GetComponent<ParticleSystem> ();
+		muzzleFlash = barrel.GetComponentInChildren<ParticleSystem> ();
 
 	}
 
@@ -31,9 +31,11 @@ public class Pistol : Gun {
 
 	protected override void Fire (Hand hand)
 	{
-		GameObject proj = Instantiate (projectile, new Vector3(barrel.transform.position.x, barrel.transform.position.y, barrel.transform.position.z + projectile.GetComponent<Collider>().bounds.extents.z), Quaternion.identity);
+		base.Fire (hand);
 
-		proj.GetComponentInChildren<Projectile> ().Launch (this.damage, barrel.transform, gameObject, new string[] { "Enemy" });
+		GameObject proj = Instantiate (projectile, barrel.transform.position, Quaternion.identity);
+
+		proj.GetComponentInChildren<Projectile> ().Launch (barrel.transform, this.damage, gameObject, new string[] { "Enemy" });
 
 		//Muzzle flash
 		muzzleFlash.Play ();
@@ -52,7 +54,6 @@ public class Pistol : Gun {
 
 		lastPlayedIndex = randomAudioSource;
 
-		Debug.Log (randomAudioSource);
 	}
 
 }

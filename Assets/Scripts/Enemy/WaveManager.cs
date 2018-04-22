@@ -13,6 +13,8 @@ public class WaveManager : MonoBehaviour {
 	static WaveManager instance;
 
 	//Collected in editor
+	public float fastEnemySpeed;
+	public float attackingEnemyRange;
 	public Transform enemyParent;
 
 	[SerializeField]
@@ -69,6 +71,7 @@ public class WaveManager : MonoBehaviour {
 			return;
 		}
 
+
 		if (enemyParent.childCount <= 0 && enemiesLeftToSpawn <= 0) {
 
 			RemoveNewWaveButton ();
@@ -78,8 +81,43 @@ public class WaveManager : MonoBehaviour {
 				enemiesLeftToSpawn = 0;
 
 				foreach (EnemyGroup g in data[currentWave].groups) {
-					enemiesLeftToSpawn += g.number;
-					StartCoroutine (GroupCoroutine (g));
+
+					//NB an enemy cannot be fast and attacking!
+
+					if (g.enemy == EnemyType.Drone || g.enemy == EnemyType.Triple) {
+
+						List<int> allEnemyIndicies = new List<int> ();
+						List<int> fastEnemyIndicies = new List<int> ();
+						List<int> attackingEnemyIndicies = new List<int> ();
+						for (int i = 0; i < g.number; i++) {
+							allEnemyIndicies.Add (i);
+						}
+
+						for (int i = 0; i < g.numFastEnemies; i++) {
+							if (allEnemyIndicies.Count <= 0) {
+								Debug.Log ("WaveManager Warning: Run out of enemies to randomly allocate 'increased speed' to");
+							}
+
+							int r = Random.Range (0, allEnemyIndicies.Count);
+							fastEnemyIndicies.Add (allEnemyIndicies [r]);
+							allEnemyIndicies.RemoveAt (r);
+						}
+
+						for (int i = 0; i < g.numAttackingEnemies; i++) {
+							if (allEnemyIndicies.Count <= 0) {
+								Debug.Log ("WaveManager Warning: Run out of enemies to randomly allocate 'increased range' to");
+							}
+
+							int r = Random.Range (0, allEnemyIndicies.Count);
+							attackingEnemyIndicies.Add (allEnemyIndicies [r]);
+							allEnemyIndicies.RemoveAt (r);
+						}
+
+						enemiesLeftToSpawn += g.number;
+						StartCoroutine (GroupCoroutine (g, fastEnemyIndicies, attackingEnemyIndicies));
+					} else {
+						StartCoroutine (GroupCoroutine (g, new List<int>(), new List<int>()));
+					}
 				}
 			}
 		} else {
@@ -87,7 +125,7 @@ public class WaveManager : MonoBehaviour {
 		}
 	}
 		
-	IEnumerator GroupCoroutine(EnemyGroup group){
+	IEnumerator GroupCoroutine(EnemyGroup group, List<int> randomFastIndicies, List<int> randomAttackingIndicies){
 
 		yield return new WaitForSeconds (group.initialDelay);
 
@@ -95,23 +133,28 @@ public class WaveManager : MonoBehaviour {
 	
 			yield return new WaitForSeconds (group.timeDelay);
 
-			SpawnEnemy (group);
+			//spawn enemy
+			GameObject enemyObj = Instantiate(enemyPrefabs[(int)group.enemy].gameObject, enemyParent);
+
+			enemyObj.transform.position = startCubes [group.startCubeIndex].RandomPositionInBounds;
+
+			Enemy e = enemyObj.GetComponent<Enemy> ();
+
+			if (randomFastIndicies.Contains (i)) {
+				e.moveSpeed = this.fastEnemySpeed;
+			}
+
+			if (randomAttackingIndicies.Contains (i)) {
+				e.attackRange = this.attackingEnemyRange;
+			}
+
+			//start pathfinding
+			e.Begin (startCubes [group.startCubeIndex]);
+
+			EnemyPathManager.Instance.AddEnemyToPathManager (e);
+
+			enemiesLeftToSpawn--;
 		}
-	}
-
-
-	public void SpawnEnemy(EnemyGroup group){
-		//spawn enemy
-		GameObject enemyObj = Instantiate(enemyPrefabs[(int)group.enemy].gameObject, enemyParent);
-
-		enemyObj.transform.position = startCubes [group.startCubeIndex].RandomPositionInBounds;
-
-		//start pathfinding
-		enemyObj.GetComponent<Enemy> ().Begin (startCubes [group.startCubeIndex]);
-
-		EnemyPathManager.Instance.AddEnemyToPathManager (enemyObj.GetComponent<Enemy> ());
-
-		enemiesLeftToSpawn--;
 	}
 
 	public void CouldEndWave(){
@@ -180,6 +223,8 @@ public class EnemyGroup {
 	public float timeDelay;
 	public float initialDelay;
 	public int startCubeIndex;
+	public int numFastEnemies;
+	public int numAttackingEnemies;
 
 	/*
 	public EnemyGroup(){
@@ -203,5 +248,6 @@ public class EnemyGroup {
 
 public enum EnemyType {
 	Drone,
-	Flash
+	Triple,
+	Bomber
 }

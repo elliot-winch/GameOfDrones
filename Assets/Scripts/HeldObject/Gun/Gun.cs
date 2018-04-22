@@ -13,16 +13,16 @@ public abstract class Gun : HeldObject {
 	public GameObject projectile;
 
 	private float rateOfFireTimer;
-	protected Transform barrel;
+	public Transform barrel;
 
-	//every coroutine that you launch should call firelock when it begins and fireunlock when it ends
-	private int firingLock = 0;
+	private Recoiler recoiler;
 
 	protected override void Awake(){
 		base.Awake();
 
 		rateOfFireTimer = 0f;
-		barrel = transform.GetChild(0).Find ("EndOfBarrel");
+
+		recoiler = GetComponentInChildren<Recoiler> ();
 	}
 
 	#region HeldObject
@@ -56,39 +56,11 @@ public abstract class Gun : HeldObject {
 	}
 	#endregion
 
-		#region Fire
-		/* Raycast Firing - not cool
-		protected virtual void Fire(){
-			rateOfFireTimer = 0f;
 
-			if (onShoot != null) {
-				onShoot ();
-			}
-
-			RaycastHit hitInfo;
-
-			if(Physics.Raycast(transform.position, transform.forward, out hitInfo)){
-				if(hitInfo.collider != null){
-					//we hit a collider
-					if (hitInfo.collider.GetComponentInParent<DamagableObject> () != null) {
-						hitInfo.collider.GetComponentInParent<DamagableObject> ().Hit (10);
-					}
-
-				}
-			}
-		}*/
 	protected abstract bool FireControlActivated (HandControls hc);
 
-	protected abstract void Fire (Hand hand);
+	protected virtual void Fire (Hand hand) {
 
-	//This should be called at the beginning of every coroutine associated with Fire
-	public void FireLock(){
-		firingLock++;
+		recoiler.Recoil ();
 	}
-
-	public void FireUnlock(){
-		firingLock--;
-	}
-	#endregion
-
 }

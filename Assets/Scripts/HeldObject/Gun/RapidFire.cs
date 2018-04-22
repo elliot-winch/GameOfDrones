@@ -34,7 +34,7 @@ public class RapidFire : Gun {
 	{
 		GameObject proj = Instantiate (projectile, new Vector3(barrel.transform.position.x, barrel.transform.position.y, barrel.transform.position.z + projectile.GetComponent<Collider>().bounds.extents.z), Quaternion.identity);
 
-		proj.GetComponentInChildren<Projectile> ().Launch (this.damage, barrel.transform, gameObject, new string[] { "Enemy" });
+		proj.GetComponentInChildren<Projectile> ().Launch (barrel.transform, this.damage, gameObject, new string[] { "Enemy" });
 
 		//Muzzle flash
 		muzzleFlash.Play ();
@@ -53,7 +53,6 @@ public class RapidFire : Gun {
 
 		lastPlayedIndex = randomAudioSource;
 
-		Debug.Log (randomAudioSource);
 	}
 
 }

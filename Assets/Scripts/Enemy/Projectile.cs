@@ -9,9 +9,16 @@ public class Projectile : MonoBehaviour {
 	public float speed = 1f;
 
 	private float damage;
+	private GameObject launcher;
 
 	string[] layersToHit;
 	Transform rootParent;
+
+	public string[] LayersToHit {
+		get {
+			return layersToHit;
+		}
+	}
 
 	void Start(){
 		Transform t = transform;
@@ -22,33 +29,31 @@ public class Projectile : MonoBehaviour {
 		rootParent = t;
 	}
 
-	public void Launch(float damage, Vector3 position, GameObject dontCollideWith, string[] layersToHit = null){
+	public void Launch(Vector3 position, float damage, GameObject launcher, string[] layersToHit = null){
 		//there is a case where something was firing at an object that is destroyed before the projectile is launched
-		this.damage = damage;
-
+	
 		this.transform.LookAt (position);
 
-		this.layersToHit = layersToHit;
-
-		Launch (dontCollideWith);
-
+		Launch(damage, launcher, layersToHit);
 	}
 
-	public void Launch(float damage, Transform inLineWith, GameObject dontCollideWith, string[] layersToHit = null)
+	public void Launch(Transform inLineWith, float damage,  GameObject launcher, string[] layersToHit = null)
 	{
-		this.damage = damage;
 
 		this.transform.forward = inLineWith.forward;
 
-		this.layersToHit = layersToHit;
-
-		Launch(dontCollideWith);
+		Launch(damage, launcher, layersToHit);
 
 	}
 
-	private void Launch(GameObject dontCollideWith){
+	private void Launch(float damage, GameObject launcher, string[] layersToHit){
 
-		foreach (Collider c in dontCollideWith.GetComponentsInChildren<Collider>()) {
+		this.damage = damage;
+		this.launcher = launcher;
+		this.layersToHit = layersToHit;
+
+
+		foreach (Collider c in launcher.GetComponentsInChildren<Collider>()) {
 			foreach (Collider mc in GetComponentsInChildren<Collider>()) {
 				Physics.IgnoreCollision (c, mc);
 			}
@@ -60,17 +65,13 @@ public class Projectile : MonoBehaviour {
 	}
 
 	void OnCollisionEnter(Collision col){
+
 		//we have defined layers and this isn't one of them
-		Debug.Log("Projectile collides");
-		Debug.Log ("Looking for layers: " + layersToHit [0] + " (only + " + layersToHit.Length + ") and this collider is in layer " + LayerMask.LayerToName (col.gameObject.layer));
 		if (this.layersToHit != null && layersToHit.Contains(LayerMask.LayerToName(col.gameObject.layer)))
 		{ 
-			Debug.Log (LayerMask.LayerToName(col.gameObject.layer) + " " + layersToHit [0]);
-
 			if (col.collider.GetComponentInParent<DamagableObject>() != null)
 			{
-				Vector3 hitDirection = transform.InverseTransformDirection (GetComponent<Rigidbody> ().velocity);
-				col.collider.GetComponentInParent<DamagableObject>().Hit(col.contacts[0].point, hitDirection, damage);
+				col.collider.GetComponentInParent<DamagableObject>().Hit(col.contacts[0].point, this.launcher.transform, this.damage);
 			}
 		}
 

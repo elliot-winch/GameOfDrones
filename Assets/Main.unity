@@ -761,6 +761,22 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 97ce004937ea65a489a2f8fc8e886d52, type: 3}
   m_IsPrefabParent: 0
+--- !u!1 &376351578 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 100000, guid: 3fdbb780952280c48ad50b5eaede57da, type: 3}
+  m_PrefabInternal: {fileID: 1549135984}
+--- !u!65 &376351579
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 376351578}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 102.2057, y: 1, z: 103.48458}
+  m_Center: {x: 0.47957703, y: 0, z: 0.29794922}
 --- !u!1001 &378027479
 Prefab:
   m_ObjectHideFlags: 0
@@ -867,7 +883,7 @@ ReflectionProbe:
   m_TimeSlicingMode: 0
   m_Resolution: 128
   m_UpdateFrequency: 0
-  m_BoxSize: {x: 20, y: 20, z: 20}
+  m_BoxSize: {x: 20, y: 25, z: 20}
   m_BoxOffset: {x: 0, y: 0, z: 0}
   m_NearClip: 0.3
   m_FarClip: 1000
@@ -1669,7 +1685,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1151493425}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 3.5, y: 46.5, z: 0}
+  m_LocalPosition: {x: 3.5, y: 10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1772,21 +1788,6 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 114127039033733658, guid: dc06161b6d97feb419f45f03b62e14b9,
-        type: 2}
-      propertyPath: playerHeldPrefabs.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 114861674027391762, guid: dc06161b6d97feb419f45f03b62e14b9,
-        type: 2}
-      propertyPath: playerHeldPrefabs.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 114111067238223332, guid: dc06161b6d97feb419f45f03b62e14b9,
-        type: 2}
-      propertyPath: playerHeldPrefabs.Array.size
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 447954, guid: dc06161b6d97feb419f45f03b62e14b9, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1819,24 +1820,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114127039033733658, guid: dc06161b6d97feb419f45f03b62e14b9,
-        type: 2}
-      propertyPath: playerHeldPrefabs.Array.data[2]
-      value: 
-      objectReference: {fileID: 114512188386322046, guid: 74cfdb0661679c847bf68a81982f96ed,
-        type: 2}
-    - target: {fileID: 114861674027391762, guid: dc06161b6d97feb419f45f03b62e14b9,
-        type: 2}
-      propertyPath: playerHeldPrefabs.Array.data[2]
-      value: 
-      objectReference: {fileID: 114512188386322046, guid: 74cfdb0661679c847bf68a81982f96ed,
-        type: 2}
-    - target: {fileID: 114111067238223332, guid: dc06161b6d97feb419f45f03b62e14b9,
-        type: 2}
-      propertyPath: playerHeldPrefabs.Array.data[2]
-      value: 
-      objectReference: {fileID: 114512188386322046, guid: 74cfdb0661679c847bf68a81982f96ed,
-        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: dc06161b6d97feb419f45f03b62e14b9, type: 2}
   m_IsPrefabParent: 0
@@ -2490,7 +2473,6 @@ GameObject:
   - component: {fileID: 1548584362}
   - component: {fileID: 1548584366}
   - component: {fileID: 1548584367}
-  - component: {fileID: 1548584368}
   - component: {fileID: 1548584361}
   - component: {fileID: 1548584363}
   - component: {fileID: 1548584364}
@@ -2599,84 +2581,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4637aec87f9ad174c9b44500136634bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fastEnemySpeed: 3
+  attackingEnemyRange: 10
   enemyParent: {fileID: 1339882738}
   startCubes:
   - {fileID: 1029452244}
   enemyPrefabs:
-  - {fileID: 114934456002686462, guid: 6600cb5ce0a30514abea388fd16287df, type: 2}
-  - {fileID: 114719600905913674, guid: b632f78fdc5c8d24e90677e740045b17, type: 2}
+  - {fileID: 114126791378515290, guid: 7fbcb8e049aa6954f8662837847410bd, type: 2}
+  - {fileID: 114773702029099506, guid: b632f78fdc5c8d24e90677e740045b17, type: 2}
+  - {fileID: 114424897736715918, guid: 2cde072f594d17249b28c289a70e193e, type: 2}
   data:
   - groups:
-    - enemy: 0
-      number: 5
-      timeDelay: 0.2
+    - enemy: 2
+      number: 1
+      timeDelay: 0.4
       initialDelay: 0
       startCubeIndex: 0
-  - groups:
-    - enemy: 0
-      number: 10
-      timeDelay: 0.1
-      initialDelay: 0
-      startCubeIndex: 0
-    - enemy: 0
-      number: 10
-      timeDelay: 0.1
-      initialDelay: 6
-      startCubeIndex: 0
-    - enemy: 0
-      number: 10
-      timeDelay: 0.1
-      initialDelay: 12
-      startCubeIndex: 0
-    - enemy: 0
-      number: 10
-      timeDelay: 0.1
-      initialDelay: 18
-      startCubeIndex: 0
-  - groups:
-    - enemy: 0
-      number: 16
-      timeDelay: 0.2
-      initialDelay: 0
-      startCubeIndex: 0
-    - enemy: 0
-      number: 16
-      timeDelay: 0.2
-      initialDelay: 7
-      startCubeIndex: 0
-    - enemy: 0
-      number: 16
-      timeDelay: 0.2
-      initialDelay: 14
-      startCubeIndex: 0
-    - enemy: 0
-      number: 16
-      timeDelay: 0.2
-      initialDelay: 21
-      startCubeIndex: 0
-    - enemy: 0
-      number: 16
-      timeDelay: 0.2
-      initialDelay: 28
-      startCubeIndex: 0
-  - groups:
-    - enemy: 0
-      number: 100
-      timeDelay: 0.5
-      initialDelay: 0
-      startCubeIndex: 0
---- !u!114 &1548584368
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1548584360}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fbf0db37528a104dac18d3f4d1d2b47, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sloMoFactor: 0.4
+      numFastEnemies: 0
+      numAttackingEnemies: 0
 --- !u!1001 &1549135984
 Prefab:
   m_ObjectHideFlags: 0

@@ -7,23 +7,18 @@ using Valve.VR.InteractionSystem;
 
 public class BuildTool : HeldObject {
 
-	public float deadHoldToActTime = 0.05f;
-	public float holdToActTime = 1f;
 	public Canvas gameCubeActTimeCanvasPrefab;
 	public GameObject[] buildables;
 	public GameObject deleteModel;
 	public int startBuildable = 0;
 
 	private int currentID;
-	private float actOnCubeTimer = 0f;
-
-	private Canvas gameCubeActTimeCanvas;
-	private Slider actTimeSlider; 
 
 	Transform barrel;
 
 	//BuiltToolStatsCanvas btStatsCanvas;
 	BuildToolPreview btPreview;
+	BuildToolProgressBar brProgressBar;
 
 	List<IHeldUpdateable> heldUpdateables;
 
@@ -46,30 +41,7 @@ public class BuildTool : HeldObject {
 		}
 	}
 
-	private float ActOnCubeTimer {
-		get {
-			return actOnCubeTimer;
-		}
-		set {
-			actOnCubeTimer = value;
 
-			if (actOnCubeTimer > deadHoldToActTime && lastPointedAt != null) {
-
-				if (gameCubeActTimeCanvas.enabled == false) {
-
-					gameCubeActTimeCanvas.enabled = true;
-
-					gameCubeActTimeCanvas.transform.LookAt(Vector3.zero);
-					//weird bug: rotation set seemingly randomly?
-					gameCubeActTimeCanvas.transform.position = lastPointedAt.Position + gameCubeActTimeCanvas.transform.forward ;
-				}
-
-				actTimeSlider.value = actOnCubeTimer;
-			} else {
-				gameCubeActTimeCanvas.enabled = false;
-			}
-		}
-	}
 
 	protected override void Awake(){
 		base.Awake();
@@ -78,6 +50,7 @@ public class BuildTool : HeldObject {
 
 		//btStatsCanvas = GetComponentInChildren<BuiltToolStatsCanvas> (true);
 		btPreview = GetComponent<BuildToolPreview> ();
+		brProgressBar = GetComponent<BuildToolProgressBar> ();
 
 		ResourceManager.Instance.btrd =  GetComponentInChildren<BuildToolResourceDisplay> (true);
 
@@ -89,12 +62,7 @@ public class BuildTool : HeldObject {
 		currentID = startBuildable;
 
 		//Act on Cube UI
-		gameCubeActTimeCanvas = Instantiate(gameCubeActTimeCanvasPrefab);
-		gameCubeActTimeCanvas.enabled = false;
 
-		actTimeSlider = gameCubeActTimeCanvas.GetComponentInChildren<Slider>(true);
-		actTimeSlider.maxValue = holdToActTime;
-		actTimeSlider.minValue = deadHoldToActTime;
 
 		//Control Wheel Actions
 		ControlWheelSegment left = new ControlWheelSegment(
@@ -162,7 +130,7 @@ public class BuildTool : HeldObject {
 
 					//When we look at a different cube or the cube we look at changes
 					if (lastPointedAt != cube || lastPointedAtOccupying != cube.Occupying) {
-						ActOnCubeTimer = 0f;
+						brProgressBar.ActOnCubeTimer = 0f;
 
 						if (lastPointedAt != null) {
 							lastPointedAt.OnPointedAway ();
@@ -181,15 +149,15 @@ public class BuildTool : HeldObject {
 
 					if (hc.TriggerPulled.Any && built == false) {
 
-						ActOnCubeTimer += Time.deltaTime;
+						brProgressBar.ActOnCubeTimer += Time.deltaTime;
 
-						if (actOnCubeTimer >= holdToActTime) {
+						if (brProgressBar.ActOnCubeTimer >= brProgressBar.holdToActTime) {
 							ActOnCube (cube);
-							ActOnCubeTimer = 0f;
+							brProgressBar.ActOnCubeTimer = 0f;
 							built = true;
 						}
 					} else {
-						ActOnCubeTimer = Mathf.Max(0f, ActOnCubeTimer - (Time.deltaTime * 2f));
+						brProgressBar.ActOnCubeTimer = Mathf.Max(0f, brProgressBar.ActOnCubeTimer - (Time.deltaTime * 2f));
 					}
 
 					if (hc.TriggerPulled.Up) {
@@ -207,7 +175,7 @@ public class BuildTool : HeldObject {
 
 			lastPointedAt = null;
 
-			ActOnCubeTimer = 0f;
+			brProgressBar.ActOnCubeTimer = 0f;
 		}
 	}
 
@@ -286,9 +254,4 @@ public class BuildTool : HeldObject {
 	}
 
 	#endregion
-
-	public override void OnDestroy(){
-
-		Destroy (gameCubeActTimeCanvas.gameObject);
-	}
 }

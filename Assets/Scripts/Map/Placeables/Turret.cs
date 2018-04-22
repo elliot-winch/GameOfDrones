@@ -24,6 +24,20 @@ public class Turret : Wall {
 		onShoot += callback;
 	}
 
+	protected override void Start ()
+	{
+		base.Start ();
+
+		foreach (Collider col1 in GetComponents<Collider>()) {
+			foreach (Collider col2 in GetComponents<Collider>()) {
+
+				if (col1 != col2) {
+					Physics.IgnoreCollision (col1, col2);
+				}
+			}
+		}
+	}
+
 	protected override void Update(){
 
 		//Attacking
@@ -62,7 +76,7 @@ public class Turret : Wall {
 
 		GameObject proj = Instantiate (projectile, transform.position, Quaternion.identity);
 
-		proj.GetComponent<Projectile> ().Launch (this.damage, currentTarget.transform.position, gameObject, new string[] { "Enemy" });
+		proj.GetComponent<Projectile> ().Launch (currentTarget.transform.position, this.damage, gameObject, new string[] { "Enemy" });
 
 		currentTarget = null;
 

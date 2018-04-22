@@ -550,6 +550,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4170502547528926}
   - component: {fileID: 95665957681524024}
+  - component: {fileID: 114750032313286038}
   m_Layer: 0
   m_Name: Pistol
   m_TagString: Untagged
@@ -739,7 +740,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1726180813861306}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children:
@@ -766,7 +767,7 @@ Transform:
   - {fileID: 4760542732220630}
   - {fileID: 4207974192837466}
   m_Father: {fileID: 4415971890524522}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4185923170975280
 Transform:
@@ -868,12 +869,12 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1561898544661618}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.0005, y: 0.165, z: 0.1736}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0.000817, z: 0}
+  m_LocalScale: {x: 0.44681793, y: 0.44681814, z: 0.011612339}
   m_Children:
   - {fileID: 4556178058131814}
-  m_Father: {fileID: 4415971890524522}
+  m_Father: {fileID: 4851704522143468}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4312317047513090
@@ -938,7 +939,6 @@ Transform:
   m_LocalPosition: {x: 0, y: -0.159, z: -0.057}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4280189184466524}
   - {fileID: 4170502547528926}
   - {fileID: 4609127337220390}
   - {fileID: 4706723126786382}
@@ -1038,7 +1038,7 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 4415971890524522}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!4 &4616432508161772
 Transform:
@@ -1077,7 +1077,7 @@ Transform:
   m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
   m_Children: []
   m_Father: {fileID: 4415971890524522}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: -60, y: 0, z: 0}
 --- !u!4 &4733738491299394
 Transform:
@@ -1127,7 +1127,8 @@ Transform:
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: -0, y: 0.0490434, z: 0.03579196}
   m_LocalScale: {x: 0.7460161, y: 28.705114, z: 0.7460161}
-  m_Children: []
+  m_Children:
+  - {fileID: 4280189184466524}
   m_Father: {fileID: 4170502547528926}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1138,7 +1139,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1353524335242844}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.0505183, y: 3.254757, z: 1.4348311}
+  m_LocalPosition: {x: 5.68, y: 2.7210402, z: 2.43}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4415971890524522}
@@ -3161,8 +3162,24 @@ MonoBehaviour:
   damage: 5
   rateOfFire: 0.15
   projectile: {fileID: 1495670284022458, guid: 1aa6fe14347697f47837fc84ace07431, type: 2}
+  barrel: {fileID: 4280189184466524}
   hapticDurationAsPercentageOfFireRate: 0.5
   hapticStrength: 0.5
+--- !u!114 &114750032313286038
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1726180813861306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cd01fb36c459b9458479477da7f9dba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxRecoilTime: 0.1
+  recoilSpeed: 10
+  recoilUpSpeedLoss: 0
+  rotateAbout: {fileID: 4085183994351782}
 --- !u!114 &114922592785557820
 MonoBehaviour:
   m_ObjectHideFlags: 1

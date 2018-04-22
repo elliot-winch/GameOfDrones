@@ -4,30 +4,25 @@ using UnityEngine;
 
 public class Enemy : DamagableObject {
 
+	public int resourcesGainedOnDestroyed = 5;
 	public float attackRange = 1f;
 	public float attackDamage = 1f;
-	public float moveSpeed = 1f;
 	public float weaponChargeTime = 0.2f;
 
-	protected DamagableObject currentTarget;
+	public float moveSpeed = 1f;
+	//rotateSpeed is for cosmetics only. A drone will not delay firing to rotate
+	public float rotateSpeed = 1f;
+	public GameObject onHitParticleSystem;
+
+	private GameCube startCube;
 	protected GameCube currentCube;
 	protected GameCube destination;
 	protected Vector3 destinationPosition;
 
-	private bool firing;
-	private bool disengaging;
-
-	private GameCube startCube;
-	//to be set by manager depending on the start cube assigned in begin
-	private List<GameCube> pathToTarget;
-	private int currentPathIndex;
-	private Coroutine moveCoroutine;
-
-	protected bool Firing {
-		get {
-			return firing;
-		}
-	}
+	protected List<GameCube> pathToTarget;
+	protected int currentPathIndex;
+	protected Coroutine moveCoroutine;
+	protected Coroutine lookAt;
 
 	public GameCube StartCube {
 		get {
@@ -35,14 +30,20 @@ public class Enemy : DamagableObject {
 		}
 	}
 
-	public override void Hit (Vector3 hitPoint, Vector3 hitDirection, float amount){
 
-		base.Hit (hitPoint, hitDirection, amount);
-
-	}
 
 	protected override void Start(){
 		base.Start ();
+
+
+		foreach (Collider col1 in GetComponents<Collider>()) {
+			foreach (Collider col2 in GetComponents<Collider>()) {
+
+				if (col1 != col2) {
+					Physics.IgnoreCollision (col1, col2);
+				}
+			}
+		}
 	}
 
 	//Begin - like start but with parameters. Called by WaveManager
@@ -52,33 +53,15 @@ public class Enemy : DamagableObject {
 		this.currentCube = startCube;
 
 	}
-
-	protected override void Update(){
-		
-		//Attacking
-		if (firing == false) {
-			if (currentTarget == null) {
-				Collider[] cols = Physics.OverlapSphere (transform.position, attackRange, LayerMask.GetMask("Friendly"));
-
-				if (cols.Length > 0) {
-					//decide which enemy to shoot - currently we just pick the first target found
-					currentTarget = cols [0].GetComponentInParent<DamagableObject> ();
-					StartCoroutine (Fire (currentTarget));
-					disengaging = false;
-				} else {
-
-					if (disengaging == false) {
-						Disengage ();
-						disengaging = true;
-					}
-				}
-			} 
-		}
+	
+	// Update is called once per frame
+	protected override void Update () {
+		base.Update ();
 	}
 
-	public void SetPath(List<GameCube> path){
-		Debug.Log ("Setting path");
 
+	#region Pathfinding
+	public void SetPath(List<GameCube> path){
 		this.pathToTarget = path;
 
 		int currentCubeIndex = FindPathIndex (this.currentCube, path);
@@ -131,7 +114,7 @@ public class Enemy : DamagableObject {
 	}
 
 
-	void MoveToNext(){
+	protected virtual void MoveToNext(){
 
 		if (pathToTarget == null) {
 			Debug.LogError ("Enemy Error: Path provided was null");
@@ -147,7 +130,7 @@ public class Enemy : DamagableObject {
 		if (moveCoroutine != null) {
 			StopCoroutine (moveCoroutine);
 		}
-			
+
 		currentPathIndex++;
 		moveCoroutine = StartCoroutine (MoveTowards (pathToTarget[currentPathIndex]));
 
@@ -184,46 +167,97 @@ public class Enemy : DamagableObject {
 		MoveToNext ();
 
 	}
+	#endregion
 
-	private IEnumerator Fire(DamagableObject target){
-		firing = true;
 
-		PreFire (target);
+	#region Looking Rotation
+	//When there is no targt, a target is searched for and not found.
+	protected virtual void Disengage(){
+		LookAt (destinationPosition);
+	}
 
-		yield return new WaitForSeconds(weaponChargeTime);
 
-		if (target != null) {
-			OnFire (target);
-		} 
+	//Private methods
+	protected void LookAt(Vector3 position){
+		if (lookAt != null) {
+			StopCoroutine (lookAt);
+			lookAt = null;
+		}
 
-		currentTarget = null;
+		lookAt = StartCoroutine (SmoothLookAt (position));
+	}
 
-		firing = false;
+	//Private methods
+	protected void Track(Transform t){
+		if (lookAt != null) {
+			StopCoroutine (lookAt);
+			lookAt = null;
+		}
+
+		lookAt = StartCoroutine (SmoothTrack (t));
+	}
+
+
+	IEnumerator SmoothLookAt(Vector3 position){
+
+		Quaternion targetRotation = Quaternion.LookRotation (position - transform.position);
+
+		while (Quaternion.Angle (transform.rotation, targetRotation) > 1f) {
+			transform.rotation = Quaternion.Slerp (transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
+
+			yield return null;
+		}
+	}
+
+	IEnumerator SmoothTrack(Transform t){
+
+		while (true) {
+
+			Quaternion targetRotation = Quaternion.LookRotation (t.position - transform.position);
+
+			transform.rotation = Quaternion.Slerp (transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
+
+			yield return null;
+		}
+	}
+	#endregion
+
+
+	#region Hit
+	public override void Hit (Vector3 hitPoint, Transform hitFrom, float amount){
+
+		base.Hit (hitPoint, hitFrom, amount);
+
+		//Particle Effect
+		if (onHitParticleSystem != null) {
+			GameObject peObj = Instantiate (onHitParticleSystem, transform);
+			peObj.transform.position = hitPoint;
+			peObj.transform.LookAt (hitFrom.transform.position);
+
+			peObj.GetComponent<ParticleSystem> ().Play ();
+		}
+
 	}
 
 
 	protected override void Destroyed ()
 	{
+		ResourceManager.Instance.AddResources (resourcesGainedOnDestroyed);
+
 		EnemyPathManager.Instance.RemoveEnemyFromPathManager (this);
 
 		WaveManager.Instance.CouldEndWave ();
 
-		base.Destroyed();
+
+		if (lookAt != null) {
+			StopCoroutine (lookAt);
+		}
+
+		if (moveCoroutine != null) {
+			StopCoroutine (moveCoroutine);
+		}
+
+		//Enemy doesn't call it's super! THe enemy needs to be destroyed by hand in subclasses!
 	}
-
-	//To be overriden
-	protected virtual void OnFire(DamagableObject target){
-
-	}
-
-	protected virtual void PreFire(DamagableObject target){
-
-	}
-
-	//When there is no targt, a target is searched for and not found.
-	protected virtual void Disengage(){
-
-	}
-
-
+	#endregion
 }
