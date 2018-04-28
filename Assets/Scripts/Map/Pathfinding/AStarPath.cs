@@ -86,7 +86,7 @@ public class AStarPath {
 	}
 
 	float heuristicCostEstimate(GameCube a, GameCube b){
-		return Vector3.Distance (a.Position, b.Position);
+		return (a.MoveCost + b.MoveCost) / 2;
 	}
 
 	void RecontructPath(Dictionary<GameCube, GameCube> path, GameCube current){
@@ -119,7 +119,6 @@ public class AStarPath {
 	}
 
 	public int Length(){
-		Debug.Log (validPath);
 		return validPath.Count;
 	}
 }

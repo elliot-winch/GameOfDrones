@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 33073882908718332}
   - component: {fileID: 114050789352275792}
   - component: {fileID: 108939650544541884}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: shot_prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -196,7 +196,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1497900577f21a44b1ef8199f3061d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 36
 --- !u!136 &136433114621109858
 CapsuleCollider:
   m_ObjectHideFlags: 1

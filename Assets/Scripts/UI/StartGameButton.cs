@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class StartGameButton : DamagableObject {
 
-	public override void Hit (Vector3 hitPoint, Transform hitFrom, float amount)
+	public override void Hit (Vector3 hitPoint, Vector3 from, float amount)
 	{
-		base.Hit (hitPoint, hitFrom, amount);
+		base.Hit (hitPoint, from, amount);
 	}
 
 	protected override void Destroyed ()

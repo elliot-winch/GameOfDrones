@@ -3,14 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Turret : Wall {
+public class Turret : Wall, IRangedPlaceable {
 
 	public float range = 3f;
+
+	public float Range { get { return range; } } 
+
 	public float damage = 1f;
 	public float weaponChargeTime = 0.2f;
 
 	public float rotateSpeed = 1f; //cosmetic
+
 	public GameObject projectile;
+	public float projectileSpeed = 3f;
 
 	private GameCube cube;
 
@@ -45,16 +50,21 @@ public class Turret : Wall {
 
 		if (firing == false) {
 			if (currentTarget == null) {
-				if (cols.Length > 0) {
-					//decide which enemy to shoot - currently we just pick the first target found
-					currentTarget = cols [0].GetComponentInParent<DamagableObject> ();
-					StartCoroutine(Fire ());
+				foreach (Collider c in cols) {
+
+					if (c.GetComponentInParent<Enemy>() != null && c.GetComponentInParent<Enemy> ().CurrentHealth > 0) {
+						//decide which enemy to shoot - currently we just pick the first target found
+						currentTarget = c.GetComponentInParent<DamagableObject> ();
+						StartCoroutine(Fire ());
+						break;
+					}
 
 				}
+
 			} 
 		}
-
-
+			
+		base.Update ();
 	}
 
 	IEnumerator Fire(){
@@ -76,7 +86,7 @@ public class Turret : Wall {
 
 		GameObject proj = Instantiate (projectile, transform.position, Quaternion.identity);
 
-		proj.GetComponent<Projectile> ().Launch (currentTarget.transform.position, this.damage, gameObject, new string[] { "Enemy" });
+		proj.GetComponent<Projectile> ().Launch (currentTarget.transform.position, this.damage, this.projectileSpeed, gameObject, new string[] { "Enemy" });
 
 		currentTarget = null;
 
@@ -96,4 +106,5 @@ public class Turret : Wall {
 			yield return null;
 		}
 	}
+
 }

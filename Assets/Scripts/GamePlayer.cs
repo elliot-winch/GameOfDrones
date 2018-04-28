@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GamePlayer : DamagableObject {
 
-	protected override void Destroyed ()
+	public override void Hit (Vector3 hitPoint, Vector3 from, float amount)
 	{
-		Debug.Log ("Game over, man!");
+		ResourceManager.Instance.Spend (20);
 	}
 }

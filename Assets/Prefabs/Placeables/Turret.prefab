@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4065783174821712}
   - component: {fileID: 95265412251474138}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 33584280476192932}
   - component: {fileID: 23032266763682632}
   - component: {fileID: 64667185149146708}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: pCylinder6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 33772120813909802}
   - component: {fileID: 23188368767269674}
   - component: {fileID: 64328594146807148}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: pSphere2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -74,7 +74,7 @@ GameObject:
   - component: {fileID: 33371037112800064}
   - component: {fileID: 23319454960914962}
   - component: {fileID: 64045417569577718}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: pCylinder1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 33889893774465076}
   - component: {fileID: 23785591222332244}
   - component: {fileID: 64431517046743286}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: pCylinder5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,7 +110,7 @@ GameObject:
   - component: {fileID: 33361532394597604}
   - component: {fileID: 23856353568117190}
   - component: {fileID: 64955839927020524}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: pCylinder4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,6 +126,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4942187143197798}
   - component: {fileID: 114885089217688298}
+  - component: {fileID: 82152124892739560}
   m_Layer: 0
   m_Name: Turret
   m_TagString: Untagged
@@ -144,7 +145,7 @@ GameObject:
   - component: {fileID: 33954236546069086}
   - component: {fileID: 23927770576339114}
   - component: {fileID: 64718786195973512}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: pSphere1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +178,7 @@ GameObject:
   - component: {fileID: 33621031040299158}
   - component: {fileID: 23165286419597400}
   - component: {fileID: 64781378706112096}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: pCylinder3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -195,7 +196,7 @@ GameObject:
   - component: {fileID: 33018808462758658}
   - component: {fileID: 23758902271206414}
   - component: {fileID: 64880537740560290}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: pSphere3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -795,6 +796,86 @@ MeshCollider:
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300008, guid: 9fcd796ab032de749955285f4627e4d4, type: 3}
+--- !u!82 &82152124892739560
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1242241552651818}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 5848d328c942edb4e95d0c4865b1d555, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!95 &95265412251474138
 Animator:
   serializedVersion: 3
@@ -831,3 +912,4 @@ MonoBehaviour:
   weaponChargeTime: 0.5
   rotateSpeed: 3
   projectile: {fileID: 1495670284022458, guid: 1aa6fe14347697f47837fc84ace07431, type: 2}
+  projectileSpeed: 3

@@ -21,9 +21,9 @@ TagManager:
   - Projectile
   - HeldObject
   - SloMoTrigger
-  - 
-  - 
-  - 
+  - Detonator
+  - Target
+  - Dead
   - 
   - 
   - 

@@ -37,4 +37,11 @@ public class Wall : DamagableObject, IPlaceable {
 			return moveCost;
 		}
 	}
+
+	protected override void Destroyed ()
+	{
+		gameCube.Occupying = null;
+
+		base.Destroyed ();
+	}
 }

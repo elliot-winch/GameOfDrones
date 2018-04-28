@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 65850387917924328}
   - component: {fileID: 23290968812722766}
   - component: {fileID: 114459215017310794}
-  - component: {fileID: 114539924196439664}
+  - component: {fileID: 114238580330900440}
   m_Layer: 0
   m_Name: Wall
   m_TagString: Untagged
@@ -38,7 +38,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1955015407077890}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.6654997, y: 0.90695035, z: -2.219639}
+  m_LocalPosition: {x: 3.959318, y: 1.29, z: 3.482286}
   m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_Children: []
   m_Father: {fileID: 0}
@@ -97,6 +97,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114238580330900440
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1955015407077890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0186bb42da68734fb002d386e0ab16a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startingHealth: 0
+  buildCost: 10
+  moveCost: Infinity
 --- !u!114 &114459215017310794
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -109,16 +123,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   delay: 1
---- !u!114 &114539924196439664
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1955015407077890}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0186bb42da68734fb002d386e0ab16a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startingHealth: 1
-  cost: 10

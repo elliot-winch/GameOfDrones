@@ -21,11 +21,11 @@ public class ResourceManager : MonoBehaviour {
 		}
 	}
 
-	private int PlayerResources {
+	public int PlayerResources {
 		get {
 			return playerResources;
 		}
-		set {
+		private set {
 			playerResources = value;
 
 			if (btrd != null) {

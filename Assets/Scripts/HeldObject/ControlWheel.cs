@@ -12,6 +12,8 @@ using UnityEngine;
 
 public class ControlWheel : MonoBehaviour {
 
+	private const float deadTime = 0.2f;
+	bool canSelect = true;
 
 	public float farRadius = 1f;
 	public float nearRadius = 0.5f;
@@ -26,35 +28,29 @@ public class ControlWheel : MonoBehaviour {
 	List<Vector2> dividingVectors;
 	List<GameObject> displaySegments;
 
-	private static Action<ControlWheel> onCreate;
-
-	public static void RegisterOnCreate(Action<ControlWheel> a){
-		onCreate += a;
-	}
-
-	public static void ResetOnCreate(){
-		onCreate = null;
-	}
-
 	/* ------------- */
 
 	void Awake(){
 
 		displaySegments = new List<GameObject> ();
-
-		if (onCreate != null) {
-			onCreate (this);
-		}
-
 	}
 
 	public void AddControlWheelActions(ControlWheelSegment[] segs){
 		if (cwActions == null) {
 			cwActions = new List<ControlWheelSegment> ();
+
+			foreach (ControlWheelSegment cw in WaveManager.Instance.DefaultActions) {
+				if(CanAddSegment(cw)){
+					cwActions.Add (cw);
+				}
+			}
 		}
 
-		for (int i = 0; i < segs.Length; i++) {
-			cwActions.Add (segs [i]);
+
+		foreach (ControlWheelSegment cw in segs) {
+			if (CanAddSegment (cw)) {
+				cwActions.Add (cw);
+			}
 		}
 
 		CreateControlWheel ();
@@ -67,19 +63,40 @@ public class ControlWheel : MonoBehaviour {
 	public void AddControlWheelAction(ControlWheelSegment cwa){
 		if (cwActions == null) {
 			cwActions = new List<ControlWheelSegment> ();
+
+			foreach (ControlWheelSegment cw in WaveManager.Instance.DefaultActions) {
+				if (CanAddSegment (cw)) {
+					cwActions.Add (cw);
+				}
+			}
 		}
 
-		cwActions.Add (cwa);
+		if (CanAddSegment(cwa)) {
+			cwActions.Add (cwa);
+		}
 
 		CreateControlWheel ();
+	}
+
+	private bool CanAddSegment(ControlWheelSegment seg){
+
+		foreach (ControlWheelSegment cwseg in cwActions) {
+			if(cwseg.Name.Equals(seg.Name)){
+				Debug.LogWarning ("Control Wheel Warning: Attempting to add Control Wheel Segment with a name to a Control Wheel that already contains a segemnt with the same name. Skipping...");
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	public void RemoveControlWheelAction(string name){
 
 		foreach (ControlWheelSegment seg in cwActions) {
+
 			if (seg.Name.Equals (name)) {
 				cwActions.Remove (seg);
-				return;
+				break;
 			}
 		}
 
@@ -88,6 +105,10 @@ public class ControlWheel : MonoBehaviour {
 	}
 
 	private void CreateControlWheel(){
+
+		foreach (GameObject seg in displaySegments) {
+			Destroy (seg);
+		}
 
 		//Preferred Ordering
 		ControlWheelSegment[] orderedSegs = new ControlWheelSegment[cwActions.Count];
@@ -125,12 +146,6 @@ public class ControlWheel : MonoBehaviour {
 		}
 
 		cwActions = orderedSegs.ToList ();
-
-		//Reordering complete
-
-		foreach (GameObject seg in displaySegments) {
-			Destroy (seg);
-		}
 
 		displaySegments = new List<GameObject> ();
 		dividingVectors = new List<Vector2> ();
@@ -272,11 +287,24 @@ public class ControlWheel : MonoBehaviour {
 
 	public void Select(Vector2 location) {
 
-		int sectorNum = sector(location);
+		if (canSelect) {
 
-		if (sectorNum >= 0 && sectorNum < cwActions.Count) {
-			cwActions [sectorNum].Action ();
+			StartCoroutine (selectDead ());
+			
+			int sectorNum = sector (location);
+
+			if (sectorNum >= 0 && sectorNum < cwActions.Count) {
+				cwActions [sectorNum].Action ();
+			}
 		}
+	}
+
+	IEnumerator selectDead(){
+		canSelect = false;
+
+		yield return new WaitForSeconds (deadTime);
+
+		canSelect = true;
 	}
 			
 

@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 33139822092682596}
   - component: {fileID: 114958834095231796}
   - component: {fileID: 108985742474191174}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: shot_prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 136396221774063236}
   - component: {fileID: 54548307630412104}
   - component: {fileID: 114804569689407690}
-  m_Layer: 11
+  m_Layer: 8
   m_Name: EnemyProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -68,7 +68,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1143327553341994}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 3.750938, y: 2.8585072, z: 5.6647787}
+  m_LocalPosition: {x: -1.3312964, y: 2.175, z: 1.174}
   m_LocalScale: {x: 0.017, y: 0.017000008, z: 0.10000006}
   m_Children:
   - {fileID: 4532377776120034}
@@ -178,7 +178,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1497900577f21a44b1ef8199f3061d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
 --- !u!114 &114958834095231796
 MonoBehaviour:
   m_ObjectHideFlags: 1

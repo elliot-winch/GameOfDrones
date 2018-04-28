@@ -418,6 +418,7 @@ GameObject:
   - component: {fileID: 114831625245392866}
   - component: {fileID: 114690500168800470}
   - component: {fileID: 114796363646758786}
+  - component: {fileID: 82501773209279980}
   m_Layer: 12
   m_Name: BuildTool
   m_TagString: Untagged
@@ -608,7 +609,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1935672925881658}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.245, y: 3.89, z: 0.79}
+  m_LocalPosition: {x: 4.4317803, y: 2.4497921, z: 0.7264017}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4299475166721070}
@@ -1460,6 +1461,86 @@ MeshCollider:
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: 2aea4aeef4b9e774f823dbfff202f1c5, type: 3}
+--- !u!82 &82501773209279980
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1935672925881658}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!95 &95680621932491572
 Animator:
   serializedVersion: 3
@@ -1741,9 +1822,15 @@ MonoBehaviour:
   buildables:
   - {fileID: 1242241552651818, guid: badbbad711f9f0048aab62eb8844e5d8, type: 2}
   - {fileID: 1955015407077890, guid: c926c40d62e648f4f80e1050c30d10c4, type: 2}
+  - {fileID: 1797326579990780, guid: 816974ee14eb0964f86f611bceb1272c, type: 2}
+  - {fileID: 1677889049815118, guid: a7501f55f794c7a4a85cdac0d0994b67, type: 2}
   deleteModel: {fileID: 1299295906912560, guid: b73b5281d1e4df5468351f0fdb400982,
     type: 2}
   startBuildable: 0
+  buildChargeClip: {fileID: 8300000, guid: 26a274603cdfdcd4183fb08706812786, type: 3}
+  buildCompleteClip: {fileID: 8300000, guid: 5848d328c942edb4e95d0c4865b1d555, type: 3}
+  changeBuildClip: {fileID: 8300000, guid: ec0240a99fa66634597b8b7e4b62ae3b, type: 3}
+  failedToBuildClip: {fileID: 8300000, guid: 8ada4c67e1cd0dd4687f2f80f8185e80, type: 3}
 --- !u!114 &114796363646758786
 MonoBehaviour:
   m_ObjectHideFlags: 1

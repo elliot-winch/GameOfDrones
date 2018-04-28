@@ -9,6 +9,8 @@ public class BuildToolResourceDisplay : MonoBehaviour {
 
 	void Awake(){
 		text = GetComponent<Text> ();
+
+		UpdateDisplay (ResourceManager.Instance.PlayerResources);
 	}
 
 	public void UpdateDisplay(int amount){

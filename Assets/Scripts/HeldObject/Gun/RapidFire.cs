@@ -9,9 +9,12 @@ public class RapidFire : Gun {
 
 	public float hapticDurationAsPercentageOfFireRate = 0.5f;
 	public float hapticStrength = 0.5f;
+	public float projectileSpeed = 40f;
+
+	public AudioClip[] fireClips;
 
 	ParticleSystem muzzleFlash;
-	AudioSource[] audioSources;
+	AudioSource audioSource;
 
 	int lastPlayedIndex = -1;
 
@@ -19,7 +22,8 @@ public class RapidFire : Gun {
 	{
 		base.Awake();
 
-		audioSources = GetComponentsInChildren<AudioSource> ();
+		audioSource = GetComponentInChildren<AudioSource> ();
+
 
 		muzzleFlash = barrel.GetChild(0).GetComponent<ParticleSystem> ();
 
@@ -34,7 +38,7 @@ public class RapidFire : Gun {
 	{
 		GameObject proj = Instantiate (projectile, new Vector3(barrel.transform.position.x, barrel.transform.position.y, barrel.transform.position.z + projectile.GetComponent<Collider>().bounds.extents.z), Quaternion.identity);
 
-		proj.GetComponentInChildren<Projectile> ().Launch (barrel.transform, this.damage, gameObject, new string[] { "Enemy" });
+		proj.GetComponentInChildren<Projectile> ().Launch (barrel.transform, this.damage, this.projectileSpeed, gameObject, new string[] { "Enemy", "Detonator"  });
 
 		//Muzzle flash
 		muzzleFlash.Play ();
@@ -43,15 +47,16 @@ public class RapidFire : Gun {
 		HapticPulseForTime (hand.controller, rateOfFire * hapticDurationAsPercentageOfFireRate, hapticStrength);
 
 		//Audio
-		int randomAudioSource = Random.Range(0, audioSources.Length);
+		int randomAudioFire = Random.Range(0, fireClips.Length);
 		//The chance we play two audio clips back to back is 1 / (audioSources.Length ^ 2)
-		if (randomAudioSource == lastPlayedIndex) {
-			randomAudioSource = Random.Range(0, audioSources.Length);
+		if (randomAudioFire == lastPlayedIndex) {
+			randomAudioFire = Random.Range(0, fireClips.Length);
 		}
 
-		audioSources[randomAudioSource].Play();
+		audioSource.clip = fireClips [randomAudioFire];
+		audioSource.Play ();
 
-		lastPlayedIndex = randomAudioSource;
+		lastPlayedIndex = randomAudioFire;
 
 	}
 

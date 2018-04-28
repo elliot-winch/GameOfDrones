@@ -24,20 +24,21 @@ public class Enemy : DamagableObject {
 	protected Coroutine moveCoroutine;
 	protected Coroutine lookAt;
 
+	protected AudioSource hitAS;
+
 	public GameCube StartCube {
 		get {
 			return startCube;
 		}
 	}
 
-
-
 	protected override void Start(){
 		base.Start ();
 
+		hitAS = gameObject.AddComponent<AudioSource> ();
 
-		foreach (Collider col1 in GetComponents<Collider>()) {
-			foreach (Collider col2 in GetComponents<Collider>()) {
+		foreach (Collider col1 in GetComponentsInChildren<Collider>()) {
+			foreach (Collider col2 in GetComponentsInChildren<Collider>()) {
 
 				if (col1 != col2) {
 					Physics.IgnoreCollision (col1, col2);
@@ -52,11 +53,6 @@ public class Enemy : DamagableObject {
 		this.startCube = startCube;
 		this.currentCube = startCube;
 
-	}
-	
-	// Update is called once per frame
-	protected override void Update () {
-		base.Update ();
 	}
 
 
@@ -154,7 +150,7 @@ public class Enemy : DamagableObject {
 		while (movePercentage < 1f) {
 
 
-			movePercentage += (moveSpeed * Time.deltaTime) / dist;
+			movePercentage += (moveSpeed * Time.deltaTime) / (dist * t.MoveCost);
 
 			transform.position = Vector3.Lerp (startPos, destinationPosition, movePercentage);
 
@@ -224,15 +220,19 @@ public class Enemy : DamagableObject {
 
 
 	#region Hit
-	public override void Hit (Vector3 hitPoint, Transform hitFrom, float amount){
+	public override void Hit (Vector3 hitPoint, Vector3 hitFrom, float amount){
 
 		base.Hit (hitPoint, hitFrom, amount);
+
+		//FIXME!
+		hitAS.clip = EnemyAudioManager.Instance.GetRandomDestroyedAudio ();
+		hitAS.Play ();
 
 		//Particle Effect
 		if (onHitParticleSystem != null) {
 			GameObject peObj = Instantiate (onHitParticleSystem, transform);
 			peObj.transform.position = hitPoint;
-			peObj.transform.LookAt (hitFrom.transform.position);
+			peObj.transform.LookAt (hitFrom);
 
 			peObj.GetComponent<ParticleSystem> ().Play ();
 		}
@@ -246,7 +246,11 @@ public class Enemy : DamagableObject {
 
 		EnemyPathManager.Instance.RemoveEnemyFromPathManager (this);
 
+		transform.parent = WaveManager.Instance.enemyDeadParent;
+
 		WaveManager.Instance.CouldEndWave ();
+
+		hitAS.Stop ();
 
 
 		if (lookAt != null) {

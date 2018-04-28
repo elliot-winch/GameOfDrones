@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class Bomber : Enemy {
 
-	public float explodeTime; 
+	private AudioSource chargeAS;
+	private AudioSource explodeAS;
+
+	private Coroutine exploding;
 
 	static Dictionary<Bomber, GameCube> currentlyExploding;
 
@@ -18,36 +21,65 @@ public class Bomber : Enemy {
 		if (currentlyExploding.ContainsValue (currentCube) == false) {
 			foreach(GameCube gc in GameCubeManager.Instance.Grid.GetNeighbours (currentCube)) {
 				if (gc.Occupying != null) {
-					StartCoroutine(Explode ());
+					if (exploding == null) {
+						exploding = StartCoroutine (Explode ());
+					}
+
+					LookAt (gc.Occupying.transform.position);
 
 					currentlyExploding [this] = gc;
 					return;
 				}
 			}
 		}
+
+		AudioSource[] sources = GetComponents<AudioSource> ();
+		chargeAS = sources [0];
+		explodeAS = sources [1];
 			
 		base.MoveToNext ();
+
+		LookAt (destinationPosition);
+	}
+
+	protected override void Destroyed ()
+	{
+		if (exploding == null) {
+			
+			exploding = StartCoroutine (Explode ());
+		}
 	}
 		
 	IEnumerator Explode(){
 
-		yield return new WaitForSeconds (explodeTime);
+		if (moveCoroutine != null) {
+			StopCoroutine (moveCoroutine);
+		}
 
+		chargeAS.Play ();
+
+		yield return new WaitForSeconds (weaponChargeTime);
+			
 		base.Destroyed ();
-
-		Debug.Log (Physics.OverlapSphere (transform.position, attackRange));
 
 		foreach(Collider col in Physics.OverlapSphere (transform.position, attackRange)){
 
-			Debug.Log (col);
-
 			if (col.GetComponentInParent<DamagableObject> () != null && col.gameObject.tag != "Enemy") {
 
-				col.GetComponentInParent<DamagableObject> ().Hit (col.transform.position, transform, attackDamage);
+				col.GetComponentInParent<DamagableObject> ().Hit (col.transform.position, transform.position, attackDamage);
 			}
 		}
 
+		chargeAS.Stop ();
+		explodeAS.Play ();
+
 		currentlyExploding.Remove (this);
+
+		//Hide...
+		transform.GetChild (0).gameObject.SetActive (false);
+
+		//until sound is played
+		yield return new WaitForSeconds (explodeAS.clip.length);
 
 		Destroy (gameObject);
 	}

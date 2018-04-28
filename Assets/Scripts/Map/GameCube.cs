@@ -113,23 +113,6 @@ public class GameCube : MonoBehaviour {
 
 		originalColor = cubeMat.GetColor ("_RimColor");
 
-		/*
-		//Set Corners
-		limits = new Vector3[8];
-		corners = new List<GameObject> ();
-
-		for (int i = 0; i < 2; i++) {
-			for (int j = 0; j < 2; j++) {
-				for (int k = 0; k < 2; k++) {
-					Vector3 corner = new Vector3 (position.x + 0.9f * size.x * (i - 1/2f), position.y + 0.9f *  size.y * (j - 1/2f), position.z +  0.9f * size.z * (k - 1/2f));
-					limits [i * 4 + j * 2 + k] = corner;
-
-					corners.Add(Instantiate (cornerMarker, corner, Quaternion.identity, transform));
-				}
-			}
-		}
-		*/
-
 		//To prevent infinite recursion
 		int right = extendRight;
 		int up = extendUp;
@@ -171,6 +154,8 @@ public class GameCube : MonoBehaviour {
 		Destroy (occupying);
 
 		MoveCost = 1f;
+
+		EnemyPathManager.Instance.ShouldRecalcPathRemoved ();
 	}
 	#endregion
 
@@ -183,12 +168,13 @@ public class GameCube : MonoBehaviour {
 		CannotTotallyBlockEnemies
 	}
 
+	/*
 	public enum RepairError {
 		None,
 		NotEnoughResources,
 		OnFullHealth
 	}
-
+	*/
 	public enum RemoveError
 	{
 		None,
@@ -204,15 +190,16 @@ public class GameCube : MonoBehaviour {
 			return PlacementError.GameNotStarted;
 		}
 
-		if (this.Occupying != null) {
+		if (this.Occupying != null || this.Locked == true) {
 			return PlacementError.CubeIsOccupied;
 		}
+	
 
 		if (ResourceManager.Instance.CanSpend(placeable.BuildCost) == false) {
 			return PlacementError.NotEnoughResources;
 		}
 
-		if (EnemyPathManager.Instance.WouldYieldNoPaths (this) == false) {
+		if (EnemyPathManager.Instance.WouldYieldNoPaths (this, placeable.MoveCost) == false) {
 			return PlacementError.CannotTotallyBlockEnemies;
 		}
 
@@ -220,14 +207,14 @@ public class GameCube : MonoBehaviour {
 		return PlacementError.None;
 	}
 
+	/*
 	public RepairError CanRepair(){
 
 		//already checked to see if there is something occupying the space
 		return RepairError.None;
 	}
-
+	*/
 	public RemoveError CanRemove(){
-
 
 		if (GameManager.Instance.GameRunning == false) {
 			return RemoveError.GameNotStarted;
@@ -244,28 +231,23 @@ public class GameCube : MonoBehaviour {
 		return RemoveError.None;
 	}
 
-	public void OnPointedAt(IPlaceable placeable, BuildTool bt){
+	public bool OnPointedAt(IPlaceable placeable, BuildTool bt){
 
 		if (currentlyPointingAt == null) {
 			currentlyPointingAt = bt;
-			//Repair
-			if (this.Occupying != null) {
-
-				RepairError re = CanRepair ();
-			}
 
 		//Place
-		else if (placeable != null) {
+			if (placeable != null) {
 
 				PlacementError pe = CanPlace (placeable);
 
 				if (pe == PlacementError.None) {
 			
 					PositiveBuildUI (placeable);
-
+					return true;
 				} else {
 					NegativeBuildUI (placeable, pe);
-
+					return false;
 					//display some ui based on error
 				}
 			} else {
@@ -273,13 +255,19 @@ public class GameCube : MonoBehaviour {
 
 				RemoveError re = CanRemove ();
 
+				Debug.Log (re);
+
 				if (re == RemoveError.None) {
 					PositiveRemoveUI ();
+					return true;
 				} else {
 					NegativeRemoveUI (re);
+					return false;
 				}
 			}
 		}
+
+		return false;
 	}
 
 	public void OnPointedAway(){
@@ -300,13 +288,13 @@ public class GameCube : MonoBehaviour {
 		cubeMat.SetColor ("_RimColor", Color.green);
 		cubeMat.SetFloat ("_RimPower", 0.1f);
 
-		if (placeable is Turret) {
+		if (placeable is IRangedPlaceable) {
 
-			Turret placeableTurret = (Turret)placeable;
+			IRangedPlaceable placeableTurret = (IRangedPlaceable)placeable;
 
 			inRangeMats = new List<Material> ();
 
-			Collider[] cols = Physics.OverlapSphere (transform.position, placeableTurret.range, LayerMask.GetMask ("GameCube"));
+			Collider[] cols = Physics.OverlapSphere (transform.position, placeableTurret.Range, LayerMask.GetMask ("GameCube"));
 
 			foreach (Collider c in cols) {
 			
@@ -342,7 +330,7 @@ public class GameCube : MonoBehaviour {
 
 	void PositiveRemoveUI(){
 
-		cubeMat.SetColor ("_RimColor", Color.red);
+		cubeMat.SetColor ("_RimColor", Color.green);
 		cubeMat.SetFloat ("_RimPower", 0.1f);
 
 	}
@@ -352,7 +340,6 @@ public class GameCube : MonoBehaviour {
 		cubeMat.SetColor ("_RimColor", Color.red);
 		cubeMat.SetFloat ("_RimPower", 0.1f);
 
-		Debug.Log (re);
 	}
 
 	void Reset(Material m){

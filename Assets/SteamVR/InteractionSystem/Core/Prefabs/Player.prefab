@@ -8,7 +8,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 490018}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Attach_ControllerTip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 471722}
   - component: {fileID: 8194540}
   - component: {fileID: 114649182757686916}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: FollowHead
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 402768}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: NoSteamVRFallbackObjects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58,7 +58,7 @@ GameObject:
   - component: {fileID: 2326430}
   - component: {fileID: 3390842}
   - component: {fileID: 11451472}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: PlayVolume
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -75,7 +75,7 @@ GameObject:
   - component: {fileID: 447954}
   - component: {fileID: 11465950}
   - component: {fileID: 114086087917845922}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 422332}
   - component: {fileID: 3368578}
   - component: {fileID: 2353626}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Indicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 496744}
   - component: {fileID: 2083460}
   - component: {fileID: 11476190}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: FallbackObjects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,7 +124,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 494198}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: SteamVRObjects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -161,7 +161,7 @@ GameObject:
   - component: {fileID: 9215702}
   - component: {fileID: 12440092}
   - component: {fileID: 114000012530188460}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: VRCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   m_Component:
   - component: {fileID: 495400}
   - component: {fileID: 11405908}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: ControllerHoverHighlight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -195,7 +195,7 @@ GameObject:
   - component: {fileID: 11461462}
   - component: {fileID: 11464692}
   - component: {fileID: 114000013786455312}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: InputModule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -213,7 +213,7 @@ GameObject:
   - component: {fileID: 11497470}
   - component: {fileID: 5492098}
   - component: {fileID: 114127039033733658}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: FallbackHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -230,7 +230,7 @@ GameObject:
   - component: {fileID: 476540}
   - component: {fileID: 11450312}
   - component: {fileID: 114111067238223332}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Hand1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -247,7 +247,7 @@ GameObject:
   - component: {fileID: 485514}
   - component: {fileID: 11401046}
   - component: {fileID: 114861674027391762}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Hand2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -262,7 +262,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 480432}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Attach_ControllerTip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -278,7 +278,7 @@ GameObject:
   m_Component:
   - component: {fileID: 451882}
   - component: {fileID: 11461284}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: ControllerHoverHighlight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -294,7 +294,7 @@ GameObject:
   m_Component:
   - component: {fileID: 472612}
   - component: {fileID: 11479638}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: '[SteamVR]'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -310,7 +310,7 @@ GameObject:
   m_Component:
   - component: {fileID: 446772}
   - component: {fileID: 11489144}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: ControllerButtonHints
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -326,7 +326,7 @@ GameObject:
   m_Component:
   - component: {fileID: 413580}
   - component: {fileID: 11494192}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: ControllerButtonHints
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -344,7 +344,7 @@ GameObject:
   - component: {fileID: 13693334}
   - component: {fileID: 11455280}
   - component: {fileID: 5475726}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: BodyCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1190,7 +1190,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4000012025983752}
   - component: {fileID: 114000013709408034}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: DebugUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1207,7 +1207,7 @@ GameObject:
   - component: {fileID: 4849915796506036}
   - component: {fileID: 135157202673805740}
   - component: {fileID: 114700662012799126}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: SloMoCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1310,6 +1310,7 @@ MonoBehaviour:
   - {fileID: 114796155627870678, guid: a9f3cba3cefa75f4fb956dff27df91a0, type: 2}
   - {fileID: 114336418587100392, guid: 38e5093edea57134993f613afd85c884, type: 2}
   - {fileID: 114512188386322046, guid: 74cfdb0661679c847bf68a81982f96ed, type: 2}
+  - {fileID: 114518804895592666, guid: 6ef3b59b80232ff4c995eb450ce7d82a, type: 2}
   startTool: 0
 --- !u!114 &114127039033733658
 MonoBehaviour:
@@ -1326,6 +1327,7 @@ MonoBehaviour:
   - {fileID: 114796155627870678, guid: a9f3cba3cefa75f4fb956dff27df91a0, type: 2}
   - {fileID: 114336418587100392, guid: 38e5093edea57134993f613afd85c884, type: 2}
   - {fileID: 114512188386322046, guid: 74cfdb0661679c847bf68a81982f96ed, type: 2}
+  - {fileID: 114518804895592666, guid: 6ef3b59b80232ff4c995eb450ce7d82a, type: 2}
   startTool: 0
 --- !u!114 &114649182757686916
 MonoBehaviour:
@@ -1349,7 +1351,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fbf0db37528a104dac18d3f4d1d2b47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sloMoFactor: 0.4
+  sloMoFactor: 0.6
+  sloMoTransitionTime: 0.3
 --- !u!114 &114861674027391762
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1365,6 +1368,7 @@ MonoBehaviour:
   - {fileID: 114796155627870678, guid: a9f3cba3cefa75f4fb956dff27df91a0, type: 2}
   - {fileID: 114336418587100392, guid: 38e5093edea57134993f613afd85c884, type: 2}
   - {fileID: 114512188386322046, guid: 74cfdb0661679c847bf68a81982f96ed, type: 2}
+  - {fileID: 114518804895592666, guid: 6ef3b59b80232ff4c995eb450ce7d82a, type: 2}
   startTool: 1
 --- !u!135 &135157202673805740
 SphereCollider:
@@ -1376,5 +1380,5 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 2
+  m_Radius: 1.5
   m_Center: {x: 0, y: 0, z: 0}

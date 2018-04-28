@@ -11,6 +11,13 @@ public class DamagableObject : MonoBehaviour {
 	public float CurrentHealth {
 		get {
 			return health;
+		} set {
+
+			 if (health > value) {
+				Debug.LogWarning ("DamagableObject Warning: Should not be setting health by CurrentHealth is you mean to damage something in game");
+			}
+
+			health = value;
 		}
 	}
 
@@ -18,24 +25,17 @@ public class DamagableObject : MonoBehaviour {
 		health = startingHealth;
 	}
 
-	public virtual void Hit(Vector3 hitPoint, Transform hitFrom, float amount){
+	public virtual void Hit(Vector3 hitPoint, Vector3 from, float amount){
 
 		health = Mathf.Max (0f, health - amount);
 
-		if (health > 0f) {
-
-			Damaged (amount);
-		} else {
+		if (health <= 0f) {
+			
 			Destroyed ();
 		}
 	}
 
-	protected virtual void Damaged(float amount){
-		
-	}
-
 	protected virtual void Destroyed(){
-		Destroy (gameObject);
 	}
 
 	protected virtual void Update(){

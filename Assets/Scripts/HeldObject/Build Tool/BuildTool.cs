@@ -22,6 +22,12 @@ public class BuildTool : HeldObject {
 
 	List<IHeldUpdateable> heldUpdateables;
 
+	public AudioClip buildChargeClip;
+	public AudioClip buildCompleteClip;
+	public AudioClip changeBuildClip;
+	public AudioClip failedToBuildClip;
+	AudioSource aSource;
+
 	public int CurrentID {
 		get {
 			return currentID;
@@ -52,7 +58,7 @@ public class BuildTool : HeldObject {
 		btPreview = GetComponent<BuildToolPreview> ();
 		brProgressBar = GetComponent<BuildToolProgressBar> ();
 
-		ResourceManager.Instance.btrd =  GetComponentInChildren<BuildToolResourceDisplay> (true);
+		ResourceManager.Instance.btrd = GetComponentInChildren<BuildToolResourceDisplay> (true);
 
 		heldUpdateables = new List<IHeldUpdateable> ();
 
@@ -61,8 +67,7 @@ public class BuildTool : HeldObject {
 
 		currentID = startBuildable;
 
-		//Act on Cube UI
-
+		aSource = GetComponent<AudioSource> ();
 
 		//Control Wheel Actions
 		ControlWheelSegment left = new ControlWheelSegment(
@@ -76,7 +81,13 @@ public class BuildTool : HeldObject {
 					} else {
 						this.CurrentID = newID;
 					}
-					
+
+					updateUI = true;
+
+					aSource.clip = changeBuildClip;
+					this.aSource.time = 0f;
+					aSource.Play();
+						
 	   			}, 
 			icon: Resources.Load<Sprite> ("Icons/left-arrow"),
 			preferredPosition: ControlWheelSegment.PreferredPosition.Left);
@@ -92,7 +103,13 @@ public class BuildTool : HeldObject {
 					} else {
 						this.CurrentID = newID;
 					}
-					
+
+					updateUI = true;
+
+					this.aSource.clip = changeBuildClip;
+					this.aSource.time = 0f;
+					this.aSource.Play();
+										
 				}, 
 			icon: Resources.Load<Sprite> ("Icons/right-arrow"),
 			preferredPosition: ControlWheelSegment.PreferredPosition.Right);
@@ -107,6 +124,8 @@ public class BuildTool : HeldObject {
 	GameObject lastPointedAtOccupying; //this needs to be cached to avoid the bug where continuouslt holding down keeps building
 	GameCube lastPointedAt;
 	bool built; //to stop continuously holding the trigger to mean continuously acting on a block
+	bool updateUI; //tells the build tool to update the UI
+	bool canUpdate = false;
 	protected override void HandAttachedUpdate (Hand hand){
 		base.HandAttachedUpdate (hand);
 
@@ -129,7 +148,7 @@ public class BuildTool : HeldObject {
 				if (cube != null) {
 
 					//When we look at a different cube or the cube we look at changes
-					if (lastPointedAt != cube || lastPointedAtOccupying != cube.Occupying) {
+					if (updateUI == true || lastPointedAt != cube || lastPointedAtOccupying != cube.Occupying) {
 						brProgressBar.ActOnCubeTimer = 0f;
 
 						if (lastPointedAt != null) {
@@ -137,10 +156,11 @@ public class BuildTool : HeldObject {
 						}
 
 						if (currentID >= 0) {
-							cube.OnPointedAt (buildables [currentID].GetComponent<IPlaceable> (), this);
+							canUpdate = cube.OnPointedAt (buildables [currentID].GetComponent<IPlaceable> (), this);
 						} else {
-							cube.OnPointedAt (null, this);
+							canUpdate = cube.OnPointedAt (null, this);
 						}
+						updateUI = false;
 					}
 
 					//Called every frame that we point to the cube
@@ -149,15 +169,30 @@ public class BuildTool : HeldObject {
 
 					if (hc.TriggerPulled.Any && built == false) {
 
+						if (brProgressBar.ActOnCubeTimer <= 0) {
+							aSource.clip = buildChargeClip;
+
+						}
+
+						if (aSource.isPlaying == false) {
+							aSource.time = Mathf.Min(aSource.clip.length, brProgressBar.ActOnCubeTimer);
+							aSource.Play ();
+						}
+
 						brProgressBar.ActOnCubeTimer += Time.deltaTime;
+
 
 						if (brProgressBar.ActOnCubeTimer >= brProgressBar.holdToActTime) {
 							ActOnCube (cube);
 							brProgressBar.ActOnCubeTimer = 0f;
 							built = true;
+							updateUI = true;
+
 						}
 					} else {
 						brProgressBar.ActOnCubeTimer = Mathf.Max(0f, brProgressBar.ActOnCubeTimer - (Time.deltaTime * 2f));
+						aSource.Stop ();
+
 					}
 
 					if (hc.TriggerPulled.Up) {
@@ -221,13 +256,18 @@ public class BuildTool : HeldObject {
 					//most of the spawning process is handled by the gamecube
 					gc.Occupying = p;
 
+					if(p.GetComponent<AudioSource>() != null){
+						p.GetComponent<AudioSource> ().Play ();
+					}
+
 					//spend resources
 					ResourceManager.Instance.Spend (p.GetComponent<IPlaceable> ().BuildCost);
 
-					EnemyPathManager.Instance.ShouldRecalcPathBlocked (gc);
+					EnemyPathManager.Instance.ShouldRecalcPathBlocked (gc);			
 
 				} else {
 					//failure cases
+
 					Debug.Log (pe.ToString ());
 				}
 			} else {
@@ -240,7 +280,6 @@ public class BuildTool : HeldObject {
 
 					gc.Occupying = null;
 
-					EnemyPathManager.Instance.ShouldRecalcPathRemoved ();
 
 				} else {
 					//failure case
@@ -254,4 +293,22 @@ public class BuildTool : HeldObject {
 	}
 
 	#endregion
+
+	public override void OnDestroy ()
+	{
+
+		RaycastHit hitInfo;
+
+		if (Physics.Raycast (barrel.transform.position, barrel.transform.forward, out hitInfo, Mathf.Infinity)) {
+			if (hitInfo.collider != null) {
+				//we hit a collider
+				GameCube cube = hitInfo.collider.GetComponent<GameCube> ();
+
+				if (cube != null) {
+					cube.OnPointedAway ();
+				}
+			}
+		}
+		base.OnDestroy ();
+	}
 }

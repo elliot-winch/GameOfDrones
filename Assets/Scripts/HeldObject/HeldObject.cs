@@ -83,5 +83,6 @@ public abstract class HeldObject : MonoBehaviour {
 
 	public virtual void OnDestroy() {
 
+
 	}
 }

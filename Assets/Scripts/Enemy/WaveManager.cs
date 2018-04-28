@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using TMPro;
+
 /*
  * The Wave Manager concerns itself only with waves of enemies: what a wave consists of, and when each enemy in that wave is spawned.
  * 
@@ -12,10 +14,15 @@ public class WaveManager : MonoBehaviour {
 
 	static WaveManager instance;
 
+	public TextMeshPro[] waveText;
+
 	//Collected in editor
 	public float fastEnemySpeed;
 	public float attackingEnemyRange;
 	public Transform enemyParent;
+	public Transform enemyDeadParent;
+
+	List<ControlWheelSegment> defaultActions;
 
 	[SerializeField]
 	public List<GameCube> startCubes;
@@ -29,12 +36,31 @@ public class WaveManager : MonoBehaviour {
 	private int currentWave = 0;
 	private int enemiesLeftToSpawn = 0;
 
+	private AudioSource waveStartAudio;
+	private AudioSource waveEndAudio;
+
+
 	public static WaveManager Instance {
 		get {
 			return instance;
 		}
 	}
 
+	public int CurrentWave {
+		get {
+			return currentWave;
+		}
+		set {
+			currentWave = value;
+
+		}
+	}
+
+	public List<ControlWheelSegment> DefaultActions {
+		get {
+			return defaultActions;
+		}
+	}
 
 	void Start(){
 		if (instance != null) {
@@ -47,19 +73,45 @@ public class WaveManager : MonoBehaviour {
 			Debug.LogWarning ("No starting cubes set!");
 			return;
 		}
+
+		defaultActions = new List<ControlWheelSegment> ();
+
+		waveStartAudio = GetComponents<AudioSource> ()[0];
+		waveEndAudio = GetComponents<AudioSource> ()[1];
+
 	}
 
 	public void OnGameStart(){
 
-		currentWave = 0;
+		CurrentWave = 0;
 
 		AddNewWaveButton ();
+
+		foreach (TextMeshPro tm in waveText) {
+			tm.text = "BUILD";
+		}
+	}
+
+	public void OnGameEnd(){
+		foreach (TextMeshPro tm in waveText) {
+			tm.text = "";
+		}
 	}
 
 	//for 2d debugging
 	void Update(){
 		if (Input.GetKeyDown (KeyCode.U)) {
 			RunNextWave ();
+		}
+
+		if (Input.GetKeyDown (KeyCode.K)) {
+
+			foreach (DamagableObject obj in enemyParent.GetComponentsInChildren<DamagableObject>()) {
+				if(obj.GetComponent<DamagableObject>() != null){
+					obj.GetComponent<DamagableObject> ().Hit (Vector3.zero, Vector3.zero, 10000);
+
+				}
+			}
 		}
 	}
 
@@ -71,57 +123,78 @@ public class WaveManager : MonoBehaviour {
 			return;
 		}
 
-
+		Debug.Log ("Running next wave");
 		if (enemyParent.childCount <= 0 && enemiesLeftToSpawn <= 0) {
+			//UI
+			string waveString = currentWave.ToString ();
 
+			if (currentWave < 10) {
+				waveString = "0" + waveString;
+			}
+
+			foreach (TextMeshPro tm in waveText) {
+				tm.text = waveString;
+			}
+			//END UI
+
+			Debug.Log ("Removing new wave button");
 			RemoveNewWaveButton ();
 
 			if (data.Count > currentWave) {
 
-				enemiesLeftToSpawn = 0;
-
-				foreach (EnemyGroup g in data[currentWave].groups) {
-
-					//NB an enemy cannot be fast and attacking!
-
-					if (g.enemy == EnemyType.Drone || g.enemy == EnemyType.Triple) {
-
-						List<int> allEnemyIndicies = new List<int> ();
-						List<int> fastEnemyIndicies = new List<int> ();
-						List<int> attackingEnemyIndicies = new List<int> ();
-						for (int i = 0; i < g.number; i++) {
-							allEnemyIndicies.Add (i);
-						}
-
-						for (int i = 0; i < g.numFastEnemies; i++) {
-							if (allEnemyIndicies.Count <= 0) {
-								Debug.Log ("WaveManager Warning: Run out of enemies to randomly allocate 'increased speed' to");
-							}
-
-							int r = Random.Range (0, allEnemyIndicies.Count);
-							fastEnemyIndicies.Add (allEnemyIndicies [r]);
-							allEnemyIndicies.RemoveAt (r);
-						}
-
-						for (int i = 0; i < g.numAttackingEnemies; i++) {
-							if (allEnemyIndicies.Count <= 0) {
-								Debug.Log ("WaveManager Warning: Run out of enemies to randomly allocate 'increased range' to");
-							}
-
-							int r = Random.Range (0, allEnemyIndicies.Count);
-							attackingEnemyIndicies.Add (allEnemyIndicies [r]);
-							allEnemyIndicies.RemoveAt (r);
-						}
-
-						enemiesLeftToSpawn += g.number;
-						StartCoroutine (GroupCoroutine (g, fastEnemyIndicies, attackingEnemyIndicies));
-					} else {
-						StartCoroutine (GroupCoroutine (g, new List<int>(), new List<int>()));
-					}
-				}
+				StartCoroutine (RunNextWaveCoroutine ());
 			}
 		} else {
 			Debug.Log ("Cannot start wave as wave is already running!");
+		}
+	}
+
+	IEnumerator RunNextWaveCoroutine(){
+
+		waveStartAudio.Play ();
+
+		yield return new WaitForSeconds (waveStartAudio.clip.length);
+
+		enemiesLeftToSpawn = 0;
+
+		foreach (EnemyGroup g in data[currentWave].groups) {
+
+			//NB an enemy cannot be fast and attacking!
+
+			if (g.enemy == EnemyType.Drone || g.enemy == EnemyType.Triple) {
+
+				List<int> allEnemyIndicies = new List<int> ();
+				List<int> fastEnemyIndicies = new List<int> ();
+				List<int> attackingEnemyIndicies = new List<int> ();
+				for (int i = 0; i < g.number; i++) {
+					allEnemyIndicies.Add (i);
+				}
+
+				for (int i = 0; i < g.numFastEnemies; i++) {
+					if (allEnemyIndicies.Count <= 0) {
+						Debug.Log ("WaveManager Warning: Run out of enemies to randomly allocate 'increased speed' to");
+					}
+
+					int r = Random.Range (0, allEnemyIndicies.Count);
+					fastEnemyIndicies.Add (allEnemyIndicies [r]);
+					allEnemyIndicies.RemoveAt (r);
+				}
+
+				for (int i = 0; i < g.numAttackingEnemies; i++) {
+					if (allEnemyIndicies.Count <= 0) {
+						Debug.Log ("WaveManager Warning: Run out of enemies to randomly allocate 'increased range' to");
+					}
+
+					int r = Random.Range (0, allEnemyIndicies.Count);
+					attackingEnemyIndicies.Add (allEnemyIndicies [r]);
+					allEnemyIndicies.RemoveAt (r);
+				}
+
+				enemiesLeftToSpawn += g.number;
+				StartCoroutine (GroupCoroutine (g, fastEnemyIndicies, attackingEnemyIndicies));
+			} else {
+				StartCoroutine (GroupCoroutine (g, new List<int>(), new List<int>()));
+			}
 		}
 	}
 		
@@ -158,25 +231,22 @@ public class WaveManager : MonoBehaviour {
 	}
 
 	public void CouldEndWave(){
-		/*
-			 * Why does this check to see if there is one enemy left rather than zero? 
-			 * Good question!
-			 * When we check to see if the wave is over, the enemy which is about to be destoryed is checking.
-			 * This means that enemy is still childed to the enemyParent, so there will be one (but only one)
-			 * enemy to check for
-			 */ 
-		if (enemyParent.childCount <= 1 && enemiesLeftToSpawn <= 0) {
+		if (enemyParent.childCount <= 0 && enemiesLeftToSpawn <= 0) {
 			Debug.Log("Cleared wave " + currentWave);
 
-			currentWave++;
+			CurrentWave++;
 
 			AddNewWaveButton ();
 
+			waveEndAudio.Play ();
+
 			if (currentWave >= data.Count) {
-				currentWave = 0;
+				CurrentWave = 0;
 			}
 
-			//some kinda of visual i guess
+			foreach (TextMeshPro tm in waveText) {
+				tm.text = "BUILD";
+			}
 		}
 	}
 
@@ -187,27 +257,27 @@ public class WaveManager : MonoBehaviour {
             action: () => {
 				WaveManager.Instance.RunNextWave ();
 			}, 
-	        icon: Resources.Load<Sprite> ("Icons/Drone Icon")
+	        icon: Resources.Load<Sprite> ("Icons/Drone Icon"),
+			preferredPosition: ControlWheelSegment.PreferredPosition.Down
 	    );
 
-		//Wheels in the future
-		ControlWheel.RegisterOnCreate ((self) => {
-			self.AddControlWheelAction( startWave );
-		});
 
 		//Currently equipped
-		foreach (ControlWheel cw in Resources.FindObjectsOfTypeAll<ControlWheel> ()) {
-			cw.AddControlWheelAction ( startWave );
+		foreach (GameObject go in GrippedTool.CurrentlyHeldTools) {
+			go.GetComponentInChildren<ControlWheel>().AddControlWheelAction ( startWave );
 		}
+
+		defaultActions.Add (startWave);
 	}
 
 	private void RemoveNewWaveButton(){
 
-		ControlWheel.ResetOnCreate ();
+		defaultActions.Clear ();
 
-		foreach (ControlWheel cw in Resources.FindObjectsOfTypeAll<ControlWheel> ()) {
-			cw.RemoveControlWheelAction ("Start Wave");
+		foreach (GameObject go in GrippedTool.CurrentlyHeldTools) {
+			go.GetComponentInChildren<ControlWheel>().RemoveControlWheelAction ("Start Wave");
 		}
+
 	}
 }
 

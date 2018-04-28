@@ -34,7 +34,6 @@ public class Recoiler : MonoBehaviour {
 	IEnumerator RecoilCoroutine(){
 
 		float maxAngle = maxRecoilTime * recoilSpeed;
-		float speed = recoilSpeed;
 		float currentTime = 0f;
 
 		while (currentTime <= maxRecoilTime) {
@@ -44,9 +43,6 @@ public class Recoiler : MonoBehaviour {
 			transform.RotateAround(rotateAbout.position, transform.right, -Mathf.Sqrt(angle));
 
 			currentTime += Time.deltaTime;
-			//speed -= (recoilUpSpeedLoss * recoilUpSpeedLoss);
-
-			Debug.Log (speed);
 
 			yield return null;
 		}
@@ -55,17 +51,11 @@ public class Recoiler : MonoBehaviour {
 
 		while (currentTime <= maxRecoilTime) {
 
-			Debug.Log ("rotating forward");
-
 			float angle = Mathf.Lerp (0f, maxAngle, recoilSpeed * currentTime);
 
 			transform.RotateAround(rotateAbout.position, transform.right, Mathf.Sqrt(angle));
 
 			currentTime += Time.deltaTime;
-			//speed -= (recoilUpSpeedLoss * recoilUpSpeedLoss);
-
-			Debug.Log (speed);
-
 
 			yield return null;
 		}

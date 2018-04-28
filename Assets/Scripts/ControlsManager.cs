@@ -25,13 +25,6 @@ public class ControlsManager : MonoBehaviour {
 		instance = this;
 	}
 
-	//temp!
-	void Update(){
-
-		if (Input.GetKeyDown (KeyCode.B)) {
-			GameManager.Instance.StartGame ();
-		}
-	}
 
 	public HandControls GetControlsFromHand(Hand hand){
 

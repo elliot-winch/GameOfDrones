@@ -25,9 +25,25 @@ public class GrippedTool: MonoBehaviour {
 
 	private int numGuns;
 
+	private AudioSource switchSource;
+
+	static List<GameObject> currentlyHeldTools;
+
+	public static List<GameObject> CurrentlyHeldTools {
+		get {
+			return currentlyHeldTools;
+		}
+	}
+
 	void Start ()
 	{
+		if (currentlyHeldTools == null) {
+			currentlyHeldTools = new List<GameObject> ();
+		}
+
 		numGuns = Enum.GetNames (typeof(GrippedToolIndex)).Length - 1;
+
+		switchSource = GetComponent<AudioSource> ();
 
 		StartCoroutine(AttachToolsAfterDelay(1f));
 	}
@@ -47,6 +63,8 @@ public class GrippedTool: MonoBehaviour {
 	public void SwitchGrippedObject(GrippedToolIndex index){
 
 		if (this.prevHeld != null) {
+			currentlyHeldTools.Remove (this.prevHeld);
+
 			this.hand.DetachObject( this.prevHeld );
 
 			// Call this to undo HoverLock
@@ -61,6 +79,9 @@ public class GrippedTool: MonoBehaviour {
 			}
 		}
 
+		//audio
+		switchSource.Play();
+
 		GameObject playerHeld = Instantiate (this.playerHeldPrefabs[(int)index].gameObject);
 
 		this.hand.HoverLock( playerHeld.GetComponent<Interactable>() );
@@ -68,7 +89,7 @@ public class GrippedTool: MonoBehaviour {
 		// Attach this object to the hand
 		this.hand.AttachObject( playerHeld, this.attachmentFlags );
 
-
+		currentlyHeldTools.Add (playerHeld);
 		//Set Up Control Wheel Actions
 
 		if (index == GrippedToolIndex.BuildTool) {

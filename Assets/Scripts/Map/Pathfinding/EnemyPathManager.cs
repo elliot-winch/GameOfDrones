@@ -65,11 +65,11 @@ public class EnemyPathManager : MonoBehaviour {
 	 * THere should always be a path the enemies can take from (each) start cube to
 	 * the enemy destination
 	 */ 
-	public bool WouldYieldNoPaths(GameCube test){
+	public bool WouldYieldNoPaths(GameCube test, float newMoveCost){
 
 		// set test cube to Mathf.Infinity
 		float testMoveCost = test.MoveCost;
-		test.MoveCost = Mathf.Infinity;
+		test.MoveCost = newMoveCost;
 
 		foreach (GameCube start in startCubes) {
 
@@ -140,6 +140,8 @@ public class EnemyPathManager : MonoBehaviour {
 	//When we delete something, does it open a shorter path?
 	public void ShouldRecalcPathRemoved(){
 
+		Debug.Log ("Called");
+
 		Dictionary<GameCube, List<GameCube>> paths = new Dictionary<GameCube, List<GameCube>> ();
 
 		foreach (KeyValuePair<GameCube, List<GameCube>> kvp in currentPaths) {
@@ -149,10 +151,7 @@ public class EnemyPathManager : MonoBehaviour {
 		foreach (KeyValuePair<GameCube, List<GameCube>> path in paths) {
 			AStarPath newPath = new AStarPath(path.Key, enemyDestination);
 
-			Debug.Log (newPath.Length () + " " + path.Value.Count);
-
 			if (newPath.Length() < path.Value.Count) {
-				Debug.Log ("Recalcing path");
 				CalcEnemyPath (path.Key, newPath);
 			}
 		}
